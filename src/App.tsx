@@ -3,6 +3,7 @@ import { useContext } from "react";
 // import { AuthContext } from "./context/authContext";
 import Header from "./components/common/Header/Header";
 import Subscribe from "./pages/Subscribe";
+import LoginModal from "./components/modals/LoginModal";
 
 function App() {
   // const { isNewUser } = useContext(AuthContext);

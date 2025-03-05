@@ -1,10 +1,13 @@
 import { Link } from "react-router";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowRight, Home, Key, Coins, Gift, Landmark } from "lucide-react";
+import { ArrowRight, Home, Key, Coins, Gift } from "lucide-react";
 import BGSliderImage from "/images/slider/slider-1.jpg";
+import LoginModal from "@/components/modals/LoginModal";
+import { useState } from "react";
 
 const Subscribe = () => {
+  const [showLogin, setShowLogin] = useState(false);
   return (
     <section
       className="relative text-white min-h-screen h-screen flex flex-col justify-center overflow-hidden bg-cover bg-center"
@@ -15,7 +18,6 @@ const Subscribe = () => {
       <div className="absolute inset-0 bg-gradient-to-r from-blue-900/40 to-black/40 z-0"></div>
       <div className="absolute left-0 top-1/4 h-32 w-2 bg-blue-600"></div>
 
-      {/* Logo on top left */}
       <div className="absolute top-10 left-5">
         <img
           alt="logo"
@@ -25,9 +27,8 @@ const Subscribe = () => {
         />
       </div>
 
-      {/* Building icon on top right */}
       <div className="absolute top-8 right-4 text-white">
-      <img
+        <img
           alt="logo"
           width={200}
           src="images/slider/graplic-slider-2.png"
@@ -40,7 +41,7 @@ const Subscribe = () => {
           <h1 className="text-3xl md:text-4xl font-semibold mb-4 text-white md:mt-6">
             Welcome Home
           </h1>
-          <div className="text-4xl md:text-6xl md:mt-10 max-w-4xl mx-auto font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600 mb-6 md:mb-8">
+          <div className="text-4xl md:text-6xl md:mt-10 max-w-4xl mx-auto font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600 mb-6 md:mb-10">
             Find Your Perfect Pad Today!
           </div>
           <div className="max-w-2xl mx-auto text-lg">
@@ -52,26 +53,26 @@ const Subscribe = () => {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 md:mx-4 lg:mx-10 lg:grid-cols-4 gap-4 lg:gap-8 mb-8">
-          <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm p-4 rounded-lg">
+        <div className="grid md:grid-cols-2 md:mx-4 lg:mx-20 lg:grid-cols-4 gap-4 lg:gap-8 mb-8">
+          <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm p-3 rounded-lg">
             <div className="bg-blue-600 p-2 rounded-full">
               <Home className="h-5 w-5" />
             </div>
             <span>Self touring</span>
           </div>
-          <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm p-4 rounded-lg">
+          <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm p-3 rounded-lg">
             <div className="bg-blue-600 p-2 rounded-full">
               <Key className="h-5 w-5" />
             </div>
             <span>Instant Leasing</span>
           </div>
-          <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm p-4 rounded-lg">
+          <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm p-3 rounded-lg">
             <div className="bg-blue-600 p-2 rounded-full">
               <Coins className="h-5 w-5" />
             </div>
             <span>Reduced rent</span>
           </div>
-          <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm p-4 rounded-lg">
+          <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm p-3 rounded-lg">
             <div className="bg-blue-600 p-2 rounded-full">
               <Gift className="h-5 w-5" />
             </div>
@@ -79,7 +80,7 @@ const Subscribe = () => {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6 md:gap-10 mb-8 md:mx-20 md:mt-6">
+        <div className="grid md:grid-cols-2 gap-6 md:gap-10 mb-8 md:mx-20 md:mt-8">
           <Card className="bg-gradient-to-br from-blue-600 to-blue-800 border-0 shadow-xl overflow-hidden group hover:shadow-blue-500/20 transition-all duration-300">
             <CardContent className="p-6 relative">
               <h2 className="text-2xl font-bold mb-4 text-blue-200">
@@ -91,16 +92,14 @@ const Subscribe = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Button
+                  onClick={() => setShowLogin(!showLogin)}
                   asChild
                   variant="secondary"
                   className="bg-white text-blue-700 hover:bg-gray-100 transform hover:scale-105 transition-all duration-200"
                 >
-                  <Link
-                    to="/login"
-                    className="hover:text-lg transition-all duration-200"
-                  >
+                  <a className="hover:text-lg transition-all duration-200">
                     Login
-                  </Link>
+                  </a>
                 </Button>
                 <Button
                   asChild
@@ -138,6 +137,8 @@ const Subscribe = () => {
           </Card>
         </div>
       </div>
+
+      <LoginModal isOpen={showLogin} onClose={() => setShowLogin(false)} />
     </section>
   );
 };
