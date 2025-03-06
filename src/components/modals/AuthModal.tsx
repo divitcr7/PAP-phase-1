@@ -10,7 +10,7 @@ import {
   SignupFormValues,
 } from "@/types/auth";
 
-const LoginModal = ({
+const AuthModal = ({
   isOpen,
   onClose,
   isSignUp: isSignUpProp,
@@ -128,4 +128,4 @@ const LoginModal = ({
   );
 };
 
-export default LoginModal;
+export default AuthModal;

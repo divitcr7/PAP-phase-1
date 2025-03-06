@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, Home, Key, Coins, Gift } from "lucide-react";
 import BGSliderImage from "/images/slider/slider-1.jpg";
-import LoginModal from "@/components/modals/LoginModal";
+import AuthModal from "@/components/modals/AuthModal";
 import { useState } from "react";
 
 const Subscribe = () => {
@@ -137,12 +137,12 @@ const Subscribe = () => {
         </div>
       </div>
 
-      <LoginModal
+      <AuthModal
         isOpen={showLogin}
         onClose={() => setShowLogin(false)}
         isSignUp={false}
       />
-      <LoginModal
+      <AuthModal
         isOpen={showSignup}
         onClose={() => setShowSignup(false)}
         isSignUp={true}
