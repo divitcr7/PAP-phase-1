@@ -8,6 +8,7 @@ import { useState } from "react";
 
 const Subscribe = () => {
   const [showLogin, setShowLogin] = useState(false);
+  const [showSignup, setShowSignup] = useState(false);
   return (
     <section
       className="relative text-white min-h-screen h-screen flex flex-col justify-center overflow-hidden bg-cover bg-center"
@@ -102,16 +103,14 @@ const Subscribe = () => {
                   </a>
                 </Button>
                 <Button
+                  onClick={() => setShowSignup(!showSignup)}
                   asChild
                   variant="outline"
                   className="border-white text-black hover:bg-white/20 transform hover:scale-105 transition-all duration-200"
                 >
-                  <Link
-                    to="/signup"
-                    className="hover:text-lg transition-all duration-200"
-                  >
+                  <a className="hover:text-lg transition-all duration-200">
                     Sign-up
-                  </Link>
+                  </a>
                 </Button>
               </div>
             </CardContent>
@@ -138,7 +137,16 @@ const Subscribe = () => {
         </div>
       </div>
 
-      <LoginModal isOpen={showLogin} onClose={() => setShowLogin(false)} />
+      <LoginModal
+        isOpen={showLogin}
+        onClose={() => setShowLogin(false)}
+        isSignUp={false}
+      />
+      <LoginModal
+        isOpen={showSignup}
+        onClose={() => setShowSignup(false)}
+        isSignUp={true}
+      />
     </section>
   );
 };
