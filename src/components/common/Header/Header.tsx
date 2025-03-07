@@ -25,10 +25,10 @@ const Header: React.FC<HeaderProps> = ({ parentClass = 'main-header header-fixed
       id="header"
       className={`${parentClass} ${isFixed ? 'fixed top-0 left-0 w-full bg-white shadow-md' : ''} px-4`}
     >
-      {/* Header Lower */}
+
       <div className="bg-white text-black py-4">
-        <div className="container mx-auto flex justify-between items-center">
-          <div className="flex items-center">
+        <div className="container mx-auto flex justify-between items-center border">
+          <div className="flex items-center border">
             <Link to="/" className="flex items-center">
               <img
                 alt="logo"
@@ -38,11 +38,7 @@ const Header: React.FC<HeaderProps> = ({ parentClass = 'main-header header-fixed
                 className="transition-transform duration-300 ease-in-out transform hover:scale-105"
               />
             </Link>
-            <nav className="ml-10">
-              <ul className="flex space-x-8">
-                <Nav />
-              </ul>
-            </nav>
+            <Nav />
           </div>
           <div className="flex items-center space-x-4">
             <Button variant="outline" size="lg" className='rounded-full' onClick={() => console.log('open login modal')}>
@@ -51,7 +47,7 @@ const Header: React.FC<HeaderProps> = ({ parentClass = 'main-header header-fixed
           </div>
         </div>
       </div>
-      {/* Mobile Nav */}
+
       <div
         className="mobile-nav-toggler block lg:hidden"
         onClick={() => document.body.classList.add('mobile-menu-visible')}
@@ -60,7 +56,7 @@ const Header: React.FC<HeaderProps> = ({ parentClass = 'main-header header-fixed
         <span className="block w-6 h-0.5 bg-white mb-2" />
         <span className="block w-6 h-0.5 bg-white" />
       </div>
-      {/* Mobile Menu */}
+
       <div
         className="mobile-menu fixed top-0 right-0 bottom-0 left-0 bg-gray-800 bg-opacity-50 hidden"
         onClick={() => document.body.classList.remove('mobile-menu-visible')}

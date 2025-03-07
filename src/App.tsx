@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router";
 // import { AuthContext } from "./context/authContext";
 import Header from "./components/common/Header/Header";
 import Subscribe from "./pages/Subscribe";
+import Home from "./pages/Home";
 
 function App() {
   // const { isNewUser } = useContext(AuthContext);
@@ -16,7 +17,7 @@ function App() {
     <>
       <Header />
       <Routes>
-        <Route path="/" element={<>home</>} />
+        <Route path="/" element={<Home />} />
         <Route path="about" element={<>about</>} />
         <Route path="contact" element={<>contact</>} />
       </Routes>

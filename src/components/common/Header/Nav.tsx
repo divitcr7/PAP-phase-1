@@ -15,17 +15,15 @@ export function Nav() {
   const location = useLocation()
 
   return (
-    <div className="mt-4 flex items-center justify-center">
+    <div className="flex items-center justify-center">
       <NavigationMenu className="">
         <NavigationMenuList>
           {menuItems.map((item, index) => {
-            // Check if the current path matches this item or its children
             const isActive =
               item.isUrl
                 ? location.pathname === item.url
                 : item.links?.some((link) => location.pathname === link.href)
 
-            // If it has dropdown links
             if (item.links && item.links.length > 0) {
               return (
                 <NavigationMenuItem key={index}>
@@ -61,7 +59,6 @@ export function Nav() {
               )
             }
 
-            // If it's a direct link
             return (
               <NavigationMenuItem key={index}>
                 <Link to={item.url || "#"}>
