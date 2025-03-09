@@ -1,18 +1,11 @@
-// import { Separator } from "@/components/ui/separator";
-// import Brands from "@/components/common/Brands";
-// import Agents from "@/components/homes/home-3/Agents";
-// import Blogs from "@/components/homes/home-3/Blogs";
-// import Blogs2 from "@/components/homes/home-3/Blogs2";
-// import Categories from "@/components/homes/home-3/Categories";
-// import Locations from "@/components/homes/home-3/Locations";
-// import Properties from "@/components/homes/home-3/Properties";
-// import Services from "@/components/homes/home-3/Services";
-
-import Hero from "@/components/home/Hero";
-import Properties from "@/components/home/Properties";
-import Testimonials from "@/components/home/Testimonials";
+import { lazy, Suspense } from "react";
 import MetaComponent from "@/components/seo/MetaComponent";
+import LoadingScreen from "@/components/common/LoadingScreen";
 
+// Lazy-load components
+const Hero = lazy(() => import("@/components/home/Hero"));
+const Properties = lazy(() => import("@/components/home/Properties"));
+const Testimonials = lazy(() => import("@/components/home/Testimonials"));
 
 type Metadata = {
   title: string;
@@ -28,10 +21,16 @@ const Home = () => {
   return (
     <>
       <MetaComponent meta={metadata} />
-      <Hero />
-      <Properties />
-      <Testimonials />
-      {/* 
+      <Suspense fallback={<LoadingScreen />}>
+        <Hero />
+      </Suspense>
+      <Suspense fallback={<LoadingScreen />}>
+        <Properties />
+      </Suspense>
+      <Suspense fallback={<LoadingScreen />}>
+        <Testimonials />
+      </Suspense>
+      {/*
       <Separator className="my-6" />
       <Locations />
       <Separator className="my-6" />

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import AdvanceSearch from "./AdvanceSearch";
 import { Button } from "@/components/ui/button";
 import {
