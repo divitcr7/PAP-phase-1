@@ -34,9 +34,7 @@ const AuthModal = ({
   return (
     <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-black/5 z-50">
       <div
-        className={`relative w-full max-w-3xl ${
-          isSignUp ? "md:max-w-4xl max-h-[750px]" : "max-h-[650px]"
-        } min-h-[500px] h-screen rounded-lg shadow-lg overflow-hidden border flex`}
+        className={`relative w-full max-w-3xl max-h-[650px] min-h-[500px] h-screen rounded-lg shadow-lg overflow-hidden border flex`}
       >
         <div className="hidden md:block w-1/3">
           <img
@@ -60,9 +58,7 @@ const AuthModal = ({
           </Button>
 
           <h2
-            className={`text-3xl font-semibold text-blue-700 ${
-              isSignUp ? "mb-1" : "my-4"
-            }`}
+            className={`text-3xl font-semibold text-blue-700 my-4`}
           >
             {isSignUp ? "Join Now" : "Already a Pad Person?"}
           </h2>
@@ -71,9 +67,7 @@ const AuthModal = ({
           </h3>
 
           <Card
-            className={`w-full p-4 ${
-              isSignUp ? "md:max-w-3xl" : "md:max-w-2xl py-8"
-            }`}
+            className={`w-full p-4 md:max-w-2xl py-8`}
           >
             <CardContent>
               {isSignUp ? (

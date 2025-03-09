@@ -63,6 +63,7 @@ export function Nav() {
               <NavigationMenuItem key={index}>
                 <Link to={item.url || "#"}>
                   <NavigationMenuLink
+                    // asChild
                     className={cn(
                       navigationMenuTriggerStyle(),
                       location.pathname === item.url ? "text-primary" : ""
@@ -72,7 +73,7 @@ export function Nav() {
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
-            )
+            );
           })}
         </NavigationMenuList>
       </NavigationMenu>

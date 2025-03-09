@@ -23,12 +23,12 @@ const Header: React.FC<HeaderProps> = ({ parentClass = 'main-header header-fixed
   return (
     <header
       id="header"
-      className={`${parentClass} ${isFixed ? 'fixed top-0 left-0 w-full bg-white shadow-md' : ''} px-4`}
+      className={`${parentClass} ${isFixed ? 'z-100 fixed top-0 left-0 w-full bg-white shadow-md' : ''} px-4`}
     >
 
       <div className="bg-white text-black py-4">
-        <div className="container mx-auto flex justify-between items-center border">
-          <div className="flex items-center border">
+        <div className="container mx-auto flex justify-between items-center">
+          <div className="flex items-center">
             <Link to="/" className="flex items-center">
               <img
                 alt="logo"

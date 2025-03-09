@@ -1,17 +1,4 @@
-export interface MenuLink {
-  href: string;
-  label: string;
-}
-
-export interface MenuItem {
-  title: string;
-  isCurrent?: boolean;
-  isUrl?: boolean;
-  url: string | null;
-  links?: MenuLink[];
-}
-
-export const menuItems: MenuItem[] = [
+export const menuItems = [
   {
     title: "Home",
     isCurrent: true,
@@ -30,7 +17,6 @@ export const menuItems: MenuItem[] = [
   },
   {
     title: "Pages",
-    url: null,
     links: [
       { href: "/about-us", label: "About Us" },
       { href: "/our-service", label: "Our Services" },
@@ -47,7 +33,6 @@ export const menuItems: MenuItem[] = [
   },
   {
     title: "Dashboard",
-    url: null,
     links: [
       { href: "/dashboard", label: "Dashboard" },
       { href: "/my-property", label: "My Properties" },

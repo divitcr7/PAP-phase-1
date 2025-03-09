@@ -4,10 +4,11 @@ import { Route, Routes } from "react-router";
 import Header from "./components/common/Header/Header";
 import Subscribe from "./pages/Subscribe";
 import Home from "./pages/Home";
+import Footer from "./components/common/Footer";
 
 function App() {
   // const { isNewUser } = useContext(AuthContext);
-  const isNewUser = true;
+  const isNewUser = false;
 
   if (isNewUser) {
     return <Subscribe />; // If new user, show WelcomePage only
@@ -21,6 +22,7 @@ function App() {
         <Route path="about" element={<>about</>} />
         <Route path="contact" element={<>contact</>} />
       </Routes>
+      <Footer />
     </>
   );
 }

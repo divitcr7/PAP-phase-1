@@ -7,9 +7,10 @@
 // import Locations from "@/components/homes/home-3/Locations";
 // import Properties from "@/components/homes/home-3/Properties";
 // import Services from "@/components/homes/home-3/Services";
-// import Testimonials from "@/components/homes/home-3/Testimonials";
 
 import Hero from "@/components/home/Hero";
+import Properties from "@/components/home/Properties";
+import Testimonials from "@/components/home/Testimonials";
 import MetaComponent from "@/components/seo/MetaComponent";
 
 
@@ -28,11 +29,12 @@ const Home = () => {
     <>
       <MetaComponent meta={metadata} />
       <Hero />
+      <Properties />
+      <Testimonials />
       {/* 
       <Separator className="my-6" />
       <Locations />
       <Separator className="my-6" />
-      <Properties />
       <Separator className="my-6" />
       <Categories />
       <Separator className="my-6" />
@@ -40,7 +42,6 @@ const Home = () => {
       <Separator className="my-6" />
       <Brands />
       <Separator className="my-6" />
-      <Testimonials />
       <Separator className="my-6" />
       <Agents />
       <Separator className="my-6" />
@@ -48,7 +49,6 @@ const Home = () => {
       <Separator className="my-6" />
       <Blogs2 />
       <Separator className="my-6" />*/}
-      Home page
     </>
   );
 };
