@@ -35,19 +35,19 @@ export default function PropertyFilter() {
   return (
     <div className="w-full rounded-lg shadow-lg">
       <div className="flex space-x-4">
-        <div className="text-lg font-medium py-3 px-8 bg-blue-600 underline decoration-white-600 underline-offset-4 rounded-t-lg">
+        <div className="text-lg font-medium py-2 md:py-3 px-6 md:px-8 bg-blue-600 underline decoration-white-600 underline-offset-4 rounded-t-lg">
           Find a Rental
         </div>
       </div>
 
       <form
         onSubmit={(e) => e.preventDefault()}
-        className="space-y-4 bg-white p-6 rounded-b-lg rounded-tr-lg shadow-lg"
+        className="space-y-3 md:space-y-4 bg-white p-4 md:p-6 rounded-b-lg rounded-tr-lg shadow-lg"
       >
         <div className="flex flex-col gap-4">
           <input
             type="text"
-            className="w-full px-6 py-4 border border-gray-400 rounded-full placeholder-gray-500"
+            className="w-full px-4 md:px-6 py-3 md:py-4 border border-gray-400 rounded-full placeholder-gray-500"
             placeholder="Search Keyword"
             required
           />
@@ -55,7 +55,7 @@ export default function PropertyFilter() {
           <div className="relative">
             <input
               type="text"
-              className="w-full px-6 py-4 border border-gray-400 rounded-full placeholder-gray-500"
+              className="w-full px-4 md:px-6 py-3 md:py-4 border border-gray-400 rounded-full placeholder-gray-500"
               placeholder="Search Location"
               required
             />
@@ -66,7 +66,7 @@ export default function PropertyFilter() {
             <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
-                className="w-full border border-gray-400 rounded-full placeholder-gray-500 bg-white !px-6 !py-7 !text-gray-500 hover:bg-gray-50"
+                className="w-full border border-gray-400 rounded-full placeholder-gray-500 bg-white !px-4 !md:px-6 !py-6 md:py-4 !md:py-7 !text-gray-500 hover:bg-gray-50"
               >
                 <span className="mr-auto text-gray-500">Property type</span>
                 <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50 text-gray-500" />
@@ -88,7 +88,7 @@ export default function PropertyFilter() {
         <div className="flex items-center text-black justify-between !mb-0">
           <Button
             variant="outline"
-            className="flex items-center border-blue-600 !px-10 py-7 !rounded-full text-lg justify-center"
+            className="flex items-center border-blue-600 !px-8 !py-6 !md:px-10 !md:py-7 !rounded-full text-lg justify-center"
             onClick={() => {
               if (ddContainer.current) {
                 ddContainer.current.classList.toggle("hidden");
@@ -101,7 +101,7 @@ export default function PropertyFilter() {
           </Button>
           <Button
             type="submit"
-            className="flex items-center bg-blue-600 text-white !px-14 py-7 !rounded-full text-lg justify-center"
+            className="flex items-center border-blue-600 bg-blue-600 text-white !px-11 !py-6 !md:px-14 !md:py-7! rounded-full text-lg justify-center"
           >
             Search <Search className="size-5" />
           </Button>

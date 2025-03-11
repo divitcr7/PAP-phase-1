@@ -1,9 +1,9 @@
 import PropertyFilter from "../common/PropertyFilter";
 import { Button } from "@/components/ui/button";
-import { Home, Building2, Landmark, Factory } from "lucide-react";
+import { Home, Building2, Landmark, Factory, ArrowRight } from "lucide-react";
 import { Link } from "react-router";
 import BGSliderImage from "/images/slider/slider-1.jpg";
-import { Typewriter } from 'react-simple-typewriter';
+import { Typewriter } from "react-simple-typewriter";
 
 export default function Hero() {
   return (
@@ -12,10 +12,10 @@ export default function Hero() {
       style={{ backgroundImage: `url(${BGSliderImage})` }}
     >
       <div className="absolute inset-0 bg-black/10" />
-      <div className="container mx-auto relative z-10 px-6 lg:px-12">
-        <div className="flex justify-between items-center gap-2">
-          <div className="">
-            <h1 className="text-6xl lg:text-7xl font-bold leading-tight">
+      <div className="container mx-auto relative z-10 px-5 lg:px-12">
+        <div className="flex flex-col lg:flex-row justify-between items-center gap-14 md:gap-6 text-left">
+          <div className="max-w-xl mx-auto lg:mx-0">
+            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold leading-tight">
               Indulge in Your <br />
               <Typewriter
                 words={["Sanctuary", "Safe House", "Dream Home"]}
@@ -26,44 +26,48 @@ export default function Hero() {
                 cursorBlinking={true}
               />
             </h1>
-            <p className="mt-12 text-lg lg:min-w-[400px] lg:max-w-[700px]">
+            <p className="mt-6 text-base sm:text-lg lg:text-xl">
               Discover your perfect home with Pick-A-Pad. From spacious gardens
               to relaxing pools, every detail is crafted for your comfort and
               enjoyment.
             </p>
             <Button
               asChild
-              className="mt-8 rounded-full px-16 py-8 text-lg font-semibold bg-blue-600 hover:bg-primary-dark"
+              className="mt-6 rounded-full px-8 py-4 md:px-10 md:py-7 text-base sm:text-lg font-semibold bg-blue-600 hover:bg-primary-dark"
             >
-              <Link to="/contact">Contact Us</Link>
+              <Link to="/contact">Contact Us
+              {/* <ArrowRight /> */}
+              </Link>
             </Button>
           </div>
-          <div className="">
+          <div className="w-full lg:w-auto">
             <PropertyFilter />
-            <div className="mt-8 flex gap-6">
-              <Link to="#" className="flex items-center gap-1 text-white">
-                <div className="bg-white/20 hover:bg-white/30 rounded-full p-2">
-                  <Home size={20} className="text-white" />
+            <div className="mt-6 flex flex-wrap justify-center gap-4">
+              <Link to="#" className="flex items-center gap-1 md:gap-2 text-white">
+                <div className="bg-white/20 hover:bg-white/30 rounded-full p-1">
+                  <Home className="text-white size-4 md:size-6" />
                 </div>
                 Houses
               </Link>
 
-              <Link to="#" className="flex items-center gap-1 text-white">
-                <div className="bg-white/20 hover:bg-white/30 rounded-full p-2">
-                  <Building2 size={20} className="text-white" />
+              <Link to="#" className="flex items-center gap-1 md:gap-2 text-white">
+                <div className="bg-white/20 hover:bg-white/30 rounded-full p-1 md:p-2 text-sm md:text-base">
+                  <Building2
+                    className="text-white size-4 md:size-6"
+                  />
                 </div>
                 Villa
               </Link>
 
-              <Link to="#" className="flex items-center gap-1 text-white">
-                <div className="bg-white/20 hover:bg-white/30 rounded-full p-2">
-                  <Landmark size={20} />
+              <Link to="#" className="flex items-center gap-1 md:gap-2 text-white">
+                <div className="bg-white/20 hover:bg-white/30 rounded-full p-1 md:p-2 text-sm md:text-base">
+                  <Landmark className="text-white size-4 md:size-6" />
                 </div>
                 Office
               </Link>
-              <Link to="#" className="flex items-center gap-1 text-white">
-                <div className="bg-white/20 hover:bg-white/30 rounded-full p-2">
-                  <Factory size={20} />
+              <Link to="#" className="flex items-center gap-1 md:gap-2 text-white">
+                <div className="bg-white/20 hover:bg-white/30 rounded-full p-1 md:p-2 text-sm md:text-base">
+                  <Factory className="text-white size-4 md:size-6" />
                 </div>
                 Apartments
               </Link>

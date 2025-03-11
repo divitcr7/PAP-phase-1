@@ -41,11 +41,11 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-[#141c2f] text-white py-14">
-
-      <div className="container mx-auto flex flex-col md:flex-row justify-between items-center mb-12 border-b pb-12 border-gray-700 px-30 animate-fade-in">
-        <div className="flex items-center mb-6 md:mb-0">
-          <Link to="/" className="flex items-center">
+    <footer className="bg-[#141c2f] text-white pt-10 pb-4 md:py-14 px-6 md:px-30">
+      {/* Top Section */}
+      <div className="container mx-auto flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-12 border-b pb-6 md:pb-12 border-gray-700 animate-fade-in">
+        <div className="flex justify-start mb-6 md:mb-0">
+          <Link to="/" className="flex items-start md:items-center">
             <img
               alt="logo"
               width={166}
@@ -56,8 +56,7 @@ export default function Footer() {
           </Link>
         </div>
 
-        <div className="flex items-center">
-          <span className="mr-4 text-gray-300">Follow Us:</span>
+        <div className="">
           <div className="flex space-x-3">
             {SocialMedia.map((item, index) => (
               <Link
@@ -73,51 +72,46 @@ export default function Footer() {
       </div>
 
       {/* Main Footer Content */}
-      <div className="px-30">
-        <div className="container mx-auto border-b border-gray-700 pb-12 animate-fade-in">
-          <div className="flex gap-28 justify-around">
-            {/* Company Info */}
-            <div className="w-lg mr-10">
-              <p className="text-gray-400 mb-6">
-                Specializes in providing high-class pads (Rental Properties) for
-                those in need.<br />
-                <Link
-                  to="/contact"
-                  className="text-blue-500 hover:underline"
-                >
-                  Contact Us
+      <div className="container mx-auto border-b border-gray-700 pb-6 md:pb-12 animate-fade-in">
+        <div className="flex flex-col md:flex-row gap-6 md:gap-28 text-center md:text-left">
+          {/* Company Info */}
+          <div className="text-left md:w-lg md:mr-10">
+            <p className="text-gray-400 mb-4">
+              Specializes in providing high-class pads (Rental Properties) for
+              those in need.
+              <br />
+              <Link to="/contact" className="text-blue-500 hover:underline">
+                Contact Us
+              </Link>
+            </p>
+            <ul className="space-y-3 flex flex-col md:block items-start">
+              <li className="flex items-center justify-center md:justify-start">
+                <MapPin className="text-gray-400 mr-3 md:mr-4 size-5 md:size-6" />
+                <span>2507 South Blvd, Houston, TX 77004</span>
+              </li>
+              <li className="flex items-center justify-center md:justify-start">
+                <Phone className="text-gray-400 mr-3 md:mr-4 size-5 md:size-6" />
+                <Link to="tel:+1-713-894-1937" className="hover:text-blue-500">
+                  +1-713-894-1937
                 </Link>
-              </p>
-              <ul className="space-y-3">
-                <li className="flex items-center hover:translate-x-2 transition-transform">
-                  <MapPin className="text-gray-400 mr-4 size-6" />
-                  <span>2507 South Blvd, Houston, TX 77004</span>
-                </li>
-                <li className="flex items-center hover:translate-x-2 transition-transform">
-                  <Phone className="text-gray-400 mr-4 size-6" />
-                  <Link
-                    to="tel:+1-713-894-1937"
-                    className="hover:text-blue-500"
-                  >
-                    +1-713-894-1937
-                  </Link>
-                </li>
-                <li className="flex items-center hover:translate-x-2 transition-transform">
-                  <Mail className="text-gray-400 mr-4 size-6" />
-                  <Link
-                    to="mailto:admin@pick-a-pad.com"
-                    className="hover:text-blue-500"
-                  >
-                    admin@pick-a-pad.com
-                  </Link>
-                </li>
-              </ul>
-            </div>
+              </li>
+              <li className="flex items-center justify-center md:justify-start">
+                <Mail className="text-gray-400 mr-3 md:mr-4 size-5 md:size-6" />
+                <Link
+                  to="mailto:admin@pick-a-pad.com"
+                  className="hover:text-blue-500"
+                >
+                  admin@pick-a-pad.com
+                </Link>
+              </li>
+            </ul>
+          </div>
 
-            {/* Categories and Our Company */}
+          {/* Categories and Our Company */}
+          <div className="flex justify-between md:justify-content mt-4 md:mt-0 px-4 md:px-0 flex-row gap-6 md:gap-56 text-left">
             {FooterMenuItems.map((item, idx) => (
-              <div key={idx} className="mr-50">
-                <h3 className="text-xl font-semibold mb-4 whitespace-nowrap hover:text-blue-500 transition-colors">
+              <div key={idx}>
+                <h3 className="text-xl font-semibold mb-4 hover:text-blue-500 transition-colors">
                   {item.title}
                 </h3>
                 <ul className="space-y-2">
@@ -125,10 +119,9 @@ export default function Footer() {
                     <li key={subIdx}>
                       <Link
                         to={subItem.link}
-                        className="text-gray-400 hover:text-blue-500 transition-colors block relative group"
+                        className="text-gray-400 hover:text-blue-500 transition-colors block"
                       >
                         {subItem.label}
-                        <span className="absolute left-0 bottom-0 w-full h-0.5 bg-blue-500 transform scale-x-0 group-hover:scale-x-100 transition-transform" />
                       </Link>
                     </li>
                   ))}
@@ -137,17 +130,19 @@ export default function Footer() {
             ))}
           </div>
         </div>
+      </div>
 
-        {/* Footer Bottom */}
-        <div className="container mx-auto flex justify-between items-center pt-6 text-gray-400 text-sm">
-          <p>&copy; 2025 Pick A Pad. All Rights Reserved.</p>
-          <div className="flex space-x-6">
-            {FooterBottom.map((item, idx) => (
-              <Link key={idx} to={item.link} className="hover:text-blue-500">
-                {item.label}
-              </Link>
-            ))}
-          </div>
+      {/* Footer Bottom */}
+      <div className="container mx-auto flex flex-col md:flex-row justify-center md:justify-between items-center pt-6 text-gray-400 text-sm">
+        <p className="text-center md:text-left mb-4 md:mb-0">
+          &copy; 2025 Pick A Pad. All Rights Reserved.
+        </p>
+        <div className="flex-row space-x-6 text-center">
+          {FooterBottom.map((item, idx) => (
+            <Link key={idx} to={item.link} className="hover:text-blue-500">
+              {item.label}
+            </Link>
+          ))}
         </div>
       </div>
     </footer>
