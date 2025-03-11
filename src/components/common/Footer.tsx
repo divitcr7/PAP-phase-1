@@ -1,6 +1,5 @@
-import { MapPin, Phone, Mail, ArrowRight } from "lucide-react";
+import { MapPin, Phone, Mail } from "lucide-react";
 import { Link } from "react-router";
-import { Button } from "../ui/button";
 import YoutubeIcon from "@/assets/logos/youtube.svg?react";
 import InstagramIcon from "@/assets/logos/instagram.svg?react";
 import XIcon from "@/assets/logos/x.svg?react";
@@ -76,9 +75,9 @@ export default function Footer() {
       {/* Main Footer Content */}
       <div className="px-30">
         <div className="container mx-auto border-b border-gray-700 pb-12 animate-fade-in">
-          <div className="flex gap-32 justify-between">
+          <div className="flex gap-28 justify-around">
             {/* Company Info */}
-            <div>
+            <div className="w-lg mr-10">
               <p className="text-gray-400 mb-6">
                 Specializes in providing high-class pads (Rental Properties) for
                 those in need.
@@ -91,11 +90,11 @@ export default function Footer() {
               </p>
               <ul className="space-y-3">
                 <li className="flex items-center hover:translate-x-2 transition-transform">
-                  <MapPin className="text-gray-400 mr-3 size-6" />
+                  <MapPin className="text-gray-400 mr-4 size-6" />
                   <span>2507 South Blvd, Houston, TX 77004</span>
                 </li>
                 <li className="flex items-center hover:translate-x-2 transition-transform">
-                  <Phone className="text-gray-400 mr-3 size-6" />
+                  <Phone className="text-gray-400 mr-4 size-6" />
                   <Link
                     to="tel:+1-713-894-1937"
                     className="hover:text-blue-500"
@@ -104,7 +103,7 @@ export default function Footer() {
                   </Link>
                 </li>
                 <li className="flex items-center hover:translate-x-2 transition-transform">
-                  <Mail className="text-gray-400 mr-3 size-6" />
+                  <Mail className="text-gray-400 mr-4 size-6" />
                   <Link
                     to="mailto:admin@pick-a-pad.com"
                     className="hover:text-blue-500"
@@ -117,7 +116,7 @@ export default function Footer() {
 
             {/* Categories and Our Company */}
             {FooterMenuItems.map((item, idx) => (
-              <div key={idx} className="animate-slide-up">
+              <div key={idx} className="mr-50">
                 <h3 className="text-xl font-semibold mb-4 whitespace-nowrap hover:text-blue-500 transition-colors">
                   {item.title}
                 </h3>
@@ -136,24 +135,6 @@ export default function Footer() {
                 </ul>
               </div>
             ))}
-
-            {/* Newsletter */}
-            <div className="w-xl animate-slide-up">
-              <h3 className="text-xl font-semibold mb-4">Newsletter</h3>
-              <p className="text-gray-400 mb-6">
-                Your Weekly/Monthly Dose of Knowledge and Inspiration
-              </p>
-              <div className="relative">
-                <input
-                  type="email"
-                  placeholder="Your email address"
-                  className="w-full bg-[#1e2738] rounded-full py-3 px-4 pr-12 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <Button className="absolute right-1.5 top-1.5 bg-blue-500 p-2 rounded-full hover:bg-blue-600 transition-transform hover:scale-110">
-                  <ArrowRight className="h-4 w-4 text-white" />
-                </Button>
-              </div>
-            </div>
           </div>
         </div>
 

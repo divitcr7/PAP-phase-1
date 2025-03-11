@@ -1,4 +1,6 @@
-import { Link, useLocation } from "react-router"
+import * as React from "react";
+import { Link, useLocation } from "react-router";
+import { cn } from "@/lib/utils";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -7,76 +9,88 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu"
-import { cn } from "@/lib/utils"
-import { menuItems } from "@/data/menu"
+} from "@/components/ui/navigation-menu";
+import { menuItems } from "@/data/menu";
 
 export function Nav() {
-  const location = useLocation()
+  const location = useLocation();
 
   return (
-    <div className="flex items-center justify-center">
-      <NavigationMenu className="">
-        <NavigationMenuList>
-          {menuItems.map((item, index) => {
-            const isActive =
-              item.isUrl
-                ? location.pathname === item.url
-                : item.links?.some((link) => location.pathname === link.href)
+    <NavigationMenu>
+      <NavigationMenuList>
+        {menuItems.map((item) => {
+          const isActive = location.pathname === item.route;
 
-            if (item.links && item.links.length > 0) {
-              return (
-                <NavigationMenuItem key={index}>
-                  <NavigationMenuTrigger
-                    className={cn(isActive ? "text-primary" : "")}
-                  >
-                    {item.title}
-                  </NavigationMenuTrigger>
-                  <NavigationMenuContent className="left-0 mt-1 w-max">
-                    <ul className="grid w-[200px] gap-3 pb-2 md:w-[200px]">
-                      {item.links.map((link, linkIndex) => (
-                        <li key={linkIndex}>
-                          <NavigationMenuLink asChild>
-                            <Link
-                              to={link.href}
-                              className={cn(
-                                " select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-                                location.pathname === link.href
-                                  ? "text-primary"
-                                  : "text-muted-foreground"
-                              )}
-                            >
-                              <div className="text-sm font-medium leading-none">
-                                {link.label}
-                              </div>
-                            </Link>
-                          </NavigationMenuLink>
-                        </li>
-                      ))}
-                    </ul>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-              )
-            }
-
-            return (
-              <NavigationMenuItem key={index}>
-                <Link to={item.url || "#"}>
-                  <NavigationMenuLink
-                    // asChild
-                    className={cn(
-                      navigationMenuTriggerStyle(),
-                      location.pathname === item.url ? "text-primary" : ""
-                    )}
-                  >
-                    {item.title}
-                  </NavigationMenuLink>
+          return item.links ? (
+            // Dropdown Menu
+            <NavigationMenuItem key={item.title}>
+              <NavigationMenuTrigger
+                className={cn(
+                  isActive && "text-blue-500",
+                  "hover:text-blue-500 data-[active]:text-primary data-[state=open]:text-primary after:absolute after:bottom-2 after:left-0 after:h-0.5 after:w-0 after:bg-blue-500 after:transition-all after:duration-300 hover:after:w-full"
+                )}
+              >
+                {item.title}
+              </NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <ul className="mt-2 pb-2 bg-white md:w-[180px] lg:w-[220px] shadow-lg rounded-lg">
+                  {item.links.map((link) => {
+                    const isSubActive = location.pathname === link.route;
+                    return (
+                      <ListItem
+                        key={link.route}
+                        href={link.route}
+                        title={link.label}
+                        className={cn(isSubActive && "text-primary")}
+                      />
+                    );
+                  })}
+                </ul>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+          ) : (
+            // Single Link Item
+            <NavigationMenuItem key={item.title}>
+              <NavigationMenuLink asChild>
+                <Link
+                  to={item.route!}
+                  className={cn(
+                    navigationMenuTriggerStyle(),
+                    isActive && "text-primary",
+                    "hover:text-blue-500 data-[active]:text-primary data-[state=open]:text-primary after:absolute after:bottom-2 after:left-0 after:h-0.5 after:w-0 after:bg-blue-500 after:transition-all after:duration-300 hover:after:w-full"
+                  )}
+                >
+                  {item.title}
                 </Link>
-              </NavigationMenuItem>
-            );
-          })}
-        </NavigationMenuList>
-      </NavigationMenu>
-    </div>
-  )
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+          );
+        })}
+      </NavigationMenuList>
+    </NavigationMenu>
+  );
 }
+
+const ListItem = React.forwardRef<
+  React.ElementRef<"a">,
+  React.ComponentPropsWithoutRef<"a">
+>(({ className, title, href, ...props }, ref) => {
+  return (
+    <li className="px-6">
+      <NavigationMenuLink asChild>
+        <Link
+          ref={ref}
+          to={href ?? "/"}
+          className={cn(
+            "relative inline-flex h-10 w-max items-center justify-center rounded-none bg-transparent px-0 py-2 text-sm font-medium transition-colors hover:text-blue-500 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:text-primary data-[state=open]:text-primary after:absolute after:bottom-2 after:left-0 after:h-0.5 after:w-0 after:bg-blue-500 after:transition-all after:duration-300 hover:after:w-full",
+            className
+          )}
+          {...props}
+        >
+          {title}
+        </Link>
+      </NavigationMenuLink>
+    </li>
+  );
+});
+ListItem.displayName = "ListItem";

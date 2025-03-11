@@ -1,59 +1,50 @@
 export interface MenuLink {
-  href: string;
+  route: string;
   label: string;
 }
 
 export interface MenuItem {
   title: string;
-  isCurrent?: boolean;
-  isUrl?: boolean;
-  url: string | null;
+  route?: string;
   links?: MenuLink[];
 }
 
 export const menuItems: MenuItem[] = [
   {
     title: "Home",
-    isCurrent: true,
-    isUrl: true,
-    url: "/",
+    route: "/",
   },
   {
     title: "Listing",
-    isUrl: true,
-    url: "/sidebar-list",
+    route: "/sidebar-list",
   },
   {
     title: "Properties",
-    isUrl: true,
-    url: "/property-details",
+    route: "/property-details",
   },
   {
     title: "Pages",
-    url: null,
     links: [
-      { href: "/about-us", label: "About Us" },
-      { href: "/our-service", label: "Our Services" },
-      { href: "/pricing", label: "Pricing" },
-      { href: "/contact", label: "Contact Us" },
-      { href: "/faq", label: "FAQs" },
-      { href: "/privacy-policy", label: "Privacy Policy" },
+      { route: "/about-us", label: "About Us" },
+      { route: "/our-service", label: "Our Services" },
+      { route: "/privacy-policy", label: "Privacy Policy" },
+      { route: "/pricing", label: "Pricing" },
+      { route: "/contact", label: "Contact Us" },
+      { route: "/faq", label: "FAQs" },
     ],
   },
   {
     title: "Blog",
-    isUrl: true,
-    url: "/blog",
+    route: "/blog",
   },
   {
     title: "Dashboard",
-    url: null,
     links: [
-      { href: "/dashboard", label: "Dashboard" },
-      { href: "/my-property", label: "My Properties" },
-      { href: "/my-favorites", label: "My Favorites" },
-      { href: "/reviews", label: "Reviews" },
-      { href: "/my-profile", label: "My Profile" },
+      { route: "/dashboard", label: "Dashboard" },
+      { route: "/my-property", label: "My Properties" },
+      { route: "/my-favorites", label: "My Favorites" },
+      { route: "/reviews", label: "Reviews" },
+      { route: "/my-profile", label: "My Profile" },
     ],
   },
 ];
