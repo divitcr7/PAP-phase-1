@@ -24,6 +24,14 @@ const Header: React.FC<HeaderProps> = ({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = "hidden"; // Disable background scroll
+    } else {
+      document.body.style.overflow = ""; // Enable scrolling when menu closes
+    }
+  }, [isMobileMenuOpen]);
+
   return (
     <header
       id="header"
@@ -69,17 +77,18 @@ const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu Overlay */}
       <div
         className={`fixed inset-0 bg-black/50 z-50 lg:hidden transition-opacity duration-300 ${
           isMobileMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
-        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        onClick={() => setIsMobileMenuOpen(false)}
       >
+        {/* Scrollable Mobile Menu */}
         <div
           className={`bg-white h-full w-72 p-6 transition-transform duration-300 ${
             isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
+          } overflow-y-auto max-h-screen`} // Enables scrolling
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex justify-between items-center mb-6">
@@ -94,15 +103,12 @@ const Header: React.FC<HeaderProps> = ({
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              onClick={() => setIsMobileMenuOpen(false)}
             >
               ✕
             </Button>
           </div>
           <MobileNav />
-          <Button variant="outline" size="sm" className="w-full">
-            Login
-          </Button>
         </div>
       </div>
     </header>

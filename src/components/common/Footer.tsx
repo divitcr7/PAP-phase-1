@@ -80,10 +80,10 @@ export default function Footer() {
             <div className="w-lg mr-10">
               <p className="text-gray-400 mb-6">
                 Specializes in providing high-class pads (Rental Properties) for
-                those in need.
+                those in need.<br />
                 <Link
                   to="/contact"
-                  className="text-blue-500 hover:underline ml-1"
+                  className="text-blue-500 hover:underline"
                 >
                   Contact Us
                 </Link>
