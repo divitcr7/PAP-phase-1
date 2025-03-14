@@ -41,7 +41,7 @@ export function Nav() {
                         key={link.route}
                         href={link.route}
                         title={link.label}
-                        className={cn(isSubActive && "text-primary")}
+                        className={cn(isSubActive && "text-blue-500")}
                       />
                     );
                   })}
@@ -56,7 +56,7 @@ export function Nav() {
                   to={item.route!}
                   className={cn(
                     navigationMenuTriggerStyle(),
-                    isActive && "text-primary",
+                    isActive && "text-blue-500 w-full",
                     "hover:text-blue-500 data-[active]:text-primary data-[state=open]:text-primary after:absolute after:bottom-2 after:left-0 after:h-0.5 after:w-0 after:bg-blue-500 after:transition-all after:duration-300 hover:after:w-full"
                   )}
                 >

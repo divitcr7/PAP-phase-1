@@ -1,17 +1,15 @@
 import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router";
 import LoadingScreen from "./components/common/LoadingScreen";
-// import { useContext } from "react";
-// import { AuthContext } from "./context/authContext";
 import Header from "./components/common/Header/Header";
 import Footer from "./components/common/Footer";
 
-// Lazy-load components
 const Home = lazy(() => import("./pages/Home"));
 const Subscribe = lazy(() => import("./pages/Subscribe"));
+const PropertyDetailsPage = lazy(() => import("./pages/Property"));
+const PropertyList = lazy(() => import("./pages/PropertiesList"));
 
 function App() {
-  // const { isNewUser } = useContext(AuthContext);
   const isNewUser = false;
 
   if (isNewUser) {
@@ -19,19 +17,40 @@ function App() {
       <Suspense fallback={<LoadingScreen />}>
         <Subscribe />
       </Suspense>
-    ); // If new user, show WelcomePage only
+    );
   }
 
   return (
     <>
       <Header />
-      <Suspense fallback={<LoadingScreen />}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="about" element={<>about</>} />
-          <Route path="contact" element={<>contact</>} />
-        </Routes>
-      </Suspense>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Suspense fallback={<LoadingScreen />}>
+              <Home />
+            </Suspense>
+          }
+        />
+        <Route path="about" element={<>about</>} />
+        <Route path="contact" element={<>contact</>} />
+        <Route
+          path="property/:title"
+          element={
+            <Suspense fallback={<LoadingScreen />}>
+              <PropertyDetailsPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="properties" 
+          element={
+            <Suspense fallback={<LoadingScreen />}>
+              <PropertyList />
+            </Suspense>
+          }
+        />
+      </Routes>
       <Footer />
     </>
   );
