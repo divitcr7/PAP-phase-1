@@ -1,6 +1,6 @@
 import { CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Bed, Bath, Ruler } from "lucide-react";
+import { Bed, Bath, Ruler, Video, ArrowRight } from "lucide-react";
 import { Button } from "../ui/button";
 
 type PropertyDetailsProps = {
@@ -23,7 +23,25 @@ export default function DetailsTitle({
       <CardContent>
         <div className="flex justify-between">
           <h2 className="text-3xl font-bold text-gray-800">{title}</h2>
-          <Button className="bg-blue-500 rounded-full px-10 py-6">Apply</Button>
+          <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              className="hidden md:flex items-center gap-1.5 border px-10 py-5 border-blue-500 rounded-full"
+            >
+              <Video className="h-4 w-4" />
+              Virtual Tour
+            </Button>
+            <Button
+              variant="outline"
+              className="hidden md:flex items-center gap-1.5 borer px-10 py-5 border-blue-500 rounded-full"
+            >
+              <ArrowRight className="h-4 w-4" />
+              Next Property
+            </Button>
+            <Button className="">
+              Apply
+            </Button>
+          </div>
         </div>
         <Separator className="my-4" />
         <div className="flex justify-between">

@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import Description from "./property-details/Description";
 import Overview from "./property-details/Overview";
 import Video from "./property-details/Video";
@@ -8,10 +9,44 @@ import Attachments from "./property-details/Attachments";
 import Explore from "./property-details/Explore";
 import Nearby from "./property-details/Nearby";
 import { Separator } from "@/components/ui/separator";
+import FloatingActionButton from "./property-details/FloatingActionButton";
+import BottomActionBar from "./property-details/ActionButton";
 
 export default function PropertyDetails() {
+  const [isBottomBarVisible, setIsBottomBarVisible] = useState(false);
+  const [isScrolledDown, setIsScrolledDown] = useState(false);
+  const bottomActionBarRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsBottomBarVisible(entry.isIntersecting);
+      },
+      {root: null,
+        threshold: 0.1,
+      }
+    );
+
+    const handleScroll = () => {
+      setIsScrolledDown(window.scrollY > 80);
+    };
+
+    if (bottomActionBarRef.current) {
+      observer.observe(bottomActionBarRef.current);
+    }
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      if (bottomActionBarRef.current) {
+        observer.unobserve(bottomActionBarRef.current);
+      }
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
-    <section className="py-10">
+    <section className="pt-10">
       <div className="container mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
           <Description city="Texas" />
@@ -40,25 +75,12 @@ export default function PropertyDetails() {
           <Explore />
           <Separator className="my-4" />
           <Nearby />
-          {/* 
-          <Card className="p-4">
-            <GuestReview />
-          </Card>
+          <Separator className="my-4" />
         </div>
-        <div className="space-y-6">
-          <Card className="p-4">
-            <ContactSeller />
-          </Card>
-          <Card className="p-4">
-            <WidgetBox />
-          </Card>
-          <Card className="p-4">
-            <WhyChoose />
-          </Card>
-          <Card className="p-4">
-            <LatestProperties />
-          </Card> */}
-        </div>
+      </div>
+      {isScrolledDown && !isBottomBarVisible && <FloatingActionButton />}
+      <div ref={bottomActionBarRef}>
+        <BottomActionBar />
       </div>
     </section>
   );

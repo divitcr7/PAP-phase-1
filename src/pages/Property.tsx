@@ -6,7 +6,7 @@ import { allProperties } from "@/data/properties";
 import MetaComponent from "../components/seo/MetaComponent";
 import PropertyDetails from "../components/property/PropertyDetails";
 import slugify from "slugify";
-import LoadingComponent from "../components/common/LoadingComponent"; // Import loading component
+import LoadingComponent from "../components/common/LoadingComponent";
 
 // Define the type for a property
 interface Property {
@@ -50,7 +50,6 @@ const PropertyDetailsPage: FC = () => {
     <>
       <MetaComponent meta={metadata} />
       <div className="container mx-auto px-4 py-6">
-        {/* Title Component (loads first) */}
         {titleLoaded ? (
           propertyItem ? (
             <DetailsTitle

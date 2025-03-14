@@ -62,49 +62,49 @@ const propertyImages = [
 
 const thumbnails = [
   {
-    src: "/public/images/banner/thumb-sw1.jpg",
+    src: "/images/banner/thumb-sw1.jpg",
     alt: "Thumbnail 1",
     width: 148,
     height: 111,
   },
   {
-    src: "/public/images/banner/thumb-sw2.jpg",
+    src: "/images/banner/thumb-sw2.jpg",
     alt: "Thumbnail 2",
     width: 149,
     height: 111,
   },
   {
-    src: "/public/images/banner/thumb-sw3.jpg",
+    src: "/images/banner/thumb-sw3.jpg",
     alt: "Thumbnail 3",
     width: 149,
     height: 111,
   },
   {
-    src: "/public/images/banner/thumb-sw4.jpg",
+    src: "/images/banner/thumb-sw4.jpg",
     alt: "Thumbnail 4",
     width: 149,
     height: 111,
   },
   {
-    src: "/public/images/banner/thumb-sw5.jpg",
+    src: "/images/banner/thumb-sw5.jpg",
     alt: "Thumbnail 5",
     width: 149,
     height: 111,
   },
   {
-    src: "/public/images/banner/thumb-sw6.jpg",
+    src: "/images/banner/thumb-sw6.jpg",
     alt: "Thumbnail 6",
     width: 149,
     height: 111,
   },
   {
-    src: "/public/images/banner/thumb-sw7.jpg",
+    src: "/images/banner/thumb-sw7.jpg",
     alt: "Thumbnail 7",
     width: 149,
     height: 111,
   },
   {
-    src: "/public/images/banner/thumb-sw8.jpg",
+    src: "/images/banner/thumb-sw8.jpg",
     alt: "Thumbnail 8",
     width: 148,
     height: 111,
