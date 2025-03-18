@@ -2,6 +2,7 @@ import { CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Bed, Bath, Ruler, Video, ArrowRight } from "lucide-react";
 import { Button } from "../ui/button";
+import RentalApplicationForm from "../modals/RentalApplyForm/RentalApplicationForm";
 
 type PropertyDetailsProps = {
   title: string;
@@ -38,9 +39,7 @@ export default function DetailsTitle({
               <ArrowRight className="h-4 w-4" />
               Next Property
             </Button>
-            <Button className="">
-              Apply
-            </Button>
+            <RentalApplicationForm />
           </div>
         </div>
         <Separator className="my-4" />

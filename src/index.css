@@ -122,3 +122,29 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Works on Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 6px;  /* Thin width */
+  height: 6px; /* For horizontal scrollbars */
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Light gray background */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #a8a8a8; /* Gray scrollbar */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #888; /* Darker on hover */
+}
+
+/* Works on Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #a8a8a8 #f1f1f1; /* thumb color, track color */
+}
