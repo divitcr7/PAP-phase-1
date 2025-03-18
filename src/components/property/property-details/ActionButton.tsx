@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { ArrowRight, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import RentalApplicationForm from "@/components/modals/RentalApplyForm/RentalApplicationForm";
 
 export default function BottomActionBar() {
   const [scrollY, setScrollY] = useState(0);
@@ -42,7 +43,7 @@ export default function BottomActionBar() {
             </Button>
           )}
         </div>
-        <Button className="bg-blue-500 hover:bg-blue-600">Apply Now</Button>
+        <RentalApplicationForm />
       </div>
     </div>
   );

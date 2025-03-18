@@ -12,7 +12,8 @@ import {
 } from "@/components/ui/form";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
-import { signupSchema, SignupFormValues, SignupFormProps } from "@/types/auth";
+import { SignupFormProps } from "@/types/auth";
+import { SignupFormValues, signupSchema } from "@/schemas/Auth";
 
 const SignupForm = ({ onSubmit }: SignupFormProps) => {
   const [showPassword, setShowPassword] = useState(false);

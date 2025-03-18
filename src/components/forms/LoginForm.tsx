@@ -12,7 +12,8 @@ import {
 } from "@/components/ui/form";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
-import { LoginFormProps, LoginFormValues, loginSchema } from "@/types/auth";
+import { LoginFormProps } from "@/types/auth";
+import { LoginFormValues, loginSchema } from "@/schemas/Auth";
 
 const LoginForm = ({ onSubmit }: LoginFormProps) => {
   const [showPassword, setShowPassword] = useState(false);

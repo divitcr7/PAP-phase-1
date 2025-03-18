@@ -4,11 +4,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { X } from "lucide-react";
 import LoginForm from "../forms/LoginForm";
 import SignupForm from "../forms/SignupForm";
-import {
-  LoginModalProps,
-  LoginFormValues,
-  SignupFormValues,
-} from "@/types/auth";
+import { LoginModalProps } from "@/types/auth";
+import { LoginFormValues, SignupFormValues } from "@/schemas/Auth";
 
 const AuthModal = ({
   isOpen,

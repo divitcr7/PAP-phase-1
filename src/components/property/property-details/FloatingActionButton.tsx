@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { ArrowRight, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import RentalApplicationForm from "@/components/modals/RentalApplyForm/RentalApplicationForm";
 
 const FloatingActionButton: React.FC = () => {
   const [isBottom, setIsBottom] = useState<boolean>(false);
@@ -45,9 +46,7 @@ const FloatingActionButton: React.FC = () => {
             <span className="sr-only">Next Property</span>
           </Button>
         )}
-        <Button className="bg-blue-500 hover:bg-blue-600 py-6">
-          Apply Now
-        </Button>
+        <RentalApplicationForm />
       </div>
     </div>
   );
