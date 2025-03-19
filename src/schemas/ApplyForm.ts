@@ -80,6 +80,9 @@ export const applyFormSchema = z.object({
 
   // Where You Live
   currentAddress: z.string().min(5, "Current address is required"),
+  currentCity: z.string().optional(),
+  currentState: z.string().optional(),
+  currentZip: z.string().optional(),
   residenceType: z.enum(["rent", "own"]).optional(),
   residencyStartDate: z
     .string()

@@ -25,11 +25,15 @@ export default function RentalApplicationForm() {
   const form = useForm<ApplyFormValues>({
     defaultValues: {
       gender: "male",
-      birthdate: new Date(Date.now() - 18 * 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      birthdate: new Date(Date.now() - 18 * 365 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0],
       isMarried: false,
       isUSCitizen: true,
       isSmoker: false,
       hasCoApplicant: false,
+      residenceType: "rent",
+
       // ... other fields can use schema defaults
     },
     resolver: zodResolver(applyFormSchema),

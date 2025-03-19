@@ -19,14 +19,20 @@ import {
 } from "@/components/ui/accordion";
 import { formatPhoneNumber } from "@/lib/utils";
 
-const maxDate = new Date(Date.now() - 18 * 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+const maxDate = new Date(Date.now() - 18 * 365 * 24 * 60 * 60 * 1000)
+  .toISOString()
+  .split("T")[0];
 
-export default function StepOne({ form, }: { form: UseFormReturn<ApplyFormValues>; }) {
-
+export default function StepOne({
+  form,
+}: {
+  form: UseFormReturn<ApplyFormValues>;
+}) {
   const residencyStartDate = form.watch("residencyStartDate");
-    const fiveYearsAgo = new Date();
-    fiveYearsAgo.setFullYear(fiveYearsAgo.getFullYear() - 5);
-    const requirePreviousAddress = residencyStartDate && new Date(residencyStartDate) > fiveYearsAgo;
+  const fiveYearsAgo = new Date();
+  fiveYearsAgo.setFullYear(fiveYearsAgo.getFullYear() - 5);
+  const requirePreviousAddress =
+    residencyStartDate && new Date(residencyStartDate) > fiveYearsAgo;
 
   return (
     <div className="space-y-6">
@@ -41,7 +47,9 @@ export default function StepOne({ form, }: { form: UseFormReturn<ApplyFormValues
             render={({ field }) => (
               <FormItem className="col-span-6">
                 <div className="flex items-center gap-2">
-                  <FormLabel className="min-w-fit">Full Name<span className="text-red-500 -ml-2">*</span></FormLabel>
+                  <FormLabel className="min-w-fit">
+                    Full Name<span className="text-red-500 -ml-2">*</span>
+                  </FormLabel>
                   <FormControl>
                     <Input {...field} placeholder="John Doe" />
                   </FormControl>
@@ -58,7 +66,9 @@ export default function StepOne({ form, }: { form: UseFormReturn<ApplyFormValues
             render={({ field }) => (
               <FormItem className="col-span-3">
                 <div className="flex items-center gap-2 h-9">
-                  <FormLabel className="min-w-fit">Gender:<span className="text-red-500">*</span></FormLabel>
+                  <FormLabel className="min-w-fit">
+                    Gender:<span className="text-red-500">*</span>
+                  </FormLabel>
                   <FormControl>
                     <div className="flex gap-4">
                       <label className="flex items-center space-x-2">
@@ -94,9 +104,11 @@ export default function StepOne({ form, }: { form: UseFormReturn<ApplyFormValues
             render={({ field }) => (
               <FormItem className="col-span-3">
                 <div className="flex items-center gap-2 max-w-fit">
-                  <FormLabel className="min-w-fit">Birthdate<span className="text-red-500">*</span></FormLabel>
+                  <FormLabel className="min-w-fit">
+                    Birthdate<span className="text-red-500">*</span>
+                  </FormLabel>
                   <FormControl>
-                    <Input {...field}  type="date" max={maxDate} />
+                    <Input {...field} type="date" max={maxDate} />
                   </FormControl>
                 </div>
                 <FormMessage />
@@ -117,11 +129,17 @@ export default function StepOne({ form, }: { form: UseFormReturn<ApplyFormValues
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center gap-2">
-                  <FormLabel className="min-w-fit">Former Full Name</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="John Smith" className="max-w-[600px]" />
-                  </FormControl>
-                </div>
+                      <FormLabel className="min-w-fit">
+                        Former Full Name
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder="John Smith"
+                          className="max-w-[600px]"
+                        />
+                      </FormControl>
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -141,7 +159,11 @@ export default function StepOne({ form, }: { form: UseFormReturn<ApplyFormValues
                     Social Security No.
                   </FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="123-45-6789" type="password" />
+                    <Input
+                      {...field}
+                      placeholder="123-45-6789"
+                      type="password"
+                    />
                   </FormControl>
                 </div>
                 <FormMessage />
@@ -173,7 +195,15 @@ export default function StepOne({ form, }: { form: UseFormReturn<ApplyFormValues
                     State (Driver License)
                   </FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="TX" />
+                    <Input
+                      {...field}
+                      placeholder="TX"
+                      maxLength={2}
+                      onChange={(e) => {
+                        const value = e.target.value.toUpperCase();
+                        field.onChange(value);
+                      }}
+                    />
                   </FormControl>
                 </div>
                 <FormMessage />
@@ -191,7 +221,11 @@ export default function StepOne({ form, }: { form: UseFormReturn<ApplyFormValues
                 <div className="flex items-center gap-2">
                   <FormLabel className="min-w-fit">Government ID</FormLabel>
                   <FormControl className="w-full">
-                    <Input className="w-full" {...field} placeholder="TX12345678" />
+                    <Input
+                      className="w-full"
+                      {...field}
+                      placeholder="TX12345678"
+                    />
                   </FormControl>
                 </div>
                 <FormMessage />
@@ -208,7 +242,16 @@ export default function StepOne({ form, }: { form: UseFormReturn<ApplyFormValues
                     State (Government ID State)
                   </FormLabel>
                   <FormControl className="w-full">
-                    <Input className="w-full" {...field} placeholder="TX" />
+                    <Input
+                      className="w-full"
+                      {...field}
+                      placeholder="TX"
+                      maxLength={2}
+                      onChange={(e) => {
+                        const value = e.target.value.toUpperCase();
+                        field.onChange(value);
+                      }}
+                    />
                   </FormControl>
                 </div>
                 <FormMessage />
@@ -227,10 +270,16 @@ export default function StepOne({ form, }: { form: UseFormReturn<ApplyFormValues
                 <div className="flex items-center gap-2">
                   <FormLabel className="min-w-fit">Home Phone</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="(281) 555-0123" type="tel" maxLength={14} onChange={(e) => {
-                      const formatted = formatPhoneNumber(e.target.value);
-                      field.onChange(formatted);
-                    }} />
+                    <Input
+                      {...field}
+                      placeholder="(281) 555-0123"
+                      type="tel"
+                      maxLength={14}
+                      onChange={(e) => {
+                        const formatted = formatPhoneNumber(e.target.value);
+                        field.onChange(formatted);
+                      }}
+                    />
                   </FormControl>
                 </div>
                 <FormMessage />
@@ -245,10 +294,16 @@ export default function StepOne({ form, }: { form: UseFormReturn<ApplyFormValues
                 <div className="flex items-center gap-2">
                   <FormLabel className="min-w-fit">Cell Phone</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="(281) 555-0123" type="tel" maxLength={14} onChange={(e) => {
-                      const formatted = formatPhoneNumber(e.target.value);
-                      field.onChange(formatted);
-                    }} />
+                    <Input
+                      {...field}
+                      placeholder="(281) 555-0123"
+                      type="tel"
+                      maxLength={14}
+                      onChange={(e) => {
+                        const formatted = formatPhoneNumber(e.target.value);
+                        field.onChange(formatted);
+                      }}
+                    />
                   </FormControl>
                 </div>
                 <FormMessage />
@@ -263,10 +318,16 @@ export default function StepOne({ form, }: { form: UseFormReturn<ApplyFormValues
                 <div className="flex items-center gap-2">
                   <FormLabel className="min-w-fit">Work Phone</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="(281) 555-0123" type="tel" maxLength={14} onChange={(e) => {
-                      const formatted = formatPhoneNumber(e.target.value);
-                      field.onChange(formatted);
-                    }} />
+                    <Input
+                      {...field}
+                      placeholder="(281) 555-0123"
+                      type="tel"
+                      maxLength={14}
+                      onChange={(e) => {
+                        const formatted = formatPhoneNumber(e.target.value);
+                        field.onChange(formatted);
+                      }}
+                    />
                   </FormControl>
                 </div>
                 <FormMessage />
@@ -281,7 +342,11 @@ export default function StepOne({ form, }: { form: UseFormReturn<ApplyFormValues
                 <div className="flex items-center gap-2">
                   <FormLabel className="min-w-fit">Email</FormLabel>
                   <FormControl>
-                    <Input {...field} type="email" placeholder="work@company.com" />
+                    <Input
+                      {...field}
+                      type="email"
+                      placeholder="work@company.com"
+                    />
                   </FormControl>
                 </div>
                 <FormMessage />
@@ -291,7 +356,7 @@ export default function StepOne({ form, }: { form: UseFormReturn<ApplyFormValues
         </div>
 
         {/* Additional Information */}
-        <div className="flex gap-4 justify-between"> 
+        <div className="flex gap-4 justify-between">
           <FormField
             control={form.control}
             name="isMarried"
@@ -306,7 +371,7 @@ export default function StepOne({ form, }: { form: UseFormReturn<ApplyFormValues
                           checked={field.value === true}
                           onCheckedChange={() =>
                             form.setValue("isMarried", true)
-                          } 
+                          }
                         />
                         <span>Yes</span>
                       </label>
@@ -321,7 +386,7 @@ export default function StepOne({ form, }: { form: UseFormReturn<ApplyFormValues
                       </label>
                     </div>
                   </FormControl>
-                </div> 
+                </div>
                 <FormMessage />
               </FormItem>
             )}
@@ -406,7 +471,10 @@ export default function StepOne({ form, }: { form: UseFormReturn<ApplyFormValues
                   I am applying for the apartment located at
                 </FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="905 Park Pl Blvd, Rosenberg, TX 77469" />
+                  <Input
+                    {...field}
+                    placeholder="905 Park Pl Blvd, Rosenberg, TX 77469"
+                  />
                 </FormControl>
               </div>
               <FormMessage />
@@ -588,7 +656,12 @@ export default function StepOne({ form, }: { form: UseFormReturn<ApplyFormValues
                     <div className="flex items-center gap-2">
                       <FormLabel className="min-w-fit">Birthdate</FormLabel>
                       <FormControl>
-                        <Input {...field} type="date" max={maxDate} className="w-[150px]" />
+                        <Input
+                          {...field}
+                          type="date"
+                          max={maxDate}
+                          className="w-[150px]"
+                        />
                       </FormControl>
                     </div>
                     <FormMessage />
@@ -608,7 +681,11 @@ export default function StepOne({ form, }: { form: UseFormReturn<ApplyFormValues
                         Social Security No.
                       </FormLabel>
                       <FormControl>
-                        <Input {...field}  placeholder="123-45-6789" type="password" />
+                        <Input
+                          {...field}
+                          placeholder="123-45-6789"
+                          type="password"
+                        />
                       </FormControl>
                     </div>
                     <FormMessage />
@@ -640,11 +717,15 @@ export default function StepOne({ form, }: { form: UseFormReturn<ApplyFormValues
                     <div className="flex items-center gap-2">
                       <FormLabel className="min-w-fit">State (DL)</FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder="TX" maxLength={2} 
+                        <Input
+                          {...field}
+                          placeholder="TX"
+                          maxLength={2}
                           onChange={(e) => {
                             const value = e.target.value.toUpperCase();
                             field.onChange(value);
-                          }}/>
+                          }}
+                        />
                       </FormControl>
                     </div>
                     <FormMessage />
@@ -679,7 +760,15 @@ export default function StepOne({ form, }: { form: UseFormReturn<ApplyFormValues
                         State (Gov ID)
                       </FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder="TX" />
+                        <Input
+                          {...field}
+                          placeholder="TX"
+                          maxLength={2}
+                          onChange={(e) => {
+                            const value = e.target.value.toUpperCase();
+                            field.onChange(value);
+                          }}
+                        />
                       </FormControl>
                     </div>
                     <FormMessage />
@@ -738,10 +827,63 @@ export default function StepOne({ form, }: { form: UseFormReturn<ApplyFormValues
                       </div>
                     </FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        {...field}
+                        placeholder="5678 Oak Drive, Austin, TX 78701"
+                      />
                     </FormControl>
                   </div>
                   <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="flex gap-4">
+            <FormField
+              control={form.control}
+              name="currentCity"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <FormLabel>City</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="Austin" />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="currentState"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <FormLabel>State</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="TX" />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="currentZip"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <FormLabel>ZIP</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        className="w-[140px]"
+                        placeholder="78701"
+                        maxLength={10}
+                        minLength={5}
+                      />
+                    </FormControl>
+                  </div>
                 </FormItem>
               )}
             />
@@ -753,10 +895,16 @@ export default function StepOne({ form, }: { form: UseFormReturn<ApplyFormValues
                   <div className="flex items-center gap-2">
                     <FormLabel>Phone</FormLabel>
                     <FormControl>
-                      <Input {...field} type="tel" maxLength={14} onChange={(e) => {
-              const formatted = formatPhoneNumber(e.target.value);
-              field.onChange(formatted);
-            }} />
+                      <Input
+                        {...field}
+                        placeholder="(281) 555-0123"
+                        type="tel"
+                        maxLength={14}
+                        onChange={(e) => {
+                          const formatted = formatPhoneNumber(e.target.value);
+                          field.onChange(formatted);
+                        }}
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -804,7 +952,12 @@ export default function StepOne({ form, }: { form: UseFormReturn<ApplyFormValues
                   <div className="flex items-center gap-2">
                     <FormLabel>Beginning date of residency</FormLabel>
                     <FormControl>
-                      <Input {...field} type="date" className="w-fit" />
+                      <Input
+                        {...field}
+                        type="date"
+                        className="w-fit"
+                        max={new Date().toISOString().split("T")[0]}
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -823,6 +976,10 @@ export default function StepOne({ form, }: { form: UseFormReturn<ApplyFormValues
                       <Input
                         {...field}
                         type="number"
+                        placeholder="1500"
+                        min={500}
+                        max={25000}
+                        step="0.01"
                       />
                     </FormControl>
                   </div>
@@ -837,7 +994,7 @@ export default function StepOne({ form, }: { form: UseFormReturn<ApplyFormValues
                   <div className="flex items-center gap-2">
                     <FormLabel className="min-w-fit">Apartment name</FormLabel>
                     <FormControl>
-                      <Input {...field} className="" />
+                      <Input {...field} placeholder="Conroe Grand Apartments" />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -854,7 +1011,10 @@ export default function StepOne({ form, }: { form: UseFormReturn<ApplyFormValues
                   <div className="flex items-center gap-2">
                     <FormLabel>Name of owner or manager</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        {...field}
+                        placeholder="Texas Property Management LLC"
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -868,7 +1028,7 @@ export default function StepOne({ form, }: { form: UseFormReturn<ApplyFormValues
                   <div className="flex items-center gap-2">
                     <FormLabel>Reason for leaving</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} placeholder="Limit 250 Characters" />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -878,7 +1038,12 @@ export default function StepOne({ form, }: { form: UseFormReturn<ApplyFormValues
 
           {/* Previous address */}
           <Accordion type="single" collapsible>
-            <AccordionItem value="previous-address" className={!requirePreviousAddress ? "opacity-50 pointer-events-none" : ""}>
+            <AccordionItem
+              value="previous-address"
+              className={
+                !requirePreviousAddress ? "opacity-50 pointer-events-none" : ""
+              }
+            >
               <AccordionTrigger className="font-medium italic underline">
                 Fill out if you have been at your current address for less than
                 five years
@@ -917,7 +1082,7 @@ export default function StepOne({ form, }: { form: UseFormReturn<ApplyFormValues
                         <div className="flex items-center gap-2">
                           <FormLabel>City</FormLabel>
                           <FormControl>
-                            <Input {...field} /> 
+                            <Input {...field} />
                           </FormControl>
                         </div>
                       </FormItem>
@@ -959,10 +1124,17 @@ export default function StepOne({ form, }: { form: UseFormReturn<ApplyFormValues
                         <div className="flex items-center gap-2">
                           <FormLabel className="min-w-fit">Phone</FormLabel>
                           <FormControl>
-                            <Input {...field} type="tel" maxLength={14} onChange={(e) => {
-                              const formatted = formatPhoneNumber(e.target.value);
-                              field.onChange(formatted);
-                            }} />
+                            <Input
+                              {...field}
+                              type="tel"
+                              maxLength={14}
+                              onChange={(e) => {
+                                const formatted = formatPhoneNumber(
+                                  e.target.value
+                                );
+                                field.onChange(formatted);
+                              }}
+                            />
                           </FormControl>
                         </div>
                       </FormItem>
@@ -1017,7 +1189,7 @@ export default function StepOne({ form, }: { form: UseFormReturn<ApplyFormValues
                     )}
                   />
                   <FormField
-                    control={form.control} 
+                    control={form.control}
                     name="previousDateTo"
                     render={({ field }) => (
                       <FormItem className="w-fit">
