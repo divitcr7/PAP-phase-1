@@ -23,12 +23,17 @@ export default function RentalApplicationForm() {
   const [open, setOpen] = useState(false);
 
   const form = useForm<ApplyFormValues>({
-    resolver: zodResolver(applyFormSchema),
     defaultValues: {
-      occupants: [],
-      vehicles: [],
-      pets: [],
+      gender: "male",
+      birthdate: new Date(Date.now() - 18 * 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      isMarried: false,
+      isUSCitizen: true,
+      isSmoker: false,
+      hasCoApplicant: false,
+      // ... other fields can use schema defaults
     },
+    resolver: zodResolver(applyFormSchema),
+    // mode: "onChange",
   });
 
   const totalSteps = 6;
@@ -39,8 +44,11 @@ export default function RentalApplicationForm() {
     setOpen(false);
   };
 
-  const nextStep = () => {
-    setStep((prev) => Math.min(prev + 1, totalSteps));
+  const nextStep = async () => {
+    const isValid = await form.trigger();
+    if (isValid) {
+      setStep((prev) => Math.min(prev + 1, totalSteps));
+    }
   };
 
   const prevStep = () => {

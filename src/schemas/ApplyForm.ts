@@ -6,20 +6,51 @@ export const applyFormSchema = z.object({
   gender: z.string(),
   birthdate: z.string().min(1, "Birthdate is required"),
   formerName: z.string().optional(),
-  socialSecurity: z.string().min(9, "Valid Social Security number is required"),
-  driverLicense: z.string().min(1, "Driver License is required"),
-  driverLicenseState: z.string().min(1, "State is required"),
-  governmentID: z.string().optional(),
-  governmentIDState: z.string().optional(),
-  homePhone: z.string().optional(),
-  cellPhone: z.string().min(10, "Cell phone number is required"),
-  workPhonePersonal: z.string().optional(),
+  socialSecurity: z
+    .string()
+    .min(9, "Valid Social Security number is required")
+    .max(11, "Invalid Social Security number")
+    .regex(/^\d{3}-?\d{2}-?\d{4}$/, "Invalid Social Security number format"),
+  driverLicense: z
+    .string()
+    .min(8, "Driver License is required")
+    .max(8, "Driver License must be 8 characters")
+    .regex(/^\d{8}$/, "Driver License must be 8 digits"),
+  driverLicenseState: z
+    .string()
+    .min(2, "State is required")
+    .max(2, "State must be 2 characters")
+    .regex(/^[A-Z]{2}$/, "State must be 2 capital letters"),
+  governmentID: z
+    .string()
+    .regex(
+      /^[A-Z]{2}\d{8}$/,
+      "Government ID must be 2 capital letters followed by 8 digits"
+    )
+    .optional(),
+  governmentIDState: z
+    .string()
+    .min(2, "State must be 2 characters")
+    .max(2, "State must be 2 characters")
+    .regex(/^[A-Z]{2}$/, "State must be 2 capital letters")
+    .optional(),
+  homePhone: z
+    .string()
+    .regex(/^\(\d{3}\) \d{3}-\d{4}$/, "Please enter a valid phone number")
+    .optional(),
+  cellPhone: z
+    .string()
+    .regex(/^\(\d{3}\) \d{3}-\d{4}$/, "Please enter a valid phone number"),
+  workPhonePersonal: z
+    .string()
+    .regex(/^\(\d{3}\) \d{3}-\d{4}$/, "Please enter a valid phone number")
+    .optional(),
   email: z.string().email("Invalid email address"),
   isMarried: z.boolean(),
   isUSCitizen: z.boolean(),
   isSmoker: z.boolean(),
   apartmentAddress: z.string().min(1, "Apartment address is required"),
-  hasCoApplicant: z.boolean().default(false),
+  hasCoApplicant: z.boolean(),
   coApplicants: z
     .array(
       z.object({
@@ -121,11 +152,11 @@ export const applyFormSchema = z.object({
   creditProblems: z.string().optional(),
 
   // Rental and Criminal History
-  bankruptcy: z.boolean().default(false),
-  eviction: z.boolean().default(false),
-  refusedToPayRent: z.boolean().default(false),
-  felonyConviction: z.boolean().default(false),
-  criminalHistory: z.boolean().default(false),
+  bankruptcy: z.boolean(),
+  eviction: z.boolean(),
+  refusedToPayRent: z.boolean(),
+  felonyConviction: z.boolean(),
+  criminalHistory: z.boolean(),
   explanation: z.string().optional(),
 
   // Additional Income
@@ -150,9 +181,9 @@ export const applyFormSchema = z.object({
     workPhone: z.string().optional(),
     email: z.string().email("Invalid email address").optional(),
     authorizedPersons: z.object({
-      abovePerson: z.boolean().default(false),
-      spouse: z.boolean().default(false),
-      parentChild: z.boolean().default(false),
+      abovePerson: z.boolean(),
+      spouse: z.boolean(),
+      parentChild: z.boolean(),
     }),
   }),
 
