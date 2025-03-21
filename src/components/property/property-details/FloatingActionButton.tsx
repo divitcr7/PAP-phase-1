@@ -31,7 +31,7 @@ const FloatingActionButton: React.FC = () => {
         isBottom ? "hidden" : ""
       )}
     >
-      <Button variant="outline" className="gap-2 py-6">
+      <Button variant="outline" className="gap-2">
         <Video className="w-4 h-4" />
         <span className="hidden sm:inline">Virtual Tour</span>
       </Button>

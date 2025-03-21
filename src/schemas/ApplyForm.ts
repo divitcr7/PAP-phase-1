@@ -21,6 +21,7 @@ export const applyFormSchema = z.object({
     .min(2, "State is required")
     .max(2, "State must be 2 characters")
     .regex(/^[A-Z]{2}$/, "State must be 2 capital letters"),
+  governmentIDType: z.string().optional(),
   governmentID: z
     .string()
     .regex(
@@ -50,15 +51,67 @@ export const applyFormSchema = z.object({
   isUSCitizen: z.boolean(),
   isSmoker: z.boolean(),
   apartmentAddress: z.string().min(1, "Apartment address is required"),
+  // ... existing code ...
   hasCoApplicant: z.boolean(),
   coApplicants: z
     .array(
       z.object({
-        name: z.string().min(2, "Co-applicant name is required"),
+        fullName: z.string().min(2, "Full name is required"),
+        gender: z.string(),
+        birthdate: z.string().min(1, "Birthdate is required"),
+        formerName: z.string().optional(),
+        socialSecurity: z
+          .string()
+          .min(9, "Valid Social Security number is required")
+          .max(11, "Invalid Social Security number")
+          .regex(
+            /^\d{3}-?\d{2}-?\d{4}$/,
+            "Invalid Social Security number format"
+          ),
+        driverLicense: z
+          .string()
+          .min(8, "Driver License is required")
+          .max(8, "Driver License must be 8 characters")
+          .regex(/^\d{8}$/, "Driver License must be 8 digits"),
+        driverLicenseState: z
+          .string()
+          .min(2, "State is required")
+          .max(2, "State must be 2 characters")
+          .regex(/^[A-Z]{2}$/, "State must be 2 capital letters"),
+        governmentID: z
+          .string()
+          .regex(
+            /^[A-Z]{2}\d{8}$/,
+            "Government ID must be 2 capital letters followed by 8 digits"
+          )
+          .optional(),
+        governmentIDState: z
+          .string()
+          .min(2, "State must be 2 characters")
+          .max(2, "State must be 2 characters")
+          .regex(/^[A-Z]{2}$/, "State must be 2 capital letters")
+          .optional(),
+        homePhone: z
+          .string()
+          .regex(/^\(\d{3}\) \d{3}-\d{4}$/, "Please enter a valid phone number")
+          .optional(),
+        cellPhone: z
+          .string()
+          .regex(
+            /^\(\d{3}\) \d{3}-\d{4}$/,
+            "Please enter a valid phone number"
+          ),
+        workPhone: z
+          .string()
+          .regex(/^\(\d{3}\) \d{3}-\d{4}$/, "Please enter a valid phone number")
+          .optional(),
         email: z.string().email("Invalid email address"),
+        isMarried: z.boolean(),
+        isUSCitizen: z.boolean(),
       })
     )
     .optional(),
+  // ... existing code ...
 
   // Other Occupants
   occupants: z
@@ -72,36 +125,73 @@ export const applyFormSchema = z.object({
           .min(9, "Valid Social Security number is required"),
         driverLicense: z.string().optional(),
         driverLicenseState: z.string().optional(),
+        phone: z
+          .string()
+          .regex(
+            /^\(\d{3}\) \d{3}-\d{4}$/,
+            "Please enter a valid phone number"
+          ),
         governmentID: z.string().optional(),
         governmentIDState: z.string().optional(),
+        governmentIDType: z.string().optional(),
       })
     )
     .optional(),
 
   // Where You Live
+  // Where You Live
   currentAddress: z.string().min(5, "Current address is required"),
-  currentCity: z.string().optional(),
-  currentState: z.string().optional(),
-  currentZip: z.string().optional(),
-  residenceType: z.enum(["rent", "own"]).optional(),
+  currentCity: z.string().min(1, "City is required"),
+  currentState: z.string().min(1, "State is required"),
+  currentZIP: z.string().min(5, "ZIP code is required"),
+  currentResidenceType: z.enum(["rent", "own"]),
   residencyStartDate: z
     .string()
     .min(1, "Beginning date of residency is required"),
   monthlyPayment: z.string().min(1, "Monthly payment is required"),
-  apartmentName: z.string().optional(),
-  ownerName: z.string().optional(),
-  ownerPhone: z.string().optional(),
-  reasonForLeaving: z.string().optional(),
+  currentApartmentName: z.string().min(1, "Apartment name is required"),
+  currentOwnerName: z.string().min(1, "Owner name is required"),
+  currentOwnerPhone: z
+    .string()
+    .regex(/^\(\d{3}\) \d{3}-\d{4}$/, "Please enter a valid phone number"),
+  currentReasonForLeaving: z.string().min(1, "Reason for leaving is required"),
 
   // Previous Address (if less than 5 years)
   previousAddress: z.string().optional(),
   previousCity: z.string().optional(),
   previousState: z.string().optional(),
-  previousZip: z.string().optional(),
-  previousPhone: z.string().optional(),
+  previousZIP: z.string().optional(),
+  previousOwnerPhone: z
+    .string()
+    .regex(/^\(\d{3}\) \d{3}-\d{4}$/, "Please enter a valid phone number")
+    .optional(),
   previousResidenceType: z.enum(["rent", "own"]).optional(),
-  previousDateFrom: z.string().optional(),
-  previousDateTo: z.string().optional(),
+  previousDateFrom: z
+    .string()
+    .refine((date) => !date || new Date(date) <= new Date(), {
+      message: "Date cannot be in the future",
+    })
+    .optional(),
+  previousDateTo: z
+    .string()
+    .refine((date) => !date || new Date(date) <= new Date(), {
+      message: "Date cannot be in the future",
+    })
+    .superRefine((date, ctx) => {
+      if (!date) return;
+
+      const fromDate = (
+        ctx as z.RefinementCtx & { parent: { previousDateFrom?: string } }
+      ).parent.previousDateFrom;
+
+      if (fromDate && new Date(date) < new Date(fromDate)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "End date must be after start date",
+        });
+      }
+    })
+    .optional(),
   previousMonthlyPayment: z.string().optional(),
   previousApartmentName: z.string().optional(),
   previousOwnerName: z.string().optional(),

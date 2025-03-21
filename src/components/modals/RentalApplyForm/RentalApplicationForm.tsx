@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form"; 
-import StepOne from "./Steps/StepOne";
+import StepOne from "./Steps/StepOne/StepOne";
 import StepTwo from "./Steps/StepTwo";
 import StepThree from "./Steps/StepThree";
 import StepFour from "./Steps/StepFour";
@@ -32,7 +32,7 @@ export default function RentalApplicationForm() {
       isUSCitizen: true,
       isSmoker: false,
       hasCoApplicant: false,
-      residenceType: "rent",
+      currentResidenceType: "rent",
 
       // ... other fields can use schema defaults
     },
@@ -49,10 +49,10 @@ export default function RentalApplicationForm() {
   };
 
   const nextStep = async () => {
-    const isValid = await form.trigger();
-    if (isValid) {
+    // const isValid = await form.trigger();
+    // if (isValid) {
       setStep((prev) => Math.min(prev + 1, totalSteps));
-    }
+    // }
   };
 
   const prevStep = () => {
