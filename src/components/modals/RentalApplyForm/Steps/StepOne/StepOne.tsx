@@ -27,18 +27,28 @@ import {
   SelectValue,
   SelectItem,
 } from "@/components/ui/select";
-import { GOVERNMENT_ID_TYPES } from "@/constants/govIdentification";
+import {
+  GOVERNMENT_ID_TYPES,
+  INTERNATIONAL_ID_TYPES,
+} from "@/constants/identification";
 import { US_STATES } from "@/constants/states";
+import { COUNTRIES } from "@/constants/countries";
 
 const min18Years = new Date(Date.now() - 18 * 365 * 24 * 60 * 60 * 1000)
   .toISOString()
   .split("T")[0];
 
+interface StepOneProps {
+  form: UseFormReturn<ApplyFormValues>;
+  isUSCitizen: boolean;
+  coApplicantsCitizenship?: boolean[];
+}
+
 export default function StepOne({
   form,
-}: {
-  form: UseFormReturn<ApplyFormValues>;
-}) {
+  isUSCitizen,
+  coApplicantsCitizenship,
+}: StepOneProps) {
   const residencyStartDate = form.watch("residencyStartDate");
   const previousDateFrom = form.watch("previousDateFrom");
   const previousDateTo = form.watch("previousDateTo");
@@ -50,7 +60,12 @@ export default function StepOne({
   return (
     <div className="space-y-6">
       {/* About You */}
-      <AboutYou form={form} type="primary" min18Years={min18Years} />
+      <AboutYou
+        form={form}
+        type="primary"
+        min18Years={min18Years}
+        isUSCitizen={isUSCitizen}
+      />
 
       {/* Co-Applicant Section */}
       <div className="space-y-4">
@@ -120,6 +135,7 @@ export default function StepOne({
                   type="co-applicant"
                   index={index}
                   min18Years={min18Years}
+                  isUSCitizen={coApplicantsCitizenship?.[index] ?? true}
                 />
                 <Button
                   type="button"
@@ -177,7 +193,7 @@ export default function StepOne({
       {/* Other Occupants */}
       <div className="space-y-4">
         <h3 className="text-lg font-medium underline">OTHER OCCUPANTS</h3>
-        {form.watch("occupants")?.map((_, index) => (
+        {form.watch("occupants")?.map((occupant, index) => (
           <div key={index} className="space-y-4 p-4 border rounded-lg">
             <div className="flex gap-4 items-center justify-between">
               <h4 className="font-medium">Occupant {index + 1}</h4>
@@ -197,7 +213,7 @@ export default function StepOne({
               </Button>
             </div>
 
-            <div className="flex gap-4">
+            <div className="flex gap-4 items-center">
               <FormField
                 control={form.control}
                 name={`occupants.${index}.name`}
@@ -209,23 +225,6 @@ export default function StepOne({
                       </FormLabel>
                       <FormControl>
                         <Input {...field} placeholder="John Doe" />
-                      </FormControl>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name={`occupants.${index}.relationship`}
-                render={({ field }) => (
-                  <FormItem className="w-[300px]">
-                    <div className="flex items-center gap-2">
-                      <FormLabel className="min-w-fit" required>
-                        Relationship
-                      </FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder="Colleague" />
                       </FormControl>
                     </div>
                     <FormMessage />
@@ -254,73 +253,35 @@ export default function StepOne({
                   </FormItem>
                 )}
               />
-            </div>
-
-            <div className="flex gap-4">
               <FormField
                 control={form.control}
-                name={`occupants.${index}.socialSecurity`}
-                render={({ field }) => (
-                  <FormItem className="w-[350px]">
-                    <div className="flex items-center gap-2">
-                      <FormLabel className="min-w-fit" required>
-                        Social Security No.
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          placeholder="123-45-6789"
-                          type="password"
-                        />
-                      </FormControl>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name={`occupants.${index}.driverLicense`}
-                render={({ field }) => (
-                  <FormItem className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <FormLabel className="min-w-fit" required>
-                        Driver License
-                      </FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder="12345678" />
-                      </FormControl>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name={`occupants.${index}.driverLicenseState`}
+                name={`occupants.${index}.isUSCitizen`}
                 render={({ field }) => (
                   <FormItem className="">
                     <div className="flex items-center gap-2">
-                      <FormLabel className="min-w-fit" required>
-                        State (DL)
-                      </FormLabel>
-                      <Select
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="w-[150px]">
-                            <SelectValue placeholder="Select state" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent className="w-[150px]">
-                          {US_STATES.map((state) => (
-                            <SelectItem key={state.value} value={state.value}>
-                              {state.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <FormLabel className="min-w-fit">US Citizen</FormLabel>
+                      <FormControl>
+                        <div className="flex gap-4">
+                          <label className="flex items-center space-x-2">
+                            <Checkbox
+                              checked={field.value === true}
+                              onCheckedChange={() =>
+                                form.setValue("isUSCitizen", true)
+                              }
+                            />
+                            <span>Yes</span>
+                          </label>
+                          <label className="flex items-center space-x-2">
+                            <Checkbox
+                              checked={field.value === false}
+                              onCheckedChange={() =>
+                                form.setValue("isUSCitizen", false)
+                              }
+                            />
+                            <span>No</span>
+                          </label>
+                        </div>
+                      </FormControl>
                     </div>
                     <FormMessage />
                   </FormItem>
@@ -330,7 +291,7 @@ export default function StepOne({
                 control={form.control}
                 name={`occupants.${index}.phone`}
                 render={({ field }) => (
-                  <FormItem className="w-[280px]">
+                  <FormItem className="w-[250px]">
                     <div className="flex items-center gap-2">
                       <FormLabel required className="whitespace-nowrap">
                         Phone
@@ -356,6 +317,115 @@ export default function StepOne({
             <div className="flex gap-4">
               <FormField
                 control={form.control}
+                name={`occupants.${index}.relationship`}
+                render={({ field }) => (
+                  <FormItem className="w-[300px]">
+                    <div className="flex items-center gap-2">
+                      <FormLabel className="min-w-fit" required>
+                        Relationship
+                      </FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="Colleague" />
+                      </FormControl>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name={`occupants.${index}.socialSecurity`}
+                render={({ field }) => (
+                  <FormItem className="w-[350px]">
+                    <div className="flex items-center gap-2">
+                      <FormLabel className="min-w-fit" required>
+                        Social Security No.
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder="123-45-6789"
+                          type="password"
+                        />
+                      </FormControl>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name={`occupants.${index}.driverLicense`}
+                render={({ field }) => (
+                  <FormItem className="">
+                    <div className="flex items-center gap-2">
+                      <FormLabel className="min-w-fit" required>
+                        Driver License
+                      </FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="12345678" />
+                      </FormControl>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name={`occupants.${index}.driverLicenseState`}
+                render={({ field }) => (
+                  <FormItem className="">
+                    <div className="flex items-center gap-2">
+                      <FormLabel className="min-w-fit" required>
+                        {form.watch(`occupants.${index}.isUSCitizen`)
+                          ? "State (DL)"
+                          : "Country (DL)"}
+                      </FormLabel>
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="w-[150px]">
+                            <SelectValue
+                              placeholder={
+                                form.watch(`occupants.${index}.isUSCitizen`)
+                                  ? "Select state"
+                                  : "Select country"
+                              }
+                            />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="w-[150px]">
+                          {form.watch(`occupants.${index}.isUSCitizen`)
+                            ? US_STATES.map((state) => (
+                                <SelectItem
+                                  key={state.value}
+                                  value={state.value}
+                                >
+                                  {state.label}
+                                </SelectItem>
+                              ))
+                            : COUNTRIES.map((country) => (
+                                <SelectItem
+                                  key={country.value}
+                                  value={country.value}
+                                >
+                                  {country.label}
+                                </SelectItem>
+                              ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="flex gap-4">
+              <FormField
+                control={form.control}
                 name={`occupants.${index}.governmentIDType`}
                 render={({ field }) => (
                   <FormItem className="">
@@ -373,7 +443,10 @@ export default function StepOne({
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {GOVERNMENT_ID_TYPES.map((type) => (
+                          {(occupant.isUSCitizen
+                            ? GOVERNMENT_ID_TYPES
+                            : INTERNATIONAL_ID_TYPES
+                          ).map((type) => (
                             <SelectItem key={type.value} value={type.value}>
                               {type.label}
                             </SelectItem>
@@ -390,7 +463,7 @@ export default function StepOne({
                 control={form.control}
                 name={`occupants.${index}.governmentID`}
                 render={({ field }) => (
-                  <FormItem className="w-[400px]">
+                  <FormItem className="w-[280px]">
                     <div className="flex items-center gap-2">
                       <FormLabel className="min-w-fit" required>
                         Government ID
@@ -410,7 +483,9 @@ export default function StepOne({
                   <FormItem className="">
                     <div className="flex items-center gap-2">
                       <FormLabel className="min-w-fit" required>
-                        State (Gov ID)
+                        {form.watch(`occupants.${index}.isUSCitizen`)
+                          ? "State (Gov ID)"
+                          : "Country (Gov ID)"}
                       </FormLabel>
                       <Select
                         value={field.value}
@@ -418,15 +493,33 @@ export default function StepOne({
                       >
                         <FormControl>
                           <SelectTrigger className="w-[150px]">
-                            <SelectValue placeholder="Select state" />
+                            <SelectValue
+                              placeholder={
+                                form.watch(`occupants.${index}.isUSCitizen`)
+                                  ? "Select state"
+                                  : "Select country"
+                              }
+                            />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent className="w-[150px]">
-                          {US_STATES.map((state) => (
-                            <SelectItem key={state.value} value={state.value}>
-                              {state.label}
-                            </SelectItem>
-                          ))}
+                          {form.watch(`occupants.${index}.isUSCitizen`)
+                            ? US_STATES.map((state) => (
+                                <SelectItem
+                                  key={state.value}
+                                  value={state.value}
+                                >
+                                  {state.label}
+                                </SelectItem>
+                              ))
+                            : COUNTRIES.map((country) => (
+                                <SelectItem
+                                  key={country.value}
+                                  value={country.value}
+                                >
+                                  {country.label}
+                                </SelectItem>
+                              ))}
                         </SelectContent>
                       </Select>
                     </div>
@@ -450,6 +543,7 @@ export default function StepOne({
                 {
                   name: "",
                   relationship: "",
+                  isUSCitizen: true,
                   birthdate: "",
                   socialSecurity: "",
                   driverLicense: "",

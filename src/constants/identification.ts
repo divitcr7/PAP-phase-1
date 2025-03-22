@@ -7,3 +7,9 @@ export const GOVERNMENT_ID_TYPES = [
   { value: "visa", label: "Visa" },
   { value: "employment_auth", label: "Employment Authorization Document" },
 ];
+
+export const INTERNATIONAL_ID_TYPES = [
+  { value: "passport", label: "Passport" },
+  { value: "nationalId", label: "National ID" },
+  { value: "residencePermit", label: "Residence Permit" },
+];

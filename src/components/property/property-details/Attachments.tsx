@@ -1,25 +1,11 @@
 import { Download } from "lucide-react";
+import { Attachment } from "@/types/properties";
 
-type Attachment = {
-  name: string;
-  fileUrl: string;
-  imgSrc: string;
-};
+interface AttachmentsProps {
+  attachments: Attachment[];
+}
 
-const attachments: Attachment[] = [
-  {
-    name: "Villa-Document.pdf",
-    fileUrl: "/documents/villa-document.pdf",
-    imgSrc: "/images/home/file-1.png",
-  },
-  {
-    name: "Villa-Blueprint.pdf",
-    fileUrl: "/documents/villa-blueprint.pdf",
-    imgSrc: "/images/home/file-2.png",
-  },
-];
-
-export default function Attachments() {
+export default function Attachments({ attachments }: AttachmentsProps) {
   return (
     <div className="space-y-6 p-4">
       <h6 className="text-lg font-semibold">File Attachments</h6>

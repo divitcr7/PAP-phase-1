@@ -1,25 +1,32 @@
+import { useState } from "react";
+import { PropertyDescription } from "@/types/properties";
+import { Button } from "@/components/ui/button";
+
 interface DescriptionProps {
-  city: string;
+  description: PropertyDescription;
 }
 
-export default function Description({ city }: DescriptionProps) {
+export default function Description({ description }: DescriptionProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const content = isExpanded ? description.fullContent : description.preview;
+
   return (
     <div className="p-4 space-y-4">
-      <h5 className="font-semibold text-3xl">Description</h5>
-      <p className="">
-        Located around an hour away from {city}, between the Perche and the Iton
-        valley, in a beautiful wooded park bordered by a charming stream, this
-        country property immediately seduces with its bucolic and soothing
-        environment.
-      </p>
-      <p className="">
-        An ideal choice for sports and leisure enthusiasts who will be able to
-        take advantage of its swimming pool (11m x 5m), tennis court, gym, and
-        sauna.
-      </p>
-      <a href="#" className="">
-        <span className="text-blue-600 underline">View More</span>
-      </a>
+      <h5 className="font-semibold text-3xl">{description.title}</h5>
+      <div className="space-y-4">
+        {content.map((paragraph, index) => (
+          <p key={index} className="text-gray-600 leading-relaxed">
+            {paragraph}
+          </p>
+        ))}
+      </div>
+      <Button
+        variant={"link"}
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="text-blue-600 underline hover:text-blue-800 transition-colors !px-0"
+      >
+        {isExpanded ? "View Less" : "View More"}
+      </Button>
     </div>
   );
 }

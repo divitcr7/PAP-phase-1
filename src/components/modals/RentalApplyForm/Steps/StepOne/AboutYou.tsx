@@ -18,17 +18,24 @@ import {
 import { formatPhoneNumber } from "@/lib/utils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { US_STATES } from "@/constants/states";
-import { GOVERNMENT_ID_TYPES } from "@/constants/govIdentification";
+import { GOVERNMENT_ID_TYPES, INTERNATIONAL_ID_TYPES } from "@/constants/identification";
+import { COUNTRIES } from "@/constants/countries";
 
 interface AboutYouProps {
   form: UseFormReturn<ApplyFormValues>;
   type: "primary" | "co-applicant";
   index?: number;
   min18Years: string;
+  isUSCitizen: boolean;
 }
 
-export function AboutYou({ form, type, index = 0, min18Years }: AboutYouProps) {
-
+export function AboutYou({
+  form,
+  type,
+  index = 0,
+  min18Years,
+  isUSCitizen,
+}: AboutYouProps) {
   return (
     <div className="space-y-3">
       <h3 className="text-lg font-medium underline">
@@ -56,38 +63,37 @@ export function AboutYou({ form, type, index = 0, min18Years }: AboutYouProps) {
           )}
         />
 
-        {/* Gender - Takes up 3 columns */}
+        {/* Citizen */}
         <FormField
           control={form.control}
-          name="gender"
+          name="isUSCitizen"
           render={({ field }) => (
             <FormItem className="col-span-3">
-              <div className="flex items-center gap-2 h-9">
-                <FormLabel className="min-w-fit" required>
-                  Gender:
-                </FormLabel>
+              <div className="flex items-center gap-4 h-9">
+                <FormLabel required>US Citizen</FormLabel>
                 <FormControl>
                   <div className="flex gap-4">
                     <label className="flex items-center space-x-2">
                       <Checkbox
-                        checked={field.value === "male"}
-                        onCheckedChange={() => form.setValue("gender", "male")}
+                        checked={field.value === true}
+                        onCheckedChange={() =>
+                          form.setValue("isUSCitizen", true)
+                        }
                       />
-                      <span>Male</span>
+                      <span>Yes</span>
                     </label>
                     <label className="flex items-center space-x-2">
                       <Checkbox
-                        checked={field.value === "female"}
+                        checked={field.value === false}
                         onCheckedChange={() =>
-                          form.setValue("gender", "female")
+                          form.setValue("isUSCitizen", false)
                         }
                       />
-                      <span>Female</span>
+                      <span>No</span>
                     </label>
                   </div>
                 </FormControl>
               </div>
-              <FormMessage />
             </FormItem>
           )}
         />
@@ -106,7 +112,6 @@ export function AboutYou({ form, type, index = 0, min18Years }: AboutYouProps) {
                   <Input {...field} type="date" max={min18Years} />
                 </FormControl>
               </div>
-              <FormMessage />
             </FormItem>
           )}
         />
@@ -185,24 +190,35 @@ export function AboutYou({ form, type, index = 0, min18Years }: AboutYouProps) {
             <FormItem>
               <div className="flex items-center gap-2">
                 <FormLabel className="min-w-fit" required>
-                  State (Driver License)
+                  {isUSCitizen
+                    ? "State (Driver License)"
+                    : "Country (Driver License)"}
                 </FormLabel>
                 <Select value={field.value} onValueChange={field.onChange}>
                   <FormControl>
                     <SelectTrigger className="w-[150px]">
-                      <SelectValue placeholder="Select state" />
+                      <SelectValue
+                        placeholder={`Select ${
+                          isUSCitizen ? "State" : "Country"
+                        }`}
+                      />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent className="w-[150px]">
-                    {US_STATES.map((state) => (
-                      <SelectItem key={state.value} value={state.value}>
-                        {state.label}
-                      </SelectItem>
-                    ))}
+                    {isUSCitizen
+                      ? US_STATES.map((state) => (
+                          <SelectItem key={state.value} value={state.value}>
+                            {state.label}
+                          </SelectItem>
+                        ))
+                      : COUNTRIES.map((country) => (
+                          <SelectItem key={country.value} value={country.value}>
+                            {country.label}
+                          </SelectItem>
+                        ))}
                   </SelectContent>
                 </Select>
               </div>
-              <FormMessage />
             </FormItem>
           )}
         />
@@ -225,7 +241,10 @@ export function AboutYou({ form, type, index = 0, min18Years }: AboutYouProps) {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {GOVERNMENT_ID_TYPES.map((type) => (
+                    {(isUSCitizen
+                      ? GOVERNMENT_ID_TYPES
+                      : INTERNATIONAL_ID_TYPES
+                    ).map((type) => (
                       <SelectItem key={type.value} value={type.value}>
                         {type.label}
                       </SelectItem>
@@ -233,7 +252,6 @@ export function AboutYou({ form, type, index = 0, min18Years }: AboutYouProps) {
                   </SelectContent>
                 </Select>
               </div>
-              <FormMessage />
             </FormItem>
           )}
         />
@@ -254,7 +272,6 @@ export function AboutYou({ form, type, index = 0, min18Years }: AboutYouProps) {
                   />
                 </FormControl>
               </div>
-              <FormMessage />
             </FormItem>
           )}
         />
@@ -265,12 +282,16 @@ export function AboutYou({ form, type, index = 0, min18Years }: AboutYouProps) {
             <FormItem>
               <div className="flex items-center gap-3">
                 <FormLabel className="min-w-fit" required>
-                  State (Government ID State)
+                  {isUSCitizen ? "State" : "Country"} (Government ID)
                 </FormLabel>
                 <Select value={field.value} onValueChange={field.onChange}>
                   <FormControl>
                     <SelectTrigger className="w-[150px]">
-                      <SelectValue placeholder="Select state" />
+                      <SelectValue
+                        placeholder={`Select ${
+                          isUSCitizen ? "State" : "Country"
+                        }`}
+                      />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent className="w-[150px]">
@@ -282,7 +303,6 @@ export function AboutYou({ form, type, index = 0, min18Years }: AboutYouProps) {
                   </SelectContent>
                 </Select>
               </div>
-              <FormMessage />
             </FormItem>
           )}
         />
@@ -391,6 +411,39 @@ export function AboutYou({ form, type, index = 0, min18Years }: AboutYouProps) {
       <div className="flex gap-4 justify-between">
         <FormField
           control={form.control}
+          name="gender"
+          render={({ field }) => (
+            <FormItem className="col-span-3">
+              <div className="flex items-center gap-2 h-9">
+                <FormLabel className="min-w-fit" required>
+                  Gender:
+                </FormLabel>
+                <FormControl>
+                  <div className="flex gap-4">
+                    <label className="flex items-center space-x-2">
+                      <Checkbox
+                        checked={field.value === "male"}
+                        onCheckedChange={() => form.setValue("gender", "male")}
+                      />
+                      <span>Male</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <Checkbox
+                        checked={field.value === "female"}
+                        onCheckedChange={() =>
+                          form.setValue("gender", "female")
+                        }
+                      />
+                      <span>Female</span>
+                    </label>
+                  </div>
+                </FormControl>
+              </div>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
           name="isMarried"
           render={({ field }) => (
             <FormItem>
@@ -417,41 +470,6 @@ export function AboutYou({ form, type, index = 0, min18Years }: AboutYouProps) {
                   </div>
                 </FormControl>
               </div>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="isUSCitizen"
-          render={({ field }) => (
-            <FormItem>
-              <div className="flex items-center gap-4 h-9">
-                <FormLabel required>US Citizen</FormLabel>
-                <FormControl>
-                  <div className="flex gap-4">
-                    <label className="flex items-center space-x-2">
-                      <Checkbox
-                        checked={field.value === true}
-                        onCheckedChange={() =>
-                          form.setValue("isUSCitizen", true)
-                        }
-                      />
-                      <span>Yes</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <Checkbox
-                        checked={field.value === false}
-                        onCheckedChange={() =>
-                          form.setValue("isUSCitizen", false)
-                        }
-                      />
-                      <span>No</span>
-                    </label>
-                  </div>
-                </FormControl>
-              </div>
-              <FormMessage />
             </FormItem>
           )}
         />
@@ -483,7 +501,6 @@ export function AboutYou({ form, type, index = 0, min18Years }: AboutYouProps) {
                   </div>
                 </FormControl>
               </div>
-              <FormMessage />
             </FormItem>
           )}
         />

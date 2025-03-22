@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+import { PropertyUnit } from "@/types/properties";
 import Description from "./property-details/Description";
-import Overview from "./property-details/Overview";
+import Overview from "./property-details/Overview/Overview";
 import Video from "./property-details/Video";
 import Details from "./property-details/Details";
 import Features from "./property-details/Features";
@@ -12,75 +13,96 @@ import { Separator } from "@/components/ui/separator";
 import FloatingActionButton from "./property-details/FloatingActionButton";
 import BottomActionBar from "./property-details/ActionButton";
 
-export default function PropertyDetails() {
+interface PropertyDetailsProps {
+  unit: PropertyUnit;
+}
+
+export default function PropertyDetails({ unit }: PropertyDetailsProps) {
   const [isBottomBarVisible, setIsBottomBarVisible] = useState(false);
   const [isScrolledDown, setIsScrolledDown] = useState(false);
   const bottomActionBarRef = useRef(null);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsBottomBarVisible(entry.isIntersecting);
-      },
-      {root: null,
-        threshold: 0.1,
+    useEffect(() => {
+      const currentRef = bottomActionBarRef.current;
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          setIsBottomBarVisible(entry.isIntersecting);
+        },
+        {
+          root: null,
+          threshold: 0.1,
+        }
+      );
+
+      const handleScroll = () => {
+        setIsScrolledDown(window.scrollY > 80);
+      };
+
+      if (currentRef) {
+        observer.observe(currentRef);
       }
-    );
 
-    const handleScroll = () => {
-      setIsScrolledDown(window.scrollY > 80);
-    };
+      window.addEventListener("scroll", handleScroll);
 
-    if (bottomActionBarRef.current) {
-      observer.observe(bottomActionBarRef.current);
-    }
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      if (bottomActionBarRef.current) {
-        observer.unobserve(bottomActionBarRef.current);
-      }
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+      return () => {
+        if (currentRef) {
+          observer.unobserve(currentRef);
+        }
+        window.removeEventListener("scroll", handleScroll);
+      };
+    }, []);
 
   return (
     <section className="pt-10">
       <div className="container mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
-          <Description city="Texas" />
+          <Description description={unit.description} />
           <Separator className="my-4" />
           <Overview
-            id={2297}
-            type="House"
-            garages={1}
-            bedrooms={2}
-            bathrooms={2}
-            landSize={2000}
-            yearBuilt={2024}
-            size={900}
+            id={unit.id}
+            type={unit.type[0]}
+            garages={unit.garages}
+            bedrooms={unit.beds}
+            bathrooms={unit.baths}
+            landSize={unit.sqft}
+            yearBuilt={unit.yearBuilt}
+            size={unit.sqft}
           />
           <Separator className="my-4" />
-          <Video videoId="MLpWrANjFbI" />
+          <Video videoURI={unit.videoURI} />
           <Separator className="my-4" />
-          <Details />
+          <Details details={unit.details} />
           <Separator className="my-4" />
-          <Features />
+          <Features features={unit.features} />
           <Separator className="my-4" />
-          <FloorPlan />
+          <FloorPlan floors={unit.floors} />
           <Separator className="my-4" />
-          <Attachments />
+          <Attachments attachments={unit.attachments} />
           <Separator className="my-4" />
-          <Explore />
+          <Explore explore={unit.explore} />
           <Separator className="my-4" />
-          <Nearby />
+          <Nearby
+            nearbyDescription={unit.nearbyDescription}
+            nearbyPlaces={unit.nearbyPlaces}
+          />
           <Separator className="my-4" />
         </div>
       </div>
-      {isScrolledDown && !isBottomBarVisible && <FloatingActionButton />}
+      {isScrolledDown && !isBottomBarVisible && (
+        <FloatingActionButton
+          propertyId={unit.id}
+          price={unit.price}
+          agent={unit.agent}
+          avatar={unit.avatar}
+        />
+      )}
       <div ref={bottomActionBarRef}>
-        <BottomActionBar />
+        <BottomActionBar
+          propertyId={unit.id}
+          price={unit.price}
+          agent={unit.agent}
+          avatar={unit.avatar}
+        />
       </div>
     </section>
   );

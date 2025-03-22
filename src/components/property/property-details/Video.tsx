@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { PlayCircle } from "lucide-react";
 
 interface VideoProps {
-  videoId: string;
+  videoURI: string;
 }
 
-const Video: React.FC<VideoProps> = ({ videoId }) => {
+const Video: React.FC<VideoProps> = ({ videoURI }) => {
   const [isPlaying, setIsPlaying] = useState(false);
 
   return (
@@ -16,7 +16,7 @@ const Video: React.FC<VideoProps> = ({ videoId }) => {
           <iframe
             width="100%"
             height="400"
-            src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
+            src={`https://www.youtube.com/embed/${videoURI}?autoplay=1`}
             title="YouTube video player"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen

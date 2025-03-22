@@ -4,8 +4,23 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import RentalApplicationForm from "@/components/modals/RentalApplyForm/RentalApplicationForm";
 
-const FloatingActionButton: React.FC = () => {
+interface FloatingActionButtonProps {
+  propertyId: number;
+  price: number;
+  agent: string;
+  avatar: string;
+}
+
+
+const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
+  propertyId,
+  price,
+  agent,
+  avatar,
+}) => {
   const [isBottom, setIsBottom] = useState<boolean>(false);
+
+  console.log(propertyId, price, agent, avatar);
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;

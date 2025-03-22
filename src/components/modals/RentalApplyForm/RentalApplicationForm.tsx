@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Dialog,
@@ -59,6 +59,16 @@ export default function RentalApplicationForm() {
     setStep((prev) => Math.max(prev - 1, 1));
   };
 
+  const isUSCitizen = useWatch({
+    control: form.control,
+    name: "isUSCitizen",
+  });
+
+  const coApplicants = useWatch({
+    control: form.control,
+    name: "coApplicants",
+  });
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -84,7 +94,15 @@ export default function RentalApplicationForm() {
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            {step === 1 && <StepOne form={form} />}
+            {step === 1 && (
+              <StepOne
+                form={form}
+                isUSCitizen={isUSCitizen}
+                coApplicantsCitizenship={coApplicants?.map(
+                  (c) => c.isUSCitizen
+                )}
+              />
+            )}
             {step === 2 && <StepTwo form={form} />}
             {step === 3 && <StepThree form={form} />}
             {step === 4 && <StepFour form={form} />}

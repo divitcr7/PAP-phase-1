@@ -35,18 +35,18 @@ function App() {
         <Route path="about" element={<>about</>} />
         <Route path="contact" element={<>contact</>} />
         <Route
-          path="property/:title"
+          path=":propertyName"
           element={
             <Suspense fallback={<LoadingScreen />}>
-              <PropertyDetailsPage />
+              <PropertyList />
             </Suspense>
           }
         />
         <Route
-          path="properties" 
+          path=":propertyName/:unitTitle"
           element={
             <Suspense fallback={<LoadingScreen />}>
-              <PropertyList />
+              <PropertyDetailsPage />
             </Suspense>
           }
         />

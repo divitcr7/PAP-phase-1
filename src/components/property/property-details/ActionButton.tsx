@@ -4,9 +4,25 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import RentalApplicationForm from "@/components/modals/RentalApplyForm/RentalApplicationForm";
 
-export default function BottomActionBar() {
+interface BottomActionBarProps {
+  propertyId: number;
+  price: number;
+  agent: string;
+  avatar: string;
+}
+
+export default function BottomActionBar({
+  propertyId,
+  price,
+  agent,
+  avatar,
+}: BottomActionBarProps) {
   const [scrollY, setScrollY] = useState(0);
   const [isBottom, setIsBottom] = useState(false);
+
+  useEffect(() => {
+   console.log(propertyId, price, agent, avatar) 
+  }, [propertyId, price, agent, avatar])
 
   useEffect(() => {
     const handleScroll = () => {

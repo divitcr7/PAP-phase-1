@@ -19,14 +19,14 @@ const Subscribe = () => {
       <div className="absolute inset-0 bg-gradient-to-r from-blue-900/40 to-black/40 z-0"></div>
       <div className="absolute left-0 top-1/4 h-32 w-2 bg-blue-600"></div>
 
-      <div className="absolute top-10 left-5">
+      {/* <div className="absolute top-10 left-5">
         <img
           alt="logo"
           width={200}
           src="/images/logo/logo-transparent@2x.png"
           className="transition-transform duration-300 ease-in-out transform hover:scale-105"
         />
-      </div>
+      </div> */}
 
       <div className="absolute top-8 right-4 text-white">
         <img

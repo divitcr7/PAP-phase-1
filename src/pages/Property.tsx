@@ -1,76 +1,68 @@
 import { useParams } from "react-router";
 import { FC, useEffect, useState } from "react";
 import DetailsTitle from "../components/property/DetailsTitle";
-import Slider from "../components/property/Slider";
-import { allProperties } from "@/data/properties";
+// import Slider from "../components/property/Slider";
+import { getPropertyByName } from "@/data/properties";
 import MetaComponent from "../components/seo/MetaComponent";
 import PropertyDetails from "../components/property/PropertyDetails";
 import slugify from "slugify";
 import LoadingComponent from "../components/common/LoadingComponent";
-
-// Define the type for a property
-interface Property {
-  title: string;
-  address: string;
-  beds: number;
-  baths: number;
-  sqft: number;
-}
+import { PropertyUnit } from "@/types/properties";
 
 const metadata = {
-  title: "Property Details || Pick-A-Pad - Real Estate",
+  title: "Unit Details || Pick-A-Pad - Real Estate",
   description: "Pick-A-Pad - Real Estate",
 };
 
 const PropertyDetailsPage: FC = () => {
-  const { title } = useParams<{ title: string }>();
-
-  const [propertyItem, setPropertyItem] = useState<Property | null>(null);
-  const [titleLoaded, setTitleLoaded] = useState(false);
-  const [sliderLoaded, setSliderLoaded] = useState(false);
-  const [detailsLoaded, setDetailsLoaded] = useState(false);
+  const { propertyName, unitTitle } = useParams<{
+    propertyName: string;
+    unitTitle: string;
+  }>();
+  const [unit, setUnit] = useState<PropertyUnit | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setTimeout(() => {
-      const foundProperty =
-        allProperties.find(
-          (elm) => slugify(elm.title, { lower: true }) === title
-        ) || allProperties[0];
-
-      setPropertyItem(foundProperty);
-      setTitleLoaded(true);
-      setTimeout(() => setSliderLoaded(true), 1500);
-      setTimeout(() => setDetailsLoaded(true), 2500);
+      const property = getPropertyByName(propertyName || "");
+      if (property) {
+        const foundUnit = property.units.find(
+          (u) => slugify(u.title, { lower: true }) === unitTitle
+        );
+        setUnit(foundUnit || null);
+      }
+      setLoading(false);
     }, 1000);
-  }, [title]);
+  }, [propertyName, unitTitle]);
 
-  if (!propertyItem && titleLoaded) return <p className="text-center">Property not found.</p>;
+  if (loading) return <LoadingComponent />;
+  if (!unit) {
+    return (
+      <div className="container mx-auto text-center py-16">
+        <h2 className="text-2xl font-semibold text-gray-900">Unit not found</h2>
+        <p className="mt-2 text-gray-600">
+          The unit you're looking for doesn't exist.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <>
       <MetaComponent meta={metadata} />
       <div className="container mx-auto px-4 py-6">
-        {titleLoaded ? (
-          propertyItem ? (
-            <DetailsTitle
-              title={propertyItem.title}
-              address={propertyItem.address}
-              bedrooms={propertyItem.beds}
-              bathrooms={propertyItem.baths}
-              area={propertyItem.sqft}
-            />
-          ) : (
-            <p className="text-center">Property not found.</p>
-          )
-        ) : (
-          <LoadingComponent />
-        )}
+        <DetailsTitle
+          title={unit.title}
+          address={unit.address}
+          bedrooms={unit.beds}
+          bathrooms={unit.baths}
+          area={unit.sqft}
+          price={unit.price}
+        />
 
-        {/* Slider Component (loads after title) */}
-        {sliderLoaded ? <Slider /> : <LoadingComponent />}
+        {/* <Slider images={unit.images} /> */}
 
-        {/* Property Details (loads last) */}
-        {detailsLoaded ? <PropertyDetails /> : <LoadingComponent />}
+        <PropertyDetails unit={unit} />
       </div>
     </>
   );

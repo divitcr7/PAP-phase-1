@@ -5,30 +5,13 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { BedDouble, Bath } from "lucide-react";
+import { Floor } from "@/types/properties";
 
-type Floor = {
-  title: string;
-  bedrooms: number;
-  bathrooms: number;
-  imgSrc: string;
-};
+interface FloorPlanProps {
+  floors: Floor[];
+}
 
-const floors: Floor[] = [
-  {
-    title: "First Floor",
-    bedrooms: 2,
-    bathrooms: 2,
-    imgSrc: "/images/banner/floor.png",
-  },
-  {
-    title: "Second Floor",
-    bedrooms: 2,
-    bathrooms: 2,
-    imgSrc: "/images/banner/floor.png",
-  },
-];
-
-export default function FloorPlan() {
+export default function FloorPlan({ floors }: FloorPlanProps) {
   return (
     <div className="space-y-6 p-4">
       <h5 className="text-xl font-semibold">Floor Plans</h5>

@@ -1,10 +1,11 @@
+import { US_STATES } from "@/constants/states";
 import * as z from "zod";
 
 export const applyFormSchema = z.object({
   // Step 1 - About You
-  fullName: z.string().min(2, "Full name is required"),
+  fullName: z.string().min(4, "Full name is required"),
   gender: z.string(),
-  birthdate: z.string().min(1, "Birthdate is required"),
+  birthdate: z.string(),
   formerName: z.string().optional(),
   socialSecurity: z
     .string()
@@ -16,25 +17,15 @@ export const applyFormSchema = z.object({
     .min(8, "Driver License is required")
     .max(8, "Driver License must be 8 characters")
     .regex(/^\d{8}$/, "Driver License must be 8 digits"),
-  driverLicenseState: z
-    .string()
-    .min(2, "State is required")
-    .max(2, "State must be 2 characters")
-    .regex(/^[A-Z]{2}$/, "State must be 2 capital letters"),
-  governmentIDType: z.string().optional(),
+  driverLicenseState: z.enum(
+    US_STATES.map((state) => state.value) as [string, ...string[]]
+  ),
+  governmentIDType: z.string(),
   governmentID: z
-    .string()
-    .regex(
-      /^[A-Z]{2}\d{8}$/,
-      "Government ID must be 2 capital letters followed by 8 digits"
-    )
-    .optional(),
-  governmentIDState: z
-    .string()
-    .min(2, "State must be 2 characters")
-    .max(2, "State must be 2 characters")
-    .regex(/^[A-Z]{2}$/, "State must be 2 capital letters")
-    .optional(),
+    .string(),
+  governmentIDState: z.enum(
+    US_STATES.map((state) => state.value) as [string, ...string[]]
+  ),
   homePhone: z
     .string()
     .regex(/^\(\d{3}\) \d{3}-\d{4}$/, "Please enter a valid phone number")
@@ -51,7 +42,7 @@ export const applyFormSchema = z.object({
   isUSCitizen: z.boolean(),
   isSmoker: z.boolean(),
   apartmentAddress: z.string().min(1, "Apartment address is required"),
-  // ... existing code ...
+
   hasCoApplicant: z.boolean(),
   coApplicants: z
     .array(
@@ -73,11 +64,9 @@ export const applyFormSchema = z.object({
           .min(8, "Driver License is required")
           .max(8, "Driver License must be 8 characters")
           .regex(/^\d{8}$/, "Driver License must be 8 digits"),
-        driverLicenseState: z
-          .string()
-          .min(2, "State is required")
-          .max(2, "State must be 2 characters")
-          .regex(/^[A-Z]{2}$/, "State must be 2 capital letters"),
+        driverLicenseState: z.enum(
+          US_STATES.map((state) => state.value) as [string, ...string[]]
+        ),
         governmentID: z
           .string()
           .regex(
@@ -85,12 +74,9 @@ export const applyFormSchema = z.object({
             "Government ID must be 2 capital letters followed by 8 digits"
           )
           .optional(),
-        governmentIDState: z
-          .string()
-          .min(2, "State must be 2 characters")
-          .max(2, "State must be 2 characters")
-          .regex(/^[A-Z]{2}$/, "State must be 2 capital letters")
-          .optional(),
+        governmentIDState: z.enum(
+          US_STATES.map((state) => state.value) as [string, ...string[]]
+        ),
         homePhone: z
           .string()
           .regex(/^\(\d{3}\) \d{3}-\d{4}$/, "Please enter a valid phone number")
@@ -118,13 +104,16 @@ export const applyFormSchema = z.object({
     .array(
       z.object({
         name: z.string().min(2, "Full name is required"),
+        isUSCitizen: z.boolean(),
         relationship: z.string().min(1, "Relationship is required"),
         birthdate: z.string().min(1, "Birthdate is required"),
         socialSecurity: z
           .string()
           .min(9, "Valid Social Security number is required"),
         driverLicense: z.string().optional(),
-        driverLicenseState: z.string().optional(),
+        driverLicenseState: z.enum(
+          US_STATES.map((state) => state.value) as [string, ...string[]]
+        ),
         phone: z
           .string()
           .regex(
@@ -132,7 +121,9 @@ export const applyFormSchema = z.object({
             "Please enter a valid phone number"
           ),
         governmentID: z.string().optional(),
-        governmentIDState: z.string().optional(),
+        governmentIDState: z.enum(
+          US_STATES.map((state) => state.value) as [string, ...string[]]
+        ),
         governmentIDType: z.string().optional(),
       })
     )
@@ -142,7 +133,9 @@ export const applyFormSchema = z.object({
   // Where You Live
   currentAddress: z.string().min(5, "Current address is required"),
   currentCity: z.string().min(1, "City is required"),
-  currentState: z.string().min(1, "State is required"),
+  currentState: z.enum(
+    US_STATES.map((state) => state.value) as [string, ...string[]]
+  ),
   currentZIP: z.string().min(5, "ZIP code is required"),
   currentResidenceType: z.enum(["rent", "own"]),
   residencyStartDate: z
@@ -159,7 +152,9 @@ export const applyFormSchema = z.object({
   // Previous Address (if less than 5 years)
   previousAddress: z.string().optional(),
   previousCity: z.string().optional(),
-  previousState: z.string().optional(),
+  previousState: z.enum(
+    US_STATES.map((state) => state.value) as [string, ...string[]]
+  ),
   previousZIP: z.string().optional(),
   previousOwnerPhone: z
     .string()
@@ -202,7 +197,9 @@ export const applyFormSchema = z.object({
   position: z.string().min(1, "Position is required"),
   workAddress: z.string().min(1, "Work address is required"),
   workCity: z.string().min(1, "City is required"),
-  workState: z.string().min(1, "State is required"),
+  workState: z.enum(
+    US_STATES.map((state) => state.value) as [string, ...string[]]
+  ),
   workZIP: z.string().min(5, "ZIP code is required"),
   workPhone: z.string().min(10, "Work phone is required"),
   employmentDate: z.string().min(1, "Beginning date of employment is required"),
@@ -215,7 +212,9 @@ export const applyFormSchema = z.object({
   previousPosition: z.string().optional(),
   previousWorkAddress: z.string().optional(),
   previousWorkCity: z.string().optional(),
-  previousWorkState: z.string().optional(),
+  previousWorkState: z.enum(
+    US_STATES.map((state) => state.value) as [string, ...string[]]
+  ),
   previousWorkZIP: z.string().optional(),
   previousWorkPhone: z.string().optional(),
   previousEmploymentDateFrom: z.string().optional(),
@@ -267,7 +266,9 @@ export const applyFormSchema = z.object({
     relationship: z.string().min(1, "Relationship is required"),
     address: z.string().min(1, "Address is required"),
     city: z.string().min(1, "City is required"),
-    state: z.string().min(1, "State is required"),
+    state: z.enum(
+      US_STATES.map((state) => state.value) as [string, ...string[]]
+    ),
     zip: z.string().min(5, "ZIP code is required"),
     homePhone: z.string().optional(),
     cellPhone: z.string().min(10, "Cell phone number is required"),
@@ -289,7 +290,9 @@ export const applyFormSchema = z.object({
         color: z.string(),
         year: z.string(),
         license: z.string(),
-        state: z.string(),
+        state: z.enum(
+          US_STATES.map((state) => state.value) as [string, ...string[]]
+        ),
       })
     )
     .optional(),

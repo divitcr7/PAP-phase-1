@@ -3,126 +3,23 @@ import { Autoplay, EffectFade, Navigation, Thumbs } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { SwiperClass } from "swiper/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { PropertyImage } from "@/types/properties";
 
-import "swiper/css";
-import "swiper/css/effect-fade";
-import "swiper/css/navigation";
-// import "swiper/css/thumbs";
+interface SliderProps {
+  images: PropertyImage[];
+}
 
-const propertyImages = [
-  {
-    alt: "Property image 1",
-    width: 1291,
-    height: 680,
-    src: "/placeholder.svg",
-  },
-  {
-    alt: "Property image 2",
-    width: 1290,
-    height: 680,
-    src: "/placeholder.svg",
-  },
-  {
-    alt: "Property image 3",
-    width: 1290,
-    height: 680,
-    src: "/placeholder.svg",
-  },
-  {
-    alt: "Property image 4",
-    width: 1291,
-    height: 680,
-    src: "/placeholder.svg",
-  },
-  {
-    alt: "Property image 5",
-    width: 1290,
-    height: 680,
-    src: "/placeholder.svg",
-  },
-  {
-    alt: "Property image 6",
-    width: 1290,
-    height: 680,
-    src: "/placeholder.svg",
-  },
-  {
-    alt: "Property image 7",
-    width: 1290,
-    height: 680,
-    src: "/placeholder.svg",
-  },
-  {
-    alt: "Property image 8",
-    width: 1291,
-    height: 680,
-    src: "/placeholder.svg",
-  },
-];
-
-const thumbnails = [
-  {
-    src: "/images/banner/thumb-sw1.jpg",
-    alt: "Thumbnail 1",
-    width: 148,
-    height: 111,
-  },
-  {
-    src: "/images/banner/thumb-sw2.jpg",
-    alt: "Thumbnail 2",
-    width: 149,
-    height: 111,
-  },
-  {
-    src: "/images/banner/thumb-sw3.jpg",
-    alt: "Thumbnail 3",
-    width: 149,
-    height: 111,
-  },
-  {
-    src: "/images/banner/thumb-sw4.jpg",
-    alt: "Thumbnail 4",
-    width: 149,
-    height: 111,
-  },
-  {
-    src: "/images/banner/thumb-sw5.jpg",
-    alt: "Thumbnail 5",
-    width: 149,
-    height: 111,
-  },
-  {
-    src: "/images/banner/thumb-sw6.jpg",
-    alt: "Thumbnail 6",
-    width: 149,
-    height: 111,
-  },
-  {
-    src: "/images/banner/thumb-sw7.jpg",
-    alt: "Thumbnail 7",
-    width: 149,
-    height: 111,
-  },
-  {
-    src: "/images/banner/thumb-sw8.jpg",
-    alt: "Thumbnail 8",
-    width: 148,
-    height: 111,
-  },
-];
-
-export default function PropertySlider() {
+export default function Slider({ images }: SliderProps) {
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
   const [mainSwiper, setMainSwiper] = useState<SwiperClass | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const navigationPrevRef = useRef<HTMLButtonElement>(null);
   const navigationNextRef = useRef<HTMLButtonElement>(null);
 
-  // Custom navigation handlers
   const handlePrev = () => {
     if (mainSwiper) {
       if (activeIndex === 0) {
-        mainSwiper.slideTo(propertyImages.length - 1);
+        mainSwiper.slideTo(images.length - 1);
       } else {
         mainSwiper.slidePrev();
       }
@@ -131,7 +28,7 @@ export default function PropertySlider() {
 
   const handleNext = () => {
     if (mainSwiper) {
-      if (activeIndex === propertyImages.length - 1) {
+      if (activeIndex === images.length - 1) {
         mainSwiper.slideTo(0);
       } else {
         mainSwiper.slideNext();
@@ -144,37 +41,29 @@ export default function PropertySlider() {
       <div className="max-w-5xl">
         <div className="relative mb-4">
           <Swiper
-            modules={[Thumbs, Autoplay, EffectFade, Navigation]}
+            modules={[Thumbs, EffectFade, Navigation]}
             thumbs={{
               swiper:
                 thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null,
             }}
             className="rounded-lg overflow-hidden"
             spaceBetween={16}
-            autoplay={{
-              delay: 3000,
-              disableOnInteraction: true,
-            }}
             speed={500}
             effect="fade"
             fadeEffect={{
               crossFade: true,
             }}
-            loop={false}
+            loop={true}
             navigation={false}
-            onSwiper={(swiper) => {
-              setMainSwiper(swiper);
-            }}
-            onSlideChange={(swiper) => {
-              setActiveIndex(swiper.activeIndex);
-            }}
+            onSwiper={setMainSwiper}
+            onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
           >
-            {propertyImages.map((image, index) => (
+            {images.map((image, index) => (
               <SwiperSlide key={index}>
                 <div className="image-sw-single aspect-[16/9] bg-muted">
                   <img
+                    src={image.src}
                     alt={image.alt}
-                    src={image.src || "/placeholder.svg"}
                     width={image.width}
                     height={image.height}
                     className="w-full h-full object-cover"
@@ -183,6 +72,7 @@ export default function PropertySlider() {
               </SwiperSlide>
             ))}
           </Swiper>
+
           <div className="box-navigation absolute inset-0 flex items-center justify-between pointer-events-none">
             <button
               type="button"
@@ -204,18 +94,20 @@ export default function PropertySlider() {
             </button>
           </div>
         </div>
-
         <Swiper
-          onSwiper={(swiper) => {
-            setThumbsSwiper(swiper);
-          }}
+          onSwiper={setThumbsSwiper}
           spaceBetween={10}
           slidesPerView="auto"
+          direction="horizontal"
           freeMode={true}
           watchSlidesProgress={true}
-          modules={[Thumbs, Navigation]}
+          modules={[Thumbs, Navigation, Autoplay]}
           className="thumbs-swiper-thumbnails mt-4"
           slideToClickedSlide={true}
+          autoplay={{
+            delay: 2000,
+            disableOnInteraction: false,
+          }}
           breakpoints={{
             375: {
               slidesPerView: 3,
@@ -230,33 +122,29 @@ export default function PropertySlider() {
               spaceBetween: 14,
             },
             1024: {
-              slidesPerView: 8,
+              slidesPerView: 6,
               spaceBetween: 14,
             },
           }}
         >
-          {thumbnails.map((thumb, index) => (
+          {images.map((image, index) => (
             <SwiperSlide
               key={index}
               className="cursor-pointer w-auto max-w-[149px]"
-              onClick={() => {
-                if (mainSwiper) {
-                  mainSwiper.slideTo(index);
-                }
-              }}
+              onClick={() => mainSwiper?.slideTo(index)}
             >
               <div
-                className={`img-thumb-thumbnail h-[80px] rounded-md overflow-hidden border-2 transition-all ${
+                className={`h-[80px] rounded-md overflow-hidden border-2 transition-all ${
                   activeIndex === index
                     ? "border-blue-500"
-                    : "border-transparent hover:border-primary"
+                    : "border-black/55 hover:border-primary"
                 }`}
               >
                 <img
-                  alt={thumb.alt}
-                  src={thumb.src || "/placeholder.svg"}
-                  width={thumb.width}
-                  height={thumb.height}
+                  src={image.thumbnailSrc || image.src}
+                  alt={`${image.alt} thumbnail`}
+                  width={149}
+                  height={80}
                   className="w-full h-full object-cover"
                 />
               </div>

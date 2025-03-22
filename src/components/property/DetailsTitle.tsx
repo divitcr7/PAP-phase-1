@@ -10,6 +10,7 @@ type PropertyDetailsProps = {
   bedrooms: number;
   bathrooms: number;
   area: number;
+  price: number;
 };
 
 export default function DetailsTitle({
@@ -18,6 +19,7 @@ export default function DetailsTitle({
   bedrooms,
   bathrooms,
   area,
+  price
 }: PropertyDetailsProps) {
   return (
     <div className="p-4">
@@ -69,7 +71,9 @@ export default function DetailsTitle({
               <p className="text-gray-500">{address}</p>
             </div>
           </div>
-          <div>Price</div>
+          <div>
+            Price: <span className="font-medium">${price}</span>
+          </div>
         </div>
       </CardContent>
     </div>

@@ -3,7 +3,8 @@ import MetaComponent from "@/components/seo/MetaComponent";
 import LoadingComponent from "@/components/common/LoadingComponent";
 
 // Lazy-load components
-const Hero = lazy(() => import("@/components/home/Hero"));
+// const Hero = lazy(() => import("@/components/home/Hero"));
+const Subscribe = lazy(() => import("./Subscribe"));
 const Properties = lazy(() => import("@/components/home/Properties"));
 const Testimonials = lazy(() => import("@/components/home/Testimonials"));
 
@@ -22,7 +23,8 @@ const Home = () => {
     <>
       <MetaComponent meta={metadata} />
       <Suspense fallback={<LoadingComponent />}>
-        <Hero />
+        <Subscribe />
+        {/* <Hero /> */}
       </Suspense>
       <Suspense fallback={<LoadingComponent />}>
         <Properties />
