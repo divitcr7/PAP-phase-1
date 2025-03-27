@@ -33,8 +33,6 @@ export default function RentalApplicationForm() {
       isSmoker: false,
       hasCoApplicant: false,
       currentResidenceType: "rent",
-
-      // ... other fields can use schema defaults
     },
     resolver: zodResolver(applyFormSchema),
     // mode: "onChange",
@@ -51,8 +49,9 @@ export default function RentalApplicationForm() {
   const nextStep = async () => {
     // const isValid = await form.trigger();
     // if (isValid) {
-      setStep((prev) => Math.min(prev + 1, totalSteps));
+    // setStep((prev) => Math.min(prev + 1, totalSteps));
     // }
+      setStep((prev) => Math.min(prev + 1, totalSteps));
   };
 
   const prevStep = () => {

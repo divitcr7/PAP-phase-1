@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import type { UseFormReturn } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -9,7 +10,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { ApplyFormValues } from "@/schemas/ApplyForm";
+import {
+  ApplyFormValues,
+  ExistingAddress,
+  AddressReference,
+} from "@/schemas/ApplyForm";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Accordion,
@@ -31,12 +36,17 @@ import {
   GOVERNMENT_ID_TYPES,
   INTERNATIONAL_ID_TYPES,
 } from "@/constants/identification";
-import { US_STATES } from "@/constants/states";
-import { COUNTRIES } from "@/constants/countries";
+import { LocationDropdown } from "../../common/LocationDropdown";
 
-const min18Years = new Date(Date.now() - 18 * 365 * 24 * 60 * 60 * 1000)
+const today = new Date();
+const min18Years = new Date(
+  today.getFullYear() - 18,
+  today.getMonth(),
+  today.getDate()
+)
   .toISOString()
   .split("T")[0];
+const todaysDate = new Date().toISOString().split("T")[0];
 
 interface StepOneProps {
   form: UseFormReturn<ApplyFormValues>;
@@ -52,10 +62,235 @@ export default function StepOne({
   const residencyStartDate = form.watch("residencyStartDate");
   const previousDateFrom = form.watch("previousDateFrom");
   const previousDateTo = form.watch("previousDateTo");
-  const fiveYearsAgo = new Date();
+  const fiveYearsAgo = useMemo(() => {
+    const date = new Date();
+    date.setFullYear(date.getFullYear() - 5);
+    return date;
+  }, []);
   fiveYearsAgo.setFullYear(fiveYearsAgo.getFullYear() - 5);
-  const requirePreviousAddress =
-    residencyStartDate && new Date(residencyStartDate) > fiveYearsAgo;
+  // const requirePreviousAddress = residencyStartDate && new Date(residencyStartDate) > fiveYearsAgo;
+
+  const [previousAddressOpen, setPreviousAddressOpen] = useState(false);
+
+    const addCoApplicant = () => {
+      const coApplicants = form.getValues("coApplicants") || [];
+      form.setValue("coApplicants", [
+        ...coApplicants,
+        {
+          fullName: "",
+          gender: "",
+          birthdate: "",
+          formerName: "",
+          socialSecurity: "",
+          driverLicense: "",
+          driverLicenseState: "",
+          governmentIDType: "",
+          governmentID: "",
+          governmentIDState: "",
+          homePhone: "",
+          cellPhone: "",
+          workPhone: "",
+          email: "",
+          isMarried: false,
+          isUSCitizen: false,
+          // Address fields
+          currentAddress: "",
+          currentCity: "",
+          currentState: "",
+          currentZIP: "",
+          currentOwnerPhone: "",
+          currentResidenceType: "rent" as const,
+          currentApartmentName: "",
+          currentOwnerName: "",
+          currentReasonForLeaving: "",
+          residencyStartDate: "", // Added
+          monthlyPayment: "", // Added
+          // Previous address fields
+          previousAddress: "",
+          previousCity: "",
+          previousState: "",
+          previousZIP: "",
+          previousOwnerPhone: "",
+          previousResidenceType: "rent" as const,
+          previousApartmentName: "",
+          previousOwnerName: "",
+          previousReasonForLeaving: "",
+          previousDateFrom: "",
+          previousDateTo: "",
+          previousMonthlyPayment: "",
+        },
+      ]);
+    };
+
+    const addOccupant = () => {
+      const occupants = form.getValues("occupants") || [];
+      form.setValue("occupants", [
+        ...occupants,
+        {
+          name: "",
+          relationship: "",
+          isUSCitizen: true,
+          birthdate: "",
+          socialSecurity: "",
+          driverLicense: "",
+          driverLicenseState: "",
+          phone: "",
+          governmentIDType: "",
+          governmentID: "",
+          governmentIDState: "",
+          // Address fields
+          currentAddress: "",
+          currentCity: "",
+          currentState: "",
+          currentZIP: "",
+          currentOwnerPhone: "",
+          currentResidenceType: "rent" as const,
+          currentApartmentName: "",
+          currentOwnerName: "",
+          currentReasonForLeaving: "",
+          residencyStartDate: "", // Added
+          monthlyPayment: "", // Added
+          // Previous address fields
+          previousAddress: "",
+          previousCity: "",
+          previousState: "",
+          previousZIP: "",
+          previousOwnerPhone: "",
+          previousResidenceType: "rent" as const,
+          previousApartmentName: "",
+          previousOwnerName: "",
+          previousReasonForLeaving: "",
+          previousDateFrom: "",
+          previousDateTo: "",
+          previousMonthlyPayment: "",
+        },
+      ]);
+    };
+
+  useEffect(() => {
+    if (residencyStartDate) {
+      const startDate = new Date(residencyStartDate);
+      if (startDate > fiveYearsAgo) {
+        setPreviousAddressOpen(true);
+      } else {
+        setPreviousAddressOpen(false);
+        // Clear previous address fields
+        form.setValue("previousAddress", "");
+        form.setValue("previousCity", "");
+        form.setValue("previousState", "");
+        form.setValue("previousZIP", "");
+        form.setValue("previousOwnerPhone", "");
+        form.setValue("previousResidenceType", "rent");
+        form.setValue("previousDateFrom", "");
+        form.setValue("previousDateTo", "");
+        form.setValue("previousApartmentName", "");
+        form.setValue("previousOwnerName", "");
+        form.setValue("previousReasonForLeaving", "");
+      }
+    }
+  }, [residencyStartDate, fiveYearsAgo, form]);
+
+  const copyAddress = (
+    selected: string,
+    targetType: "co-applicant" | "occupant",
+    targetIndex: number
+  ) => {
+    const [sourceType, sourceIndex] = selected.split("-");
+
+    // Set the address reference with correct type structure
+    const addressReference: AddressReference = {
+      sameAs: {
+        type: sourceType as "primary" | "co-applicant" | "occupant",
+        index: sourceType !== "primary" ? Number(sourceIndex) : undefined,
+      },
+    };
+
+    // Copy the address fields
+    if (targetType === "co-applicant") {
+      form.setValue(
+        `coApplicants.${targetIndex}.addressReference`,
+        addressReference
+      );
+      form.setValue(
+        `coApplicants.${targetIndex}.currentAddress`,
+        "Same as " +
+          (sourceType === "primary"
+            ? "Primary Applicant"
+            : sourceType === "co-applicant"
+            ? `Co-Applicant ${Number(sourceIndex) + 1}`
+            : `Occupant ${Number(sourceIndex) + 1}`)
+      );
+    } else {
+      form.setValue(
+        `occupants.${targetIndex}.addressReference`,
+        addressReference
+      );
+      form.setValue(
+        `occupants.${targetIndex}.currentAddress`,
+        "Same as " +
+          (sourceType === "primary"
+            ? "Primary Applicant"
+            : sourceType === "co-applicant"
+            ? `Co-Applicant ${Number(sourceIndex) + 1}`
+            : `Occupant ${Number(sourceIndex) + 1}`)
+      );
+    }
+  };
+
+  // Get existing addresses for dropdown
+  const getExistingAddresses = (): ExistingAddress[] => {
+    const addresses: ExistingAddress[] = [];
+
+    // Add primary applicant
+    if (form.watch("currentAddress")) {
+      addresses.push({
+        name: form.watch("fullName"),
+        type: "primary",
+        currentAddress: form.watch("currentAddress"),
+        currentCity: form.watch("currentCity"),
+        currentState: form.watch("currentState"),
+        currentZIP: form.watch("currentZIP"),
+        currentOwnerPhone: form.watch("currentOwnerPhone"),
+        currentResidenceType: form.watch("currentResidenceType"),
+      });
+    }
+
+    // Add co-applicants
+    form.watch("coApplicants")?.forEach((coApp, index) => {
+      if (coApp.currentAddress && !coApp.addressReference) {
+        addresses.push({
+          name: coApp.fullName,
+          type: "co-applicant",
+          index,
+          currentAddress: coApp.currentAddress,
+          currentCity: coApp.currentCity,
+          currentState: coApp.currentState,
+          currentZIP: coApp.currentZIP,
+          currentOwnerPhone: coApp.currentOwnerPhone,
+          currentResidenceType: coApp.currentResidenceType,
+        });
+      }
+    });
+
+    // Add occupants
+    form.watch("occupants")?.forEach((occ, index) => {
+      if (occ.currentAddress && !occ.addressReference) {
+        addresses.push({
+          name: occ.name,
+          type: "occupant",
+          index,
+          currentAddress: occ.currentAddress,
+          currentCity: occ.currentCity,
+          currentState: occ.currentState,
+          currentZIP: occ.currentZIP,
+          currentOwnerPhone: occ.currentOwnerPhone,
+          currentResidenceType: occ.currentResidenceType,
+        });
+      }
+    });
+
+    return addresses;
+  };
 
   return (
     <div className="space-y-6">
@@ -158,29 +393,7 @@ export default function StepOne({
                 type="button"
                 variant="link"
                 className="underline"
-                onClick={() => {
-                  const coApplicants = form.getValues("coApplicants") || [];
-                  form.setValue("coApplicants", [
-                    ...coApplicants,
-                    {
-                      fullName: "",
-                      gender: "",
-                      birthdate: "",
-                      formerName: "",
-                      socialSecurity: "",
-                      driverLicense: "",
-                      driverLicenseState: "",
-                      governmentID: "",
-                      governmentIDState: "",
-                      homePhone: "",
-                      cellPhone: "",
-                      workPhone: "",
-                      email: "",
-                      isMarried: false,
-                      isUSCitizen: false,
-                    },
-                  ]);
-                }}
+                onClick={addCoApplicant}
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Add Co-Applicant
@@ -266,7 +479,10 @@ export default function StepOne({
                             <Checkbox
                               checked={field.value === true}
                               onCheckedChange={() =>
-                                form.setValue("isUSCitizen", true)
+                                form.setValue(
+                                  `occupants.${index}.isUSCitizen`,
+                                  true
+                                )
                               }
                             />
                             <span>Yes</span>
@@ -275,7 +491,10 @@ export default function StepOne({
                             <Checkbox
                               checked={field.value === false}
                               onCheckedChange={() =>
-                                form.setValue("isUSCitizen", false)
+                                form.setValue(
+                                  `occupants.${index}.isUSCitizen`,
+                                  false
+                                )
                               }
                             />
                             <span>No</span>
@@ -381,41 +600,22 @@ export default function StepOne({
                           ? "State (DL)"
                           : "Country (DL)"}
                       </FormLabel>
-                      <Select
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="w-[150px]">
-                            <SelectValue
-                              placeholder={
-                                form.watch(`occupants.${index}.isUSCitizen`)
-                                  ? "Select state"
-                                  : "Select country"
-                              }
-                            />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent className="w-[150px]">
-                          {form.watch(`occupants.${index}.isUSCitizen`)
-                            ? US_STATES.map((state) => (
-                                <SelectItem
-                                  key={state.value}
-                                  value={state.value}
-                                >
-                                  {state.label}
-                                </SelectItem>
-                              ))
-                            : COUNTRIES.map((country) => (
-                                <SelectItem
-                                  key={country.value}
-                                  value={country.value}
-                                >
-                                  {country.label}
-                                </SelectItem>
-                              ))}
-                        </SelectContent>
-                      </Select>
+                      <FormControl>
+                        <LocationDropdown
+                          type={
+                            form.watch(`occupants.${index}.isUSCitizen`)
+                              ? "state"
+                              : "country"
+                          }
+                          value={field.value}
+                          onChange={field.onChange}
+                          placeholder={`Select ${
+                            form.watch(`occupants.${index}.isUSCitizen`)
+                              ? "state"
+                              : "country"
+                          }`}
+                        />
+                      </FormControl>
                     </div>
                     <FormMessage />
                   </FormItem>
@@ -443,7 +643,7 @@ export default function StepOne({
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {(occupant.isUSCitizen
+                          {(form.watch(`occupants.${index}.isUSCitizen`)
                             ? GOVERNMENT_ID_TYPES
                             : INTERNATIONAL_ID_TYPES
                           ).map((type) => (
@@ -487,41 +687,22 @@ export default function StepOne({
                           ? "State (Gov ID)"
                           : "Country (Gov ID)"}
                       </FormLabel>
-                      <Select
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="w-[150px]">
-                            <SelectValue
-                              placeholder={
-                                form.watch(`occupants.${index}.isUSCitizen`)
-                                  ? "Select state"
-                                  : "Select country"
-                              }
-                            />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent className="w-[150px]">
-                          {form.watch(`occupants.${index}.isUSCitizen`)
-                            ? US_STATES.map((state) => (
-                                <SelectItem
-                                  key={state.value}
-                                  value={state.value}
-                                >
-                                  {state.label}
-                                </SelectItem>
-                              ))
-                            : COUNTRIES.map((country) => (
-                                <SelectItem
-                                  key={country.value}
-                                  value={country.value}
-                                >
-                                  {country.label}
-                                </SelectItem>
-                              ))}
-                        </SelectContent>
-                      </Select>
+                      <FormControl>
+                        <LocationDropdown
+                          type={
+                            form.watch(`occupants.${index}.isUSCitizen`)
+                              ? "state"
+                              : "country"
+                          }
+                          value={field.value}
+                          onChange={field.onChange}
+                          placeholder={`Select ${
+                            form.watch(`occupants.${index}.isUSCitizen`)
+                              ? "state"
+                              : "country"
+                          }`}
+                        />
+                      </FormControl>
                     </div>
                     <FormMessage />
                   </FormItem>
@@ -536,25 +717,7 @@ export default function StepOne({
             type="button"
             variant="link"
             className="underline"
-            onClick={() => {
-              const occupants = form.getValues("occupants") || [];
-              form.setValue("occupants", [
-                ...occupants,
-                {
-                  name: "",
-                  relationship: "",
-                  isUSCitizen: true,
-                  birthdate: "",
-                  socialSecurity: "",
-                  driverLicense: "",
-                  driverLicenseState: "",
-                  phone: "",
-                  governmentIDType: "",
-                  governmentID: "",
-                  governmentIDState: "",
-                },
-              ]);
-            }}
+            onClick={addOccupant}
           >
             <Plus className="h-4 w-4 mr-2" />
             Add Occupant
@@ -565,39 +728,70 @@ export default function StepOne({
       {/* Where you live */}
       <div className="space-y-4">
         <h3 className="text-lg font-medium underline">WHERE YOU LIVE</h3>
-        <WhereYouLive form={form} type="current" />
+        <WhereYouLive
+          form={form}
+          type="current"
+          residencyStartDate={residencyStartDate}
+          applicantType="primary"
+          applicantName={form.watch("fullName")}
+          existingAddresses={[]}
+          todaysDate={todaysDate}
+        />
 
         {/* Previous address */}
-        <Accordion
-          type="single"
-          collapsible
-          onValueChange={(value) => {
-            if (value === "previous-address") {
-              form.setValue("previousResidenceType", "rent");
+        {previousAddressOpen && (
+          <Accordion type="single" value="previous" collapsible={false}>
+            <AccordionItem value="previous">
+              <AccordionTrigger>Previous Address</AccordionTrigger>
+              <AccordionContent>
+                <WhereYouLive
+                  form={form}
+                  type="previous"
+                  residencyStartDate={residencyStartDate}
+                  previousDateFrom={previousDateFrom}
+                  previousDateTo={previousDateTo}
+                  applicantType="primary"
+                  applicantName={form.watch("fullName")}
+                  todaysDate={todaysDate}
+                />
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        )}
+
+        {/* Co-Applicants' Addresses */}
+        {form.watch("coApplicants")?.map((coApp, index) => (
+          <WhereYouLive
+            key={`co-app-${index}`}
+            form={form}
+            type="current"
+            applicantType="co-applicant"
+            applicantIndex={index}
+            applicantName={coApp.fullName}
+            existingAddresses={getExistingAddresses()}
+            onAddressSelect={(selected) =>
+              copyAddress(selected, "co-applicant", index)
             }
-          }}
-        >
-          <AccordionItem
-            value="previous-address"
-            className={
-              !requirePreviousAddress ? "opacity-50 pointer-events-none" : ""
+            todaysDate={todaysDate}
+          />
+        ))}
+
+        {/* Occupants' Addresses */}
+        {form.watch("occupants")?.map((occ, index) => (
+          <WhereYouLive
+            key={`occ-${index}`}
+            form={form}
+            type="current"
+            applicantType="occupant"
+            applicantIndex={index}
+            applicantName={occ.name}
+            existingAddresses={getExistingAddresses()}
+            onAddressSelect={(selected) =>
+              copyAddress(selected, "occupant", index)
             }
-          >
-            <AccordionTrigger className="font-medium italic underline">
-              Fill out if you have been at your current address for less than
-              five years
-            </AccordionTrigger>
-            <AccordionContent className="space-y-4">
-              <WhereYouLive
-                form={form}
-                type="previous"
-                residencyStartDate={residencyStartDate}
-                previousDateFrom={previousDateFrom}
-                previousDateTo={previousDateTo}
-              />
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
+            todaysDate={todaysDate}
+          />
+        ))}
       </div>
     </div>
   );

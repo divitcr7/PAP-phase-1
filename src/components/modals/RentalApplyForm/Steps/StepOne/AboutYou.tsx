@@ -16,10 +16,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { formatPhoneNumber } from "@/lib/utils";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { US_STATES } from "@/constants/states";
-import { GOVERNMENT_ID_TYPES, INTERNATIONAL_ID_TYPES } from "@/constants/identification";
-import { COUNTRIES } from "@/constants/countries";
+import { IDTypeDropdown } from "../../common/IDTypeDropdown";
+import { LocationDropdown } from "../../common/LocationDropdown";
 
 interface AboutYouProps {
   form: UseFormReturn<ApplyFormValues>;
@@ -66,7 +64,11 @@ export function AboutYou({
         {/* Citizen */}
         <FormField
           control={form.control}
-          name="isUSCitizen"
+          name={
+            type === "primary"
+              ? "isUSCitizen"
+              : `coApplicants.${index}.isUSCitizen`
+          }
           render={({ field }) => (
             <FormItem className="col-span-3">
               <div className="flex items-center gap-4 h-9">
@@ -77,7 +79,12 @@ export function AboutYou({
                       <Checkbox
                         checked={field.value === true}
                         onCheckedChange={() =>
-                          form.setValue("isUSCitizen", true)
+                          form.setValue(
+                            type === "primary"
+                              ? "isUSCitizen"
+                              : `coApplicants.${index}.isUSCitizen`,
+                            true
+                          )
                         }
                       />
                       <span>Yes</span>
@@ -86,7 +93,12 @@ export function AboutYou({
                       <Checkbox
                         checked={field.value === false}
                         onCheckedChange={() =>
-                          form.setValue("isUSCitizen", false)
+                          form.setValue(
+                            type === "primary"
+                              ? "isUSCitizen"
+                              : `coApplicants.${index}.isUSCitizen`,
+                            false
+                          )
                         }
                       />
                       <span>No</span>
@@ -101,7 +113,9 @@ export function AboutYou({
         {/* Birthdate */}
         <FormField
           control={form.control}
-          name="birthdate"
+          name={
+            type === "primary" ? "birthdate" : `coApplicants.${index}.birthdate`
+          }
           render={({ field }) => (
             <FormItem className="col-span-3">
               <div className="flex items-center gap-2 max-w-fit">
@@ -151,7 +165,11 @@ export function AboutYou({
       <div className="grid grid-cols-3 gap-8">
         <FormField
           control={form.control}
-          name="socialSecurity"
+          name={
+            type === "primary"
+              ? "socialSecurity"
+              : `coApplicants.${index}.socialSecurity`
+          }
           render={({ field }) => (
             <FormItem>
               <div className="flex items-center gap-2">
@@ -168,7 +186,11 @@ export function AboutYou({
         />
         <FormField
           control={form.control}
-          name="driverLicense"
+          name={
+            type === "primary"
+              ? "driverLicense"
+              : `coApplicants.${index}.driverLicense`
+          }
           render={({ field }) => (
             <FormItem>
               <div className="flex items-center gap-2">
@@ -183,41 +205,28 @@ export function AboutYou({
             </FormItem>
           )}
         />
+        {/* State/Country Logic */}
         <FormField
           control={form.control}
-          name="driverLicenseState"
+          name={
+            type === "primary"
+              ? "driverLicenseState"
+              : `coApplicants.${index}.driverLicenseState`
+          }
           render={({ field }) => (
             <FormItem>
               <div className="flex items-center gap-2">
                 <FormLabel className="min-w-fit" required>
-                  {isUSCitizen
-                    ? "State (Driver License)"
-                    : "Country (Driver License)"}
+                  {isUSCitizen ? "State" : "Country"} (Driver License)
                 </FormLabel>
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <FormControl>
-                    <SelectTrigger className="w-[150px]">
-                      <SelectValue
-                        placeholder={`Select ${
-                          isUSCitizen ? "State" : "Country"
-                        }`}
-                      />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent className="w-[150px]">
-                    {isUSCitizen
-                      ? US_STATES.map((state) => (
-                          <SelectItem key={state.value} value={state.value}>
-                            {state.label}
-                          </SelectItem>
-                        ))
-                      : COUNTRIES.map((country) => (
-                          <SelectItem key={country.value} value={country.value}>
-                            {country.label}
-                          </SelectItem>
-                        ))}
-                  </SelectContent>
-                </Select>
+                <FormControl>
+                  <LocationDropdown
+                    type={isUSCitizen ? "state" : "country"}
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder={`Select ${isUSCitizen ? "state" : "country"}`}
+                  />
+                </FormControl>
               </div>
             </FormItem>
           )}
@@ -227,37 +236,35 @@ export function AboutYou({
       <div className="flex gap-12">
         <FormField
           control={form.control}
-          name="governmentIDType"
+          name={
+            type === "primary"
+              ? "governmentIDType"
+              : `coApplicants.${index}.governmentIDType`
+          }
           render={({ field }) => (
             <FormItem className="">
               <div className="flex items-center gap-2">
                 <FormLabel className="min-w-fit" required>
                   Government ID Type
                 </FormLabel>
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <FormControl>
-                    <SelectTrigger className="w-[290px]">
-                      <SelectValue placeholder="Select ID type" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {(isUSCitizen
-                      ? GOVERNMENT_ID_TYPES
-                      : INTERNATIONAL_ID_TYPES
-                    ).map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
-                        {type.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <FormControl>
+                  <IDTypeDropdown
+                    value={field.value}
+                    onChange={field.onChange}
+                    isUSCitizen={isUSCitizen}
+                  />
+                </FormControl>
               </div>
             </FormItem>
           )}
         />
         <FormField
           control={form.control}
-          name="governmentID"
+          name={
+            type === "primary"
+              ? "governmentID"
+              : `coApplicants.${index}.governmentID`
+          }
           render={({ field }) => (
             <FormItem>
               <div className="flex items-center gap-2">
@@ -277,31 +284,25 @@ export function AboutYou({
         />
         <FormField
           control={form.control}
-          name="governmentIDState"
+          name={
+            type === "primary"
+              ? "governmentIDState"
+              : `coApplicants.${index}.governmentIDState`
+          }
           render={({ field }) => (
             <FormItem>
               <div className="flex items-center gap-3">
                 <FormLabel className="min-w-fit" required>
                   {isUSCitizen ? "State" : "Country"} (Government ID)
                 </FormLabel>
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <FormControl>
-                    <SelectTrigger className="w-[150px]">
-                      <SelectValue
-                        placeholder={`Select ${
-                          isUSCitizen ? "State" : "Country"
-                        }`}
-                      />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent className="w-[150px]">
-                    {US_STATES.map((state) => (
-                      <SelectItem key={state.value} value={state.value}>
-                        {state.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <FormControl>
+                  <LocationDropdown
+                    type={isUSCitizen ? "state" : "country"}
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder={`Select ${isUSCitizen ? "state" : "country"}`}
+                  />
+                </FormControl>
               </div>
             </FormItem>
           )}
@@ -312,7 +313,9 @@ export function AboutYou({
       <div className="grid grid-cols-4 gap-6">
         <FormField
           control={form.control}
-          name="homePhone"
+          name={
+            type === "primary" ? "homePhone" : `coApplicants.${index}.homePhone`
+          }
           render={({ field }) => (
             <FormItem>
               <div className="flex items-center gap-2">

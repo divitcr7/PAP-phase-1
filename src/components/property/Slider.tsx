@@ -16,56 +16,34 @@ export default function Slider({ images }: SliderProps) {
   const navigationPrevRef = useRef<HTMLButtonElement>(null);
   const navigationNextRef = useRef<HTMLButtonElement>(null);
 
-  const handlePrev = () => {
-    if (mainSwiper) {
-      if (activeIndex === 0) {
-        mainSwiper.slideTo(images.length - 1);
-      } else {
-        mainSwiper.slidePrev();
-      }
-    }
-  };
-
-  const handleNext = () => {
-    if (mainSwiper) {
-      if (activeIndex === images.length - 1) {
-        mainSwiper.slideTo(0);
-      } else {
-        mainSwiper.slideNext();
-      }
-    }
-  };
-
   return (
     <div className="px-4">
       <div className="max-w-5xl">
         <div className="relative mb-4">
           <Swiper
-            modules={[Thumbs, EffectFade, Navigation]}
-            thumbs={{
-              swiper:
-                thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null,
-            }}
-            className="rounded-lg overflow-hidden"
-            spaceBetween={16}
-            speed={500}
+            modules={[Navigation, EffectFade, Thumbs, Autoplay]}
+            thumbs={{ swiper: thumbsSwiper }}
             effect="fade"
-            fadeEffect={{
-              crossFade: true,
-            }}
             loop={true}
-            navigation={false}
+            autoplay={{
+              delay: 3000,
+              disableOnInteraction: false,
+            }}
+            navigation={{
+              prevEl: navigationPrevRef.current,
+              nextEl: navigationNextRef.current,
+            }}
             onSwiper={setMainSwiper}
             onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
+            className="main-swiper rounded-lg overflow-hidden"
+            style={{ height: "500px" }}
           >
             {images.map((image, index) => (
-              <SwiperSlide key={index}>
-                <div className="image-sw-single aspect-[16/9] bg-muted">
+              <SwiperSlide key={index} className="!h-full">
+                <div className="w-full h-full relative">
                   <img
                     src={image.src}
                     alt={image.alt}
-                    width={image.width}
-                    height={image.height}
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -77,7 +55,7 @@ export default function Slider({ images }: SliderProps) {
             <button
               type="button"
               ref={navigationPrevRef}
-              onClick={handlePrev}
+              onClick={() => mainSwiper?.slidePrev()}
               className="navigation z-10 flex items-center justify-center w-10 h-10 rounded-full bg-background/80 text-foreground shadow-md pointer-events-auto ml-4 hover:bg-background transition-colors"
             >
               <ChevronLeft className="h-6 w-6" />
@@ -86,7 +64,7 @@ export default function Slider({ images }: SliderProps) {
             <button
               type="button"
               ref={navigationNextRef}
-              onClick={handleNext}
+              onClick={() => mainSwiper?.slideNext()}
               className="navigation z-10 flex items-center justify-center w-10 h-10 rounded-full bg-background/80 text-foreground shadow-md pointer-events-auto mr-4 hover:bg-background transition-colors"
             >
               <ChevronRight className="h-6 w-6" />
@@ -94,57 +72,34 @@ export default function Slider({ images }: SliderProps) {
             </button>
           </div>
         </div>
+
         <Swiper
           onSwiper={setThumbsSwiper}
-          spaceBetween={10}
-          slidesPerView="auto"
-          direction="horizontal"
-          freeMode={true}
+          spaceBetween={8}
+          slidesPerView={6}
           watchSlidesProgress={true}
-          modules={[Thumbs, Navigation, Autoplay]}
-          className="thumbs-swiper-thumbnails mt-4"
-          slideToClickedSlide={true}
-          autoplay={{
-            delay: 2000,
-            disableOnInteraction: false,
-          }}
+          modules={[Navigation, Thumbs]}
+          className="thumbs-swiper mt-4"
+          loop={true}
           breakpoints={{
-            375: {
-              slidesPerView: 3,
-              spaceBetween: 10,
-            },
-            640: {
-              slidesPerView: 4,
-              spaceBetween: 12,
-            },
-            768: {
-              slidesPerView: 5,
-              spaceBetween: 14,
-            },
-            1024: {
-              slidesPerView: 6,
-              spaceBetween: 14,
-            },
+            375: { slidesPerView: 3 },
+            640: { slidesPerView: 4 },
+            768: { slidesPerView: 5 },
+            1024: { slidesPerView: 6 },
           }}
         >
           {images.map((image, index) => (
-            <SwiperSlide
-              key={index}
-              className="cursor-pointer w-auto max-w-[149px]"
-              onClick={() => mainSwiper?.slideTo(index)}
-            >
+            <SwiperSlide key={index} className="!h-20 cursor-pointer">
               <div
-                className={`h-[80px] rounded-md overflow-hidden border-2 transition-all ${
+                className={`w-full h-full rounded-md overflow-hidden border-2 transition-all ${
                   activeIndex === index
                     ? "border-blue-500"
-                    : "border-black/55 hover:border-primary"
+                    : "border-gray-200 hover:border-gray-300"
                 }`}
               >
                 <img
                   src={image.thumbnailSrc || image.src}
                   alt={`${image.alt} thumbnail`}
-                  width={149}
-                  height={80}
                   className="w-full h-full object-cover"
                 />
               </div>

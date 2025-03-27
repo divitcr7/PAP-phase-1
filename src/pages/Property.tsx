@@ -1,7 +1,7 @@
 import { useParams } from "react-router";
 import { FC, useEffect, useState } from "react";
 import DetailsTitle from "../components/property/DetailsTitle";
-// import Slider from "../components/property/Slider";
+import Slider from "../components/property/Slider";
 import { getPropertyByName } from "@/data/properties";
 import MetaComponent from "../components/seo/MetaComponent";
 import PropertyDetails from "../components/property/PropertyDetails";
@@ -60,7 +60,7 @@ const PropertyDetailsPage: FC = () => {
           price={unit.price}
         />
 
-        {/* <Slider images={unit.images} /> */}
+        <Slider images={unit.images} />
 
         <PropertyDetails unit={unit} />
       </div>

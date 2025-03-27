@@ -1,3 +1,4 @@
+import { ExistingAddress, AddressType } from "@/schemas/ApplyForm";
 import { UseFormReturn } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import {
@@ -10,6 +11,7 @@ import {
 import { ApplyFormValues } from "@/schemas/ApplyForm";
 import { Checkbox } from "@/components/ui/checkbox";
 import { formatPhoneNumber } from "@/lib/utils";
+import { LocationDropdown } from "../../common/LocationDropdown";
 import {
   Select,
   SelectContent,
@@ -17,7 +19,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { US_STATES } from "@/constants/states";
 
 interface WhereYouLiveProps {
   form: UseFormReturn<ApplyFormValues>;
@@ -25,6 +26,12 @@ interface WhereYouLiveProps {
   residencyStartDate?: string;
   previousDateFrom?: string;
   previousDateTo?: string;
+  applicantType: AddressType["type"];
+  applicantIndex?: number;
+  applicantName: string;
+  existingAddresses?: ExistingAddress[];
+  onAddressSelect?: (selected: string) => void;
+  todaysDate: string;
 }
 
 export function WhereYouLive({
@@ -33,15 +40,110 @@ export function WhereYouLive({
   residencyStartDate,
   previousDateFrom,
   previousDateTo,
+  applicantType,
+  applicantIndex = 0,
+  applicantName,
+  existingAddresses,
+  onAddressSelect,
+  todaysDate,
 }: WhereYouLiveProps) {
   const prefix = type === "current" ? "current" : "previous";
-  const todaysDate = new Date().toISOString().split("T")[0];
+  const showAddressSelection =
+    applicantType !== "primary" && type === "current";
+
+  // Improved helper function to get field name with proper typing
+  const getFieldName = (field: string) => {
+    if (applicantType === "primary") {
+      return `${prefix}${field}` as keyof ApplyFormValues;
+    } else if (applicantType === "co-applicant") {
+      return `coApplicants.${applicantIndex}.${prefix}${field}` as keyof ApplyFormValues;
+    } else {
+      return `occupants.${applicantIndex}.${prefix}${field}` as keyof ApplyFormValues;
+    }
+  };
+
+  // Helper function for date fields
+  const getResidencyDateFieldName = () => {
+    if (type === "current") {
+      if (applicantType === "primary") {
+        return "residencyStartDate" as const;
+      } else if (applicantType === "co-applicant") {
+        return `coApplicants.${applicantIndex}.residencyStartDate` as const;
+      } else {
+        return `occupants.${applicantIndex}.residencyStartDate` as const;
+      }
+    } else {
+      if (applicantType === "primary") {
+        return "previousDateFrom" as const;
+      } else if (applicantType === "co-applicant") {
+        return `coApplicants.${applicantIndex}.previousDateFrom` as const;
+      } else {
+        return `occupants.${applicantIndex}.previousDateFrom` as const;
+      }
+    }
+  };
+
+  const getPreviousToDateFieldName = () => {
+    if (applicantType === "primary") {
+      return "previousDateTo" as const;
+    } else if (applicantType === "co-applicant") {
+      return `coApplicants.${applicantIndex}.previousDateTo` as const;
+    } else {
+      return `occupants.${applicantIndex}.previousDateTo` as const;
+    }
+  };
 
   return (
     <div className="space-y-4">
+      {/* Address Selection Dropdown */}
+      {showAddressSelection &&
+        existingAddresses &&
+        existingAddresses.length > 0 && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">
+              Same address as:
+            </span>
+            <Select onValueChange={onAddressSelect}>
+              <SelectTrigger className="w-[300px]">
+                <SelectValue placeholder="Select existing address" />
+              </SelectTrigger>
+              <SelectContent>
+                {existingAddresses
+                  .filter((addr) => addr.currentAddress) // Only show addresses that are filled
+                  .map((addr, idx) => (
+                    <SelectItem
+                      key={idx}
+                      value={`${addr.type}-${addr.index ?? 0}`}
+                    >
+                      {addr.name} (
+                      {addr.type === "primary"
+                        ? "Primary Applicant"
+                        : addr.type === "co-applicant"
+                        ? `Co-Applicant ${(addr.index ?? 0) + 1}`
+                        : `Occupant ${(addr.index ?? 0) + 1}`}
+                      )
+                    </SelectItem>
+                  ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+
+      {/* Title with applicant info */}
+      <div className="flex flex-col gap-1">
+        <h3 className="text-lg font-medium">{applicantName}</h3>
+        <p className="text-sm text-muted-foreground">
+          {applicantType === "primary"
+            ? "Primary Applicant"
+            : applicantType === "co-applicant"
+            ? `Co-Applicant ${(applicantIndex ?? 0) + 1}`
+            : `Occupant ${(applicantIndex ?? 0) + 1}`}
+        </p>
+      </div>
+
       <FormField
         control={form.control}
-        name={`${prefix}Address`}
+        name={getFieldName("Address")}
         render={({ field }) => (
           <FormItem className="flex-1">
             <div className="flex items-center gap-2">
@@ -71,7 +173,7 @@ export function WhereYouLive({
         {/* City, State, ZIP, Phone fields */}
         <FormField
           control={form.control}
-          name={`${prefix}City`}
+          name={getFieldName("City")}
           render={({ field }) => (
             <FormItem className="flex-1">
               <div className="flex items-center gap-2">
@@ -85,32 +187,26 @@ export function WhereYouLive({
         />
         <FormField
           control={form.control}
-          name={`${prefix}State`}
+          name={getFieldName("State")}
           render={({ field }) => (
             <FormItem className="">
               <div className="flex items-center gap-2">
                 <FormLabel required>State</FormLabel>
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <FormControl>
-                    <SelectTrigger className="w-[150px]">
-                      <SelectValue placeholder="Select state" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent className="w-[150px]">
-                    {US_STATES.map((state) => (
-                      <SelectItem key={state.value} value={state.value}>
-                        {state.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <FormControl>
+                  <LocationDropdown
+                    type="state"
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder="Select state"
+                  />
+                </FormControl>
               </div>
             </FormItem>
           )}
         />
         <FormField
           control={form.control}
-          name={`${prefix}ZIP`}
+          name={getFieldName("ZIP")}
           render={({ field }) => (
             <FormItem className="">
               <div className="flex items-center gap-2">
@@ -130,7 +226,7 @@ export function WhereYouLive({
         />
         <FormField
           control={form.control}
-          name={`${prefix}OwnerPhone`}
+          name={getFieldName("OwnerPhone")}
           render={({ field }) => (
             <FormItem className="w-[280px]">
               <div className="flex items-center gap-2">
@@ -155,7 +251,7 @@ export function WhereYouLive({
         />
         <FormField
           control={form.control}
-          name={`${prefix}ResidenceType`}
+          name={getFieldName("ResidenceType")}
           render={({ field }) => (
             <FormItem className="min-w-fit">
               <div className="flex items-center gap-2">
@@ -190,7 +286,7 @@ export function WhereYouLive({
         {type === "current" ? (
           <FormField
             control={form.control}
-            name="residencyStartDate"
+            name={getResidencyDateFieldName()}
             render={({ field }) => (
               <FormItem className="w-fit">
                 <div className="flex items-center gap-2">
@@ -211,7 +307,7 @@ export function WhereYouLive({
           <>
             <FormField
               control={form.control}
-              name="previousDateFrom"
+              name={getResidencyDateFieldName()}
               render={({ field }) => (
                 <FormItem className="w-fit">
                   <div className="flex items-center gap-2">
@@ -230,7 +326,7 @@ export function WhereYouLive({
             />
             <FormField
               control={form.control}
-              name="previousDateTo"
+              name={getPreviousToDateFieldName()}
               render={({ field }) => (
                 <FormItem className="w-fit">
                   <div className="flex items-center gap-2">
@@ -253,7 +349,7 @@ export function WhereYouLive({
         {/* Date fields and other inputs */}
         <FormField
           control={form.control}
-          name={`${prefix}ApartmentName`}
+          name={getFieldName("ApartmentName")}
           render={({ field }) => (
             <FormItem className="flex-1">
               <div className="flex items-center gap-2">
@@ -269,7 +365,7 @@ export function WhereYouLive({
         />
         <FormField
           control={form.control}
-          name={`${prefix}OwnerName`}
+          name={getFieldName("OwnerName")}
           render={({ field }) => (
             <FormItem className="w-[450px]">
               <div className="flex items-center gap-2">
@@ -287,7 +383,7 @@ export function WhereYouLive({
 
       <FormField
         control={form.control}
-        name={`${prefix}ReasonForLeaving`}
+        name={getFieldName("ReasonForLeaving")}
         render={({ field }) => (
           <FormItem className="flex-1">
             <div className="flex items-center gap-2">

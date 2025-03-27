@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @plugin "tailwindcss-animate";
+@plugin 'tailwind-scrollbar';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -123,28 +124,51 @@
   }
 }
 
-/* Works on Chrome, Edge, Safari */
-::-webkit-scrollbar {
-  width: 6px;  /* Thin width */
-  height: 6px; /* For horizontal scrollbars */
+@layer utilities {
+  /* Scrollbar styles */
+  ::-webkit-scrollbar {
+    @apply w-1.5 h-1.5;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-100 rounded-xl;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-400 rounded-xl hover:bg-gray-500;
+  }
+
+  /* Firefox scrollbar */
+  * {
+    @apply scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-400;
+  }
 }
 
-::-webkit-scrollbar-track {
-  background: #f1f1f1; /* Light gray background */
-  border-radius: 10px;
+/* swiper CSS */
+.thumbs-swiper {
+  @apply w-full;
 }
 
-::-webkit-scrollbar-thumb {
-  background: #a8a8a8; /* Gray scrollbar */
-  border-radius: 10px;
+.thumbs-swiper .swiper-wrapper {
+  @apply flex flex-row;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #888; /* Darker on hover */
+.thumbs-swiper .swiper-slide {
+  @apply opacity-40 transition-opacity duration-300 ease-in-out;
 }
 
-/* Works on Firefox */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: #a8a8a8 #f1f1f1; /* thumb color, track color */
+.thumbs-swiper .swiper-slide-thumb-active {
+  @apply opacity-100;
+}
+
+.swiper-slide-thumb-active div {
+  @apply border-blue-500 ![border-color:rgb(59,130,246)];
+}
+
+.main-swiper .swiper-slide {
+  @apply opacity-0 transition-opacity duration-300 ease-in-out;
+}
+
+.main-swiper .swiper-slide-active {
+  @apply opacity-100;
 }
