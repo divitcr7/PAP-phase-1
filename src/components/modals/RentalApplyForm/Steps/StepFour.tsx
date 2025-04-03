@@ -6,7 +6,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { ApplyFormValues } from "@/schemas/ApplyForm";
+import { ApplyFormValues } from "@/schemas/ApplyForm/ApplyForm";
 
 export default function StepFour({ form }: { form: UseFormReturn<ApplyFormValues> }) {
   return (

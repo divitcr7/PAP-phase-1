@@ -1,3 +1,5 @@
+export const DEFAULT_COUNTRY = "US";
+
 export const COUNTRIES = [
   { value: "US", label: "United States" },
   { value: "AF", label: "Afghanistan" },

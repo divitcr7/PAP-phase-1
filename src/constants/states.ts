@@ -1,3 +1,5 @@
+export const DEFAULT_STATE = "TX";
+
 export const US_STATES = [
   { value: "AL", label: "Alabama" },
   { value: "AK", label: "Alaska" },

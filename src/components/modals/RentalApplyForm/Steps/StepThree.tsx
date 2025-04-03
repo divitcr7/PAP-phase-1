@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { ApplyFormValues } from "../../../../schemas/ApplyForm";
+import type { ApplyFormValues } from "../../../../schemas/ApplyForm/ApplyForm";
 import {
   Accordion,
   AccordionItem,

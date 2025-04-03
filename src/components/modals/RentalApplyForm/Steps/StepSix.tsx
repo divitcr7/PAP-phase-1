@@ -1,7 +1,7 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ApplyFormValues } from "@/schemas/ApplyForm";
+import { ApplyFormValues } from "@/schemas/ApplyForm/ApplyForm";
 import { UseFormReturn } from "react-hook-form";
 
 export default function StepSix({ form }: { form: UseFormReturn<ApplyFormValues> }) {

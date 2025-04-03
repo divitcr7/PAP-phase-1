@@ -27,8 +27,10 @@ export function IDTypeDropdown({
 }: IDTypeDropdownProps) {
   const options = isUSCitizen ? GOVERNMENT_ID_TYPES : INTERNATIONAL_ID_TYPES;
 
+   const safeValue = typeof value === "string" ? value : "";
+
   return (
-    <Select value={value} onValueChange={onChange}>
+    <Select value={safeValue} onValueChange={onChange}>
       <SelectTrigger className={className || "w-[290px]"}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>

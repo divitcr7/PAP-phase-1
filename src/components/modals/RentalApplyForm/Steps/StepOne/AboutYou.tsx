@@ -1,14 +1,3 @@
-import { UseFormReturn } from "react-hook-form";
-import { Input } from "@/components/ui/input";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { ApplyFormValues } from "@/schemas/ApplyForm";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Accordion,
   AccordionContent,
@@ -17,117 +6,84 @@ import {
 } from "@/components/ui/accordion";
 import { formatPhoneNumber } from "@/lib/utils";
 import { IDTypeDropdown } from "../../common/IDTypeDropdown";
-import { LocationDropdown } from "../../common/LocationDropdown";
+import { UseFormReturn, Path } from "react-hook-form";
+import { ApplyFormValues, applicantInfoSchema } from "@/schemas/ApplyForm/ApplyForm";
+import { CustomDropdown } from "../../common/CustomDropdown";
+import { z } from "zod";
+import { FormInputField, FormCheckboxField } from "../../common/FormFields";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
+
+type ApplicantFields = z.infer<typeof applicantInfoSchema>;
 
 interface AboutYouProps {
   form: UseFormReturn<ApplyFormValues>;
-  type: "primary" | "co-applicant";
-  index?: number;
+  applicantIndex: number;
   min18Years: string;
-  isUSCitizen: boolean;
 }
 
-export function AboutYou({
+export default function AboutYou({
   form,
-  type,
-  index = 0,
+  applicantIndex,
   min18Years,
-  isUSCitizen,
 }: AboutYouProps) {
+
+  const getFieldName = <K extends keyof ApplicantFields>(
+    field: K
+  ): Path<ApplyFormValues> => {
+    return `applicants.${applicantIndex}.${String(
+      field
+    )}` as Path<ApplyFormValues>;
+  };
+
+  // Determine if the applicant is a US citizen
+  const isUSCitizen = form.getValues(getFieldName("isUSCitizen")) !== false;
+
   return (
-    <div className="space-y-3">
-      <h3 className="text-lg font-medium underline">
-        {type === "primary" ? "ABOUT YOU" : `CO-APPLICANT ${index + 1}`}
-      </h3>
+    <div
+      className={`space-y-3 px-4 ${
+        applicantIndex === 0
+          ? "border border-gray-200 rounded-md py-2 mt-1"
+          : ""
+      }`}
+    >
       <div className="grid grid-cols-12 gap-12">
         {/* Full Name section */}
-        <FormField
-          control={form.control}
-          name={
-            type === "primary" ? "fullName" : `coApplicants.${index}.fullName`
-          }
-          render={({ field }) => (
-            <FormItem className="col-span-6">
-              <div className="flex items-center gap-2">
-                <FormLabel className="min-w-fit" required>
-                  Full Name
-                </FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="John Doe" />
-                </FormControl>
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
+        <FormInputField
+          form={form}
+          name={getFieldName("fullName")}
+          label="Full Name"
+          required
+          placeholder="John Doe"
+          className="col-span-6"
         />
 
         {/* Citizen */}
-        <FormField
-          control={form.control}
-          name={
-            type === "primary"
-              ? "isUSCitizen"
-              : `coApplicants.${index}.isUSCitizen`
-          }
-          render={({ field }) => (
-            <FormItem className="col-span-3">
-              <div className="flex items-center gap-4 h-9">
-                <FormLabel required>US Citizen</FormLabel>
-                <FormControl>
-                  <div className="flex gap-4">
-                    <label className="flex items-center space-x-2">
-                      <Checkbox
-                        checked={field.value === true}
-                        onCheckedChange={() =>
-                          form.setValue(
-                            type === "primary"
-                              ? "isUSCitizen"
-                              : `coApplicants.${index}.isUSCitizen`,
-                            true
-                          )
-                        }
-                      />
-                      <span>Yes</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <Checkbox
-                        checked={field.value === false}
-                        onCheckedChange={() =>
-                          form.setValue(
-                            type === "primary"
-                              ? "isUSCitizen"
-                              : `coApplicants.${index}.isUSCitizen`,
-                            false
-                          )
-                        }
-                      />
-                      <span>No</span>
-                    </label>
-                  </div>
-                </FormControl>
-              </div>
-            </FormItem>
-          )}
+        <FormCheckboxField
+          form={form}
+          name={getFieldName("isUSCitizen")}
+          label="US Citizen"
+          required
+          className="col-span-3"
+          options={[
+            { value: true, label: "Yes" },
+            { value: false, label: "No" },
+          ]}
         />
 
         {/* Birthdate */}
-        <FormField
-          control={form.control}
-          name={
-            type === "primary" ? "birthdate" : `coApplicants.${index}.birthdate`
-          }
-          render={({ field }) => (
-            <FormItem className="col-span-3">
-              <div className="flex items-center gap-2 max-w-fit">
-                <FormLabel className="min-w-fit" required>
-                  Birthdate
-                </FormLabel>
-                <FormControl>
-                  <Input {...field} type="date" max={min18Years} />
-                </FormControl>
-              </div>
-            </FormItem>
-          )}
+        <FormInputField
+          form={form}
+          name={getFieldName("birthdate")}
+          label="Birthdate"
+          required
+          type="date"
+          max={min18Years}
+          className="col-span-3 w-fit"
         />
       </div>
 
@@ -137,82 +93,39 @@ export function AboutYou({
             Former Name (If applicable)
           </AccordionTrigger>
           <AccordionContent>
-            <FormField
-              control={form.control}
-              name="formerName"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="flex items-center gap-2">
-                    <FormLabel className="min-w-fit">
-                      Former Full Name
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        placeholder="John Smith"
-                        className="max-w-[600px]"
-                      />
-                    </FormControl>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
+            <FormInputField
+              form={form}
+              name={getFieldName("formerName")}
+              label="Former Full Name"
+              placeholder="John Smith"
+              inputClassName="max-w-[600px]"
             />
           </AccordionContent>
         </AccordionItem>
       </Accordion>
 
       <div className="grid grid-cols-3 gap-8">
-        <FormField
-          control={form.control}
-          name={
-            type === "primary"
-              ? "socialSecurity"
-              : `coApplicants.${index}.socialSecurity`
-          }
-          render={({ field }) => (
-            <FormItem>
-              <div className="flex items-center gap-2">
-                <FormLabel className="min-w-fit" required>
-                  Social Security No.
-                </FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="123-45-6789" type="password" />
-                </FormControl>
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
+        <FormInputField
+          form={form}
+          name={getFieldName("socialSecurity")}
+          label="Social Security No."
+          required
+          placeholder="123-45-6789"
+          type="password"
         />
-        <FormField
-          control={form.control}
-          name={
-            type === "primary"
-              ? "driverLicense"
-              : `coApplicants.${index}.driverLicense`
-          }
-          render={({ field }) => (
-            <FormItem>
-              <div className="flex items-center gap-2">
-                <FormLabel className="min-w-fit" required>
-                  Driver License
-                </FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="12345678" />
-                </FormControl>
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
+
+        <FormInputField
+          form={form}
+          name={getFieldName("driverLicense")}
+          label="Driver License"
+          required
+          placeholder="12345678"
         />
+
         {/* State/Country Logic */}
         <FormField
           control={form.control}
-          name={
-            type === "primary"
-              ? "driverLicenseState"
-              : `coApplicants.${index}.driverLicenseState`
-          }
+          name={getFieldName("driverLicenseState")}
           render={({ field }) => (
             <FormItem>
               <div className="flex items-center gap-2">
@@ -220,9 +133,9 @@ export function AboutYou({
                   {isUSCitizen ? "State" : "Country"} (Driver License)
                 </FormLabel>
                 <FormControl>
-                  <LocationDropdown
+                  <CustomDropdown
                     type={isUSCitizen ? "state" : "country"}
-                    value={field.value}
+                    value={(field.value as string) || ""}
                     onChange={field.onChange}
                     placeholder={`Select ${isUSCitizen ? "state" : "country"}`}
                   />
@@ -236,11 +149,7 @@ export function AboutYou({
       <div className="flex gap-12">
         <FormField
           control={form.control}
-          name={
-            type === "primary"
-              ? "governmentIDType"
-              : `coApplicants.${index}.governmentIDType`
-          }
+          name={getFieldName("governmentIDType")}
           render={({ field }) => (
             <FormItem className="">
               <div className="flex items-center gap-2">
@@ -249,7 +158,7 @@ export function AboutYou({
                 </FormLabel>
                 <FormControl>
                   <IDTypeDropdown
-                    value={field.value}
+                    value={(field.value as string) || ""}
                     onChange={field.onChange}
                     isUSCitizen={isUSCitizen}
                   />
@@ -258,37 +167,19 @@ export function AboutYou({
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name={
-            type === "primary"
-              ? "governmentID"
-              : `coApplicants.${index}.governmentID`
-          }
-          render={({ field }) => (
-            <FormItem>
-              <div className="flex items-center gap-2">
-                <FormLabel className="min-w-fit" required>
-                  Government ID
-                </FormLabel>
-                <FormControl className="w-full">
-                  <Input
-                    className="w-full"
-                    {...field}
-                    placeholder="TX12345678"
-                  />
-                </FormControl>
-              </div>
-            </FormItem>
-          )}
+
+        <FormInputField
+          form={form}
+          name={getFieldName("governmentID")}
+          label="Government ID"
+          required
+          placeholder="TX12345678"
+          inputClassName="w-full"
         />
+
         <FormField
           control={form.control}
-          name={
-            type === "primary"
-              ? "governmentIDState"
-              : `coApplicants.${index}.governmentIDState`
-          }
+          name={getFieldName("governmentIDState")}
           render={({ field }) => (
             <FormItem>
               <div className="flex items-center gap-3">
@@ -296,9 +187,9 @@ export function AboutYou({
                   {isUSCitizen ? "State" : "Country"} (Government ID)
                 </FormLabel>
                 <FormControl>
-                  <LocationDropdown
+                  <CustomDropdown
                     type={isUSCitizen ? "state" : "country"}
-                    value={field.value}
+                    value={(field.value as string) || ""}
                     onChange={field.onChange}
                     placeholder={`Select ${isUSCitizen ? "state" : "country"}`}
                   />
@@ -311,205 +202,101 @@ export function AboutYou({
 
       {/* Contact Information */}
       <div className="grid grid-cols-4 gap-6">
-        <FormField
-          control={form.control}
-          name={
-            type === "primary" ? "homePhone" : `coApplicants.${index}.homePhone`
-          }
-          render={({ field }) => (
-            <FormItem>
-              <div className="flex items-center gap-2">
-                <FormLabel className="min-w-fit">Home Phone</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="(281) 555-0123"
-                    type="tel"
-                    maxLength={14}
-                    onChange={(e) => {
-                      const formatted = formatPhoneNumber(e.target.value);
-                      field.onChange(formatted);
-                    }}
-                  />
-                </FormControl>
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
+        <FormInputField
+          form={form}
+          name={getFieldName("homePhone")}
+          label="Home Phone"
+          placeholder="(281) 555-0123"
+          type="tel"
+          maxLength={14}
+          onChange={(e) => {
+            const formatted = formatPhoneNumber(e.target.value);
+            form.setValue(getFieldName("homePhone"), formatted);
+          }}
         />
-        <FormField
-          control={form.control}
-          name="cellPhone"
-          render={({ field }) => (
-            <FormItem>
-              <div className="flex items-center gap-2">
-                <FormLabel className="min-w-fit" required>
-                  Cell Phone
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="(281) 555-0123"
-                    type="tel"
-                    maxLength={14}
-                    onChange={(e) => {
-                      const formatted = formatPhoneNumber(e.target.value);
-                      field.onChange(formatted);
-                    }}
-                  />
-                </FormControl>
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
+
+        <FormInputField
+          form={form}
+          name={getFieldName("cellPhone")}
+          label="Cell Phone"
+          required
+          placeholder="(281) 555-0123"
+          type="tel"
+          maxLength={14}
+          onChange={(e) => {
+            const formatted = formatPhoneNumber(e.target.value);
+            form.setValue(getFieldName("cellPhone"), formatted);
+          }}
         />
-        <FormField
-          control={form.control}
-          name="workPhonePersonal"
-          render={({ field }) => (
-            <FormItem>
-              <div className="flex items-center gap-2">
-                <FormLabel className="min-w-fit">Work Phone</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="(281) 555-0123"
-                    type="tel"
-                    maxLength={14}
-                    onChange={(e) => {
-                      const formatted = formatPhoneNumber(e.target.value);
-                      field.onChange(formatted);
-                    }}
-                  />
-                </FormControl>
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
+
+        <FormInputField
+          form={form}
+          name={getFieldName("workPhonePersonal")}
+          label="Work Phone"
+          placeholder="(281) 555-0123"
+          type="tel"
+          maxLength={14}
+          onChange={(e) => {
+            const formatted = formatPhoneNumber(e.target.value);
+            form.setValue(getFieldName("workPhonePersonal"), formatted);
+          }}
         />
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <div className="flex items-center gap-2">
-                <FormLabel className="min-w-fit" required>
-                  Email
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    type="email"
-                    placeholder="work@company.com"
-                  />
-                </FormControl>
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
+
+        <FormInputField
+          form={form}
+          name={getFieldName("email")}
+          label="Email"
+          required
+          placeholder="work@company.com"
+          type="email"
         />
       </div>
 
       {/* Additional Information */}
-      <div className="flex gap-4 justify-between">
-        <FormField
-          control={form.control}
-          name="gender"
-          render={({ field }) => (
-            <FormItem className="col-span-3">
-              <div className="flex items-center gap-2 h-9">
-                <FormLabel className="min-w-fit" required>
-                  Gender:
-                </FormLabel>
-                <FormControl>
-                  <div className="flex gap-4">
-                    <label className="flex items-center space-x-2">
-                      <Checkbox
-                        checked={field.value === "male"}
-                        onCheckedChange={() => form.setValue("gender", "male")}
-                      />
-                      <span>Male</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <Checkbox
-                        checked={field.value === "female"}
-                        onCheckedChange={() =>
-                          form.setValue("gender", "female")
-                        }
-                      />
-                      <span>Female</span>
-                    </label>
-                  </div>
-                </FormControl>
-              </div>
-            </FormItem>
-          )}
+      <div className="grid grid-cols-3 gap-4 justify-between">
+        <FormCheckboxField
+          form={form}
+          name={getFieldName("gender")}
+          label="Gender:"
+          required
+          className="col-span-1"
+          options={[
+            { value: "male", label: "Male" },
+            { value: "female", label: "Female" },
+          ]}
         />
-        <FormField
-          control={form.control}
-          name="isMarried"
-          render={({ field }) => (
-            <FormItem>
-              <div className="flex items-center gap-4 h-9">
-                <FormLabel required>Marital Status</FormLabel>
-                <FormControl>
-                  <div className="flex gap-4">
-                    <label className="flex items-center space-x-2">
-                      <Checkbox
-                        checked={field.value === true}
-                        onCheckedChange={() => form.setValue("isMarried", true)}
-                      />
-                      <span>Yes</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <Checkbox
-                        checked={field.value === false}
-                        onCheckedChange={() =>
-                          form.setValue("isMarried", false)
-                        }
-                      />
-                      <span>No</span>
-                    </label>
-                  </div>
-                </FormControl>
-              </div>
-            </FormItem>
-          )}
+
+        <FormCheckboxField
+          form={form}
+          name={getFieldName("isMarried")}
+          label="Marital Status"
+          required
+          options={[
+            { value: true, label: "Yes" },
+            { value: false, label: "No" },
+          ]}
         />
-        <FormField
-          control={form.control}
+
+        {applicantIndex === 0 && <FormCheckboxField
+          form={form}
           name="isSmoker"
-          render={({ field }) => (
-            <FormItem>
-              <div className="flex items-center gap-4 h-9">
-                <FormLabel required>
-                  Do you or does any occupant smoke?
-                </FormLabel>
-                <FormControl>
-                  <div className="flex gap-4">
-                    <label className="flex items-center space-x-2">
-                      <Checkbox
-                        checked={field.value === true}
-                        onCheckedChange={() => form.setValue("isSmoker", true)}
-                      />
-                      <span>Yes</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <Checkbox
-                        checked={field.value === false}
-                        onCheckedChange={() => form.setValue("isSmoker", false)}
-                      />
-                      <span>No</span>
-                    </label>
-                  </div>
-                </FormControl>
-              </div>
-            </FormItem>
-          )}
-        />
+          label="Do you or does any occupant smoke?"
+          required
+          options={[
+            { value: true, label: "Yes" },
+            { value: false, label: "No" },
+          ]}
+        />}
       </div>
+
+      {applicantIndex === 0 && <FormInputField
+        form={form}
+        name="apartmentAddress"
+        label="I am applying for the apartment located at"
+        required
+        placeholder="905 Park Pl Blvd, Rosenberg, TX 77469"
+        className="min-w-fit whitespace-nowrap"
+      />}
     </div>
   );
 }
-
-export default AboutYou;
