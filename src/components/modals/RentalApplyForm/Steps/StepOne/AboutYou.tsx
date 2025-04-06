@@ -4,7 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { formatPhoneNumber } from "@/lib/utils";
+import { formatPhoneNumber, min18Years } from "@/lib/utils";
 import { IDTypeDropdown } from "../../common/IDTypeDropdown";
 import { UseFormReturn, Path } from "react-hook-form";
 import { ApplyFormValues, applicantInfoSchema } from "@/schemas/ApplyForm/ApplyForm";
@@ -22,14 +22,12 @@ type ApplicantFields = z.infer<typeof applicantInfoSchema>;
 
 interface AboutYouProps {
   form: UseFormReturn<ApplyFormValues>;
-  applicantIndex: number;
-  min18Years: string;
+  applicantIndex: number
 }
 
 export default function AboutYou({
   form,
-  applicantIndex,
-  min18Years,
+  applicantIndex
 }: AboutYouProps) {
 
   const getFieldName = <K extends keyof ApplicantFields>(

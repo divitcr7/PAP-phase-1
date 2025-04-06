@@ -1,4 +1,4 @@
-import { UseFormReturn, Path } from "react-hook-form";
+import { UseFormReturn, Path, useWatch } from "react-hook-form";
 import {
   FormControl,
   FormField,
@@ -11,7 +11,7 @@ import {
   ApplyFormValues,
   ExistingAddress,
 } from "@/schemas/ApplyForm/ApplyForm";
-import { formatPhoneNumber } from "@/lib/utils";
+import { formatPhoneNumber, todaysDate } from "@/lib/utils";
 import {
   Select,
   SelectContent,
@@ -28,12 +28,7 @@ interface WhereYouLiveProps {
   type: "current" | "previous";
   applicantType: ApplicantType;
   applicantIndex: number;
-  // Removed applicantName as it's unused
-  todaysDate: string;
   residencyStartDate?: string;
-  previousDateFrom?: string;
-  previousDateTo?: string;
-  // Keep these in the interface but mark as optional
   existingAddresses?: ExistingAddress[];
   onAddressSelect?: (value: string) => void;
   getFieldPath: (
@@ -48,14 +43,7 @@ export function WhereYouLive({
   type,
   applicantType,
   applicantIndex,
-  // Remove applicantName from destructuring
-  todaysDate,
   residencyStartDate,
-  previousDateFrom,
-  previousDateTo,
-  // Remove unused props from destructuring
-  // existingAddresses,
-  // onAddressSelect,
   getFieldPath,
 }: WhereYouLiveProps) {
   const prefix = type === "current" ? "current" : "previous";
@@ -68,6 +56,28 @@ export function WhereYouLive({
       `${prefix}${fieldName}`
     ) as Path<ApplyFormValues>;
   };
+
+    const previousDateFromPath = getFieldPath(
+      applicantType,
+      applicantIndex,
+      "previousDateFrom"
+    );
+    const previousDateToPath = getFieldPath(
+      applicantType,
+      applicantIndex,
+      "previousDateTo"
+    );
+
+    // Fix: Explicitly type the return values as string
+    const previousDateFrom = useWatch({
+      control: form.control,
+      name: previousDateFromPath as Path<ApplyFormValues>,
+    }) as string | undefined;
+
+    const previousDateTo = useWatch({
+      control: form.control,
+      name: previousDateToPath as Path<ApplyFormValues>,
+    }) as string | undefined;
 
   return (
     <div className="space-y-4">
@@ -189,13 +199,7 @@ export function WhereYouLive({
         {type === "current" ? (
           <FormInputField
             form={form}
-            name={
-              getFieldPath(
-                applicantType,
-                applicantIndex,
-                "residencyStartDate"
-              ) as Path<ApplyFormValues>
-            }
+            name={getField("residencyStartDate")}
             label="Beginning date of residency"
             required
             type="date"
@@ -207,13 +211,7 @@ export function WhereYouLive({
           <>
             <FormInputField
               form={form}
-              name={
-                getFieldPath(
-                  applicantType,
-                  applicantIndex,
-                  "previousDateFrom"
-                ) as Path<ApplyFormValues>
-              }
+              name={getField("previousDateFrom")}
               label="Dates: From"
               type="date"
               className="w-fit"
@@ -223,13 +221,7 @@ export function WhereYouLive({
 
             <FormInputField
               form={form}
-              name={
-                getFieldPath(
-                  applicantType,
-                  applicantIndex,
-                  "previousDateTo"
-                ) as Path<ApplyFormValues>
-              }
+              name={getField("previousDateTo")}
               label="To"
               type="date"
               className="w-fit"

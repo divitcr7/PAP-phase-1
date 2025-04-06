@@ -20,7 +20,6 @@ interface ApplicantAddressesProps {
   applicantType: ApplicantType;
   applicantIndex: number;
   applicantName: string;
-  todaysDate: string;
   existingAddresses?: ExistingAddress[];
   onAddressSelect?: (value: string) => void;
   getFieldPath: (
@@ -35,7 +34,6 @@ export function ApplicantAddresses({
   applicantType,
   applicantIndex,
   applicantName,
-  todaysDate,
   existingAddresses,
   onAddressSelect,
   getFieldPath,
@@ -53,28 +51,6 @@ export function ApplicantAddresses({
   const residencyStartDate = useWatch({
     control: form.control,
     name: residencyStartDatePath as Path<ApplyFormValues>,
-  }) as string | undefined;
-
-  const previousDateFromPath = getFieldPath(
-    applicantType,
-    applicantIndex,
-    "previousDateFrom"
-  );
-  const previousDateToPath = getFieldPath(
-    applicantType,
-    applicantIndex,
-    "previousDateTo"
-  );
-
-  // Fix: Explicitly type the return values as string
-  const previousDateFrom = useWatch({
-    control: form.control,
-    name: previousDateFromPath as Path<ApplyFormValues>,
-  }) as string | undefined;
-
-  const previousDateTo = useWatch({
-    control: form.control,
-    name: previousDateToPath as Path<ApplyFormValues>,
   }) as string | undefined;
 
   // Memoize the resetPreviousFields function to avoid recreating it on every render
@@ -113,86 +89,15 @@ export function ApplicantAddresses({
       const today = new Date();
       const fiveYearsAgo = new Date();
       fiveYearsAgo.setFullYear(today.getFullYear() - 5);
-
-      // If residency start date is less than 5 years ago, show previous address
+      
       if (startDate > fiveYearsAgo) {
         setShowPreviousAddress(true);
       } else {
         setShowPreviousAddress(false);
-        // Clear previous address fields for this applicant
         resetPreviousFields();
       }
     }
   }, [residencyStartDate, resetPreviousFields]);
-
-    useEffect(() => {
-      if (residencyStartDate) {
-        const startDate = new Date(residencyStartDate);
-        const today = new Date();
-        const fiveYearsAgo = new Date();
-        fiveYearsAgo.setFullYear(today.getFullYear() - 5);
-
-        // If residency start date is less than 5 years ago, show previous address
-        if (startDate > fiveYearsAgo) {
-          setShowPreviousAddress(true);
-        } else {
-          setShowPreviousAddress(false);
-          // Clear previous address fields for this applicant
-          resetPreviousFields();
-        }
-      }
-    }, [residencyStartDate, resetPreviousFields]);
-
-    // Ensure date constraints are maintained
-    useEffect(() => {
-      if (showPreviousAddress) {
-        // If previousDateTo is greater than or equal to residencyStartDate, reset it
-        if (
-          previousDateTo &&
-          residencyStartDate &&
-          new Date(previousDateTo) >= new Date(residencyStartDate)
-        ) {
-          // Calculate one day before residencyStartDate
-          const newDateTo = new Date(residencyStartDate);
-          newDateTo.setDate(newDateTo.getDate() - 1);
-
-          // Format as YYYY-MM-DD for date input
-          const formattedDate = newDateTo.toISOString().split("T")[0];
-
-          form.setValue(
-            previousDateToPath as Path<ApplyFormValues>,
-            formattedDate
-          );
-        }
-
-        // If previousDateFrom is greater than or equal to previousDateTo, reset it
-        if (
-          previousDateFrom &&
-          previousDateTo &&
-          new Date(previousDateFrom) >= new Date(previousDateTo)
-        ) {
-          // Calculate one day before previousDateTo
-          const newDateFrom = new Date(previousDateTo);
-          newDateFrom.setDate(newDateFrom.getDate() - 1);
-
-          // Format as YYYY-MM-DD for date input
-          const formattedDate = newDateFrom.toISOString().split("T")[0];
-
-          form.setValue(
-            previousDateFromPath as Path<ApplyFormValues>,
-            formattedDate
-          );
-        }
-      }
-    }, [
-      showPreviousAddress,
-      previousDateFrom,
-      previousDateTo,
-      residencyStartDate,
-      form,
-      previousDateFromPath,
-      previousDateToPath,
-    ]);
 
   return (
     <div className="space-y-4 border border-gray-200 rounded-md py-2 px-4">
@@ -207,7 +112,6 @@ export function ApplicantAddresses({
         type="current"
         applicantType={applicantType}
         applicantIndex={applicantIndex}
-        todaysDate={todaysDate}
         residencyStartDate={residencyStartDate}
         existingAddresses={existingAddresses}
         onAddressSelect={onAddressSelect}
@@ -230,10 +134,7 @@ export function ApplicantAddresses({
                   type="previous"
                   applicantType={applicantType}
                   applicantIndex={applicantIndex}
-                  todaysDate={todaysDate}
                   residencyStartDate={residencyStartDate}
-                  previousDateFrom={previousDateFrom}
-                  previousDateTo={previousDateTo}
                   getFieldPath={getFieldPath}
                 />
               </AccordionContent>

@@ -70,12 +70,14 @@ export function AdditionalIncome({
             form={form}
             name={getFieldName(index, "type")}
             label="Type"
+            placeholder="e.g. Investment, Rental Income"
           />
 
           <FormInputField
             form={form}
             name={getFieldName(index, "source")}
             label="Source"
+            placeholder="e.g. Stock Dividends, Property"
           />
 
           <div className="flex gap-2">
@@ -84,6 +86,7 @@ export function AdditionalIncome({
               name={getFieldName(index, "amount")}
               label="Gross Monthly"
               className="flex-1"
+              placeholder="0.00"
             />
 
             <Button
@@ -95,9 +98,9 @@ export function AdditionalIncome({
                 incomes.splice(index, 1);
                 form.setValue(basePath as Path<ApplyFormValues>, incomes);
               }}
-              className="mt-8"
+              className="mr-4 rounded-full hover:bg-destructive/10 transition-colors"
             >
-              <X className="h-4 w-4" />
+              <X className="h-4 w-4 text-destructive" />
             </Button>
           </div>
         </div>
@@ -105,7 +108,8 @@ export function AdditionalIncome({
 
       <Button
         type="button"
-        variant="outline"
+        variant="link"
+        className="underline"
         size="sm"
         onClick={() => {
           const incomes = [
@@ -114,7 +118,6 @@ export function AdditionalIncome({
           ];
           form.setValue(basePath as Path<ApplyFormValues>, incomes);
         }}
-        className="flex items-center gap-1"
       >
         <Plus className="h-4 w-4" /> Add Additional Income
       </Button>

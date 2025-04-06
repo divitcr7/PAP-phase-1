@@ -1,10 +1,14 @@
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { ApplyFormValues } from "@/schemas/ApplyForm/ApplyForm";
 import { UseFormReturn } from "react-hook-form";
+import { FormInputField } from "../common/FormFields";
 
-export default function StepSix({ form }: { form: UseFormReturn<ApplyFormValues> }) {
+export default function StepSix({form}: { form: UseFormReturn<ApplyFormValues>}) {
   return (
     <div className="space-y-6">
       <div className="space-y-4 px-6">
@@ -25,31 +29,24 @@ export default function StepSix({ form }: { form: UseFormReturn<ApplyFormValues>
         </div>
 
         <div className="flex justify-between px-20 pt-10">
-          <FormField
-            control={form.control}
-            name="signature"
-            render={({ field }) => (
-              <FormItem className="w-[600px]">
-                <FormLabel>Applicant's Signature</FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="Type your full legal name" className="border-0 border-b border-black rounded-none px-0 focus-visible:ring-0 focus-visible:ring-offset-0" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+          <FormInputField
+            form={form}
+            name="signature.signature"
+            label="Applicant's Signature"
+            placeholder="Type your full legal name"
+            required
+            className="w-[600px]"
+            inputClassName="border-0 border-b border-black rounded-none px-0 focus-visible:ring-0 focus-visible:ring-offset-0"
           />
-          <FormField
-            control={form.control}
-            name="date"
-            render={({ field }) => (
-              <FormItem className="w-fit">
-                <FormLabel>Date</FormLabel>
-                <FormControl>
-                  <Input {...field} type="date" className="border-0 border-b border-black rounded-none px-0 focus-visible:ring-0 focus-visible:ring-offset-0" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+
+          <FormInputField
+            form={form}
+            name="signature.date"
+            label="Date"
+            type="date"
+            required
+            className="w-fit"
+            inputClassName="border-0 border-b border-black rounded-none px-0 focus-visible:ring-0 focus-visible:ring-offset-0"
           />
         </div>
       </div>

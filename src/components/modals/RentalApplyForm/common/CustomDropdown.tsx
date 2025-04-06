@@ -16,7 +16,7 @@ export interface OptionType {
 }
 
 interface CustomDropdownProps {
-  type: "state" | "country" | string;
+  type?: "state" | "country" | string;
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
@@ -56,7 +56,7 @@ export function CustomDropdown({
         {showSearch && (
           <div className="pb-2">
             <Input
-              placeholder={`Search ${type}...`}
+              placeholder={`Search ${type ? type : ""}...`}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="h-8"

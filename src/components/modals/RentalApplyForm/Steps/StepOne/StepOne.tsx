@@ -6,16 +6,7 @@ import AboutYou from "./AboutYou";
 import { ApplicantInfo } from "../../RentalApplicationForm";
 import { ApplicantAddresses } from "./ApplicantAddresses";
 import Occupant from "./Occupants";
-
-const today = new Date();
-const min18Years = new Date(
-  today.getFullYear() - 18,
-  today.getMonth(),
-  today.getDate()
-)
-  .toISOString()
-  .split("T")[0];
-const todaysDate = new Date().toISOString().split("T")[0];
+import { min18Years } from "@/lib/utils";
 
 interface StepOneProps {
   form: UseFormReturn<ApplyFormValues>;
@@ -51,7 +42,7 @@ export default function StepOne({
       {/* About You */}
       <div>
         <h3 className="text-lg font-medium underline">About You</h3>
-        <AboutYou form={form} applicantIndex={0} min18Years={min18Years} />
+        <AboutYou form={form} applicantIndex={0} />
       </div>
       {/* Co-Applicant Section */}
       <div className="space-y-4">
@@ -82,8 +73,7 @@ export default function StepOne({
                 </div>
                 <AboutYou
                   form={form}
-                  applicantIndex={idx + 1} // +1 because index 0 is primary
-                  min18Years={min18Years}
+                  applicantIndex={idx + 1}
                 />
               </div>
             ))}
@@ -170,7 +160,6 @@ export default function StepOne({
           applicantType="applicant"
           applicantIndex={0}
           applicantName={primaryApplicant?.name || ""}
-          todaysDate={todaysDate}
           getFieldPath={getFieldPath}
         />
 
@@ -183,7 +172,6 @@ export default function StepOne({
               applicantType="applicant"
               applicantIndex={index + 1}
               applicantName={coApp.name || ""}
-              todaysDate={todaysDate}
               getFieldPath={getFieldPath}
             />
           ))}
@@ -197,7 +185,6 @@ export default function StepOne({
               applicantType="occupant"
               applicantIndex={index}
               applicantName={occ.name || ""}
-              todaysDate={todaysDate}
               getFieldPath={getFieldPath}
             />
           ))}

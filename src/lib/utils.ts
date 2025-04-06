@@ -5,6 +5,16 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+export const today = new Date();
+export const min18Years = new Date(
+  today.getFullYear() - 18,
+  today.getMonth(),
+  today.getDate()
+)
+  .toISOString()
+  .split("T")[0];
+export const todaysDate = new Date().toISOString().split("T")[0];
+
 // Add this function to your utils file
 export function formatPhoneNumber(value: string) {
   // Remove all non-digits
@@ -65,3 +75,14 @@ export function processCurrencyInput(
   // Enforce maximum value
   return num > maxValue ? maxValue : num;
 }
+
+export function generateYearOptions(
+  startYear = 1950,
+  endYear = new Date().getFullYear() + 1
+): Array<{ label: string; value: string }> {
+  const years = [];
+  for (let year = endYear; year >= startYear; year--) {
+    years.push({ label: year.toString(), value: year.toString() });
+  }
+  return years;
+};

@@ -1,13 +1,14 @@
 import type { UseFormReturn } from "react-hook-form";
-import {
-  FormControl,
-  FormField,
-  FormItem
-} from "@/components/ui/form";
+import { FormControl, FormField, FormItem } from "@/components/ui/form";
 import { ApplyFormValues } from "@/schemas/ApplyForm/ApplyForm";
 import { Input } from "@/components/ui/input";
+import { FormSimpleCheckbox } from "../common/FormFields";
 
-export default function StepFive({ form }: { form: UseFormReturn<ApplyFormValues> }) {
+export default function StepFive({
+  form,
+}: {
+  form: UseFormReturn<ApplyFormValues>;
+}) {
   return (
     <div className="space-y-6">
       <div className="space-y-4">
@@ -55,7 +56,7 @@ export default function StepFive({ form }: { form: UseFormReturn<ApplyFormValues
               </span>
               <FormField
                 control={form.control}
-                name="applicationDeposit"
+                name="disclosures.applicationDeposit"
                 render={({ field }) => (
                   <FormItem className="m-0">
                     <FormControl>
@@ -86,6 +87,13 @@ export default function StepFive({ form }: { form: UseFormReturn<ApplyFormValues
             <p>C. Application fees for all applicants;</p>
             <p>D. Application deposit.</p>
           </div>
+
+          <FormSimpleCheckbox
+            form={form}
+            name="disclosures.disclosureAcknowledged"
+            label="I acknowledge that I have read and understand the disclosures above."
+            required
+          />
         </div>
       </div>
 
@@ -96,7 +104,7 @@ export default function StepFive({ form }: { form: UseFormReturn<ApplyFormValues
             I authorize
             <FormField
               control={form.control}
-              name="authorizedCompany"
+              name="disclosures.authorizedCompany"
               render={({ field }) => (
                 <FormItem className="inline-block mx-2">
                   <FormControl>
@@ -120,6 +128,13 @@ export default function StepFive({ form }: { form: UseFormReturn<ApplyFormValues
             information expires 365 days from the date of this Application. You
             agree the information provided may be used for business purposes.
           </p>
+
+          <FormSimpleCheckbox
+            form={form}
+            name="disclosures.authorizationAcknowledged"
+            label="I authorize the above company to obtain reports and verify information as described above."
+            required
+          />
         </div>
       </div>
 
@@ -130,7 +145,7 @@ export default function StepFive({ form }: { form: UseFormReturn<ApplyFormValues
             I authorize
             <FormField
               control={form.control}
-              name="paymentAuthorizedCompany"
+              name="disclosures.paymentAuthorizedCompany"
               render={({ field }) => (
                 <FormItem className="inline-block mx-2">
                   <FormControl>
@@ -170,6 +185,13 @@ export default function StepFive({ form }: { form: UseFormReturn<ApplyFormValues
               prosecution.
             </p>
           </div>
+
+          <FormSimpleCheckbox
+            form={form}
+            name="disclosures.paymentAuthorized"
+            label="I authorize the payment collection as described above and understand the non-sufficient funds policy."
+            required
+          />
         </div>
       </div>
     </div>

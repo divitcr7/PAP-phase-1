@@ -10,12 +10,14 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { UseFormReturn, Path, FieldValues, PathValue } from "react-hook-form";
 import { formatCurrency } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
+import { useState } from "react";
 
 // Base props for all form fields
 interface BaseFormFieldProps<T extends FieldValues> {
   form: UseFormReturn<T>;
   name: Path<T>;
   label: string;
+  description?: string;
   required?: boolean;
   className?: string;
 }
@@ -26,8 +28,8 @@ interface FormInputFieldProps<T extends FieldValues>
   placeholder?: string;
   type?: string;
   maxLength?: number;
-  max?: string;
-  min?: string;
+  max?: string | number;
+  min?: string | number;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   inputClassName?: string;
 }
@@ -54,42 +56,59 @@ interface FormSimpleCheckboxProps<T extends FieldValues> {
   name: Path<T>;
   label: React.ReactNode;
   className?: string;
+  required?: boolean;
 }
 
 // Props for textarea fields
-interface FormTextareaFieldProps<T extends FieldValues>
-  extends BaseFormFieldProps<T> {
+interface FormTextareaFieldProps<T extends FieldValues> {
+  form: UseFormReturn<T>;
+  name: Path<T>;
+  required?: boolean;
+  className?: string;
   placeholder?: string;
   rows?: number;
+  label: React.ReactNode;
+  labelClassName?: string;
   textareaClassName?: string;
+  maxChars?: number;
 }
 
-// Simple checkbox with label component
 export function FormSimpleCheckbox<T extends FieldValues>({
   form,
   name,
   label,
   className = "",
+  required,
 }: FormSimpleCheckboxProps<T>) {
   return (
     <FormField
       control={form.control}
       name={name}
-      render={({ field }) => (
-        <FormItem
-          className={`flex items-start space-x-3 space-y-0 ${className}`}
-        >
-          <FormControl>
-            <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-          </FormControl>
-          <FormLabel className="font-normal">{label}</FormLabel>
-        </FormItem>
-      )}
+      render={({ field }) => {
+        const value = field.value === undefined ? false : !!field.value;
+
+        return (
+          <FormItem
+            className={`flex items-start space-x-3 space-y-0 ${className}`}
+          >
+            <FormControl>
+              <Checkbox
+                checked={value}
+                onCheckedChange={(checked) => {
+                  field.onChange(checked || false);
+                }}
+              />
+            </FormControl>
+            <FormLabel className="font-normal" required={required}>
+              {label}
+            </FormLabel>
+          </FormItem>
+        );
+      }}
     />
   );
 }
 
-// Textarea field component
 export function FormTextareaField<T extends FieldValues>({
   form,
   name,
@@ -98,24 +117,55 @@ export function FormTextareaField<T extends FieldValues>({
   className = "",
   placeholder = "",
   rows = 4,
+  labelClassName = "",
   textareaClassName = "",
+  maxChars,
 }: FormTextareaFieldProps<T>) {
+
+  const [charCount, setCharCount] = useState(0);
+
+  const isApproachingLimit =
+    maxChars &&
+    charCount >= Math.max(maxChars - Math.min(Math.floor(maxChars * 0.1), 10), 3);
+
+  const isAtLimit = maxChars && charCount >= maxChars;
+
   return (
     <FormField
       control={form.control}
       name={name}
       render={({ field }) => (
         <FormItem className={className}>
-          <FormLabel required={required}>{label}</FormLabel>
+          <FormLabel required={required} className={labelClassName}>
+            {label}
+          </FormLabel>
           <FormControl>
             <Textarea
               {...field}
               placeholder={placeholder}
-              className={`min-h-[${rows * 24}px] ${textareaClassName}`}
+              className={`resize-none ${textareaClassName}`}
               rows={rows}
+              onChange={(e) => {
+                const value = e.target.value;
+                setCharCount(value.length);
+                field.onChange(e);
+              }}
+              maxLength={maxChars}
             />
           </FormControl>
-          <FormMessage />
+          {maxChars && charCount > 0 && (
+            <div
+              className={`text-sm mt-1 text-right ${
+                isAtLimit
+                  ? "text-red-600 font-medium"
+                  : isApproachingLimit
+                  ? "text-red-500"
+                  : "text-gray-500"
+              }`}
+            >
+              {charCount}/{maxChars} characters used
+            </div>
+          )}
         </FormItem>
       )}
     />
@@ -156,11 +206,8 @@ export function FormCurrencyField<T extends FieldValues>({
                   placeholder={placeholder}
                   value={formatCurrency(field.value)}
                   onChange={(e) => {
-                    // Remove all non-numeric characters except decimal point
                     const value = e.target.value.replace(/[^0-9.]/g, "");
                     const num = parseFloat(value);
-
-                    // Check if it's a valid number and not exceeding max value
                     if (!isNaN(num) && num <= maxValue) {
                       field.onChange(num);
                     } else if (value === "" || value === ".") {
@@ -178,11 +225,11 @@ export function FormCurrencyField<T extends FieldValues>({
   );
 }
 
-// Reusable input field component
 export function FormInputField<T extends FieldValues>({
   form,
   name,
   label,
+  description,
   required = false,
   className = "",
   placeholder = "",
@@ -191,7 +238,7 @@ export function FormInputField<T extends FieldValues>({
   max,
   min,
   onChange,
-  inputClassName = "",
+  inputClassName = "[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none",
 }: FormInputFieldProps<T>) {
   return (
     <FormField
@@ -201,7 +248,16 @@ export function FormInputField<T extends FieldValues>({
         <FormItem className={className}>
           <div className="flex items-center gap-2">
             <FormLabel className="min-w-fit" required={required}>
-              {label}
+              {description ? (
+                <div className="flex flex-col items-start justify-between">
+                  <div>{label}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {description}
+                  </div>
+                </div>
+              ) : (
+                label
+              )}
             </FormLabel>
             <FormControl>
               <Input
@@ -217,14 +273,12 @@ export function FormInputField<T extends FieldValues>({
               />
             </FormControl>
           </div>
-          {/* <FormMessage /> */}
         </FormItem>
       )}
     />
   );
 }
 
-// Reusable checkbox field component for yes/no or multiple choice
 export function FormCheckboxField<T extends FieldValues>({
   form,
   name,

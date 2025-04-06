@@ -24,6 +24,7 @@ import {
   previousEmploymentSchema,
   additionalIncomeSchema,
   backgroundSchema,
+  backgroundFormSchema,
   bankDetailsSchema,
   creditHistorySchema,
 } from "./Steps/stepTwo";
@@ -48,7 +49,6 @@ export const applicantSchema = z.object({
   bankDetails: bankDetailsSchema,
   additionalIncomes: z.array(additionalIncomeSchema).optional(),
   vehicles: z.array(vehicleSchema).optional(),
-  pets: z.array(petSchema).optional(),
 });
 
 // Define the complete occupant structure
@@ -56,12 +56,10 @@ export const occupantSchema = z.object({
   personalInfo: occupantInfoSchema,
   currentAddress: currentAddressSchema,
   previousAddress: previousAddressSchema.optional(),
-  currentEmployment: currentEmploymentSchema,
+  currentEmployment: currentEmploymentSchema.optional(),
   previousEmployment: previousEmploymentSchema.optional(),
-  bankDetails: bankDetailsSchema,
+  bankDetails: bankDetailsSchema.optional(),
   additionalIncomes: z.array(additionalIncomeSchema).optional(),
-  vehicles: z.array(vehicleSchema).optional(),
-  pets: z.array(petSchema).optional(),
 });
 
 // Define the primary applicant only fields
@@ -71,7 +69,7 @@ export const applyFormSchema = z.object({
   hasOccupants: z.boolean(),
   occupants: z.array(occupantSchema).optional(),
   creditHistory: creditHistorySchema,
-  background: backgroundSchema,
+  background: backgroundFormSchema,
   emergencyContact: emergencyContactSchema,
   referral: referralSchema,
   specialProvisions: specialProvisionsSchema,
@@ -79,6 +77,8 @@ export const applyFormSchema = z.object({
   signature: signatureSchema,
   applicants: z.array(applicantSchema),
   hasCoApplicant: z.boolean(),
+  pets: z.array(petSchema).optional(),
+  vehicles: z.array(vehicleSchema).optional(),
 });
 
 export type ApplyFormValues = z.infer<typeof applyFormSchema>;

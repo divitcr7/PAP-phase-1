@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { stateOrCountryEnum } from "./base";
+import { stateEnum, stateOrCountryEnum } from "./base";
 
 // Emergency contact schema
 export const emergencyContactSchema = z.object({
@@ -29,12 +29,13 @@ export const referralSchema = z.object({
 
 // Vehicle schema
 export const vehicleSchema = z.object({
+  owner: z.string(),
   make: z.string(),
   model: z.string(),
   color: z.string(),
   year: z.string(),
   license: z.string(),
-  state: stateOrCountryEnum,
+  state: stateEnum,
 });
 
 // Pet schema

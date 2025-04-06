@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import StepOne from "./Steps/StepOne/StepOne";
 import StepTwo from "./Steps/StepTwo/StepTwo";
-import StepThree from "./Steps/StepThree";
+import StepThree from "./Steps/StepThree/StepThree";
 import StepFour from "./Steps/StepFour";
 import StepFive from "./Steps/StepFive";
 import StepSix from "./Steps/StepSix";

@@ -62,7 +62,7 @@ export const DEFAULT_PREVIOUS_ADDRESS = {
 };
 
 // Employment information (shared between applicants)
-const DEFAULT_EMPLOYMENT = {
+export const DEFAULT_EMPLOYMENT = {
   employer: "",
   position: "",
   workAddress: "",
@@ -78,7 +78,7 @@ const DEFAULT_EMPLOYMENT = {
   grossMonthlyIncome: "",
 };
 
-const DEFAULT_BANK_DETAILS = {
+export const DEFAULT_BANK_DETAILS = {
   bankName: "",
   bankBranch: "",
   bankAccountNumber: "",
@@ -133,9 +133,9 @@ const DEFAULT_EMERGENCY_CONTACT = {
   },
 };
 
-
 // Vehicle information (for individual applicants/occupants)
 export const DEFAULT_VEHICLE = {
+  owner: "",
   make: "",
   model: "",
   color: "",
@@ -184,8 +184,6 @@ export const DEFAULT_APPLICANT = {
   previousEmployment: undefined,
   bankDetails: DEFAULT_BANK_DETAILS,
   additionalIncomes: [],
-  vehicles: [], // Array of vehicles specific to this applicant
-  pets: [], // Array of pets specific to this applicant
 };
 
 // Complete occupant structure with all nested objects
@@ -197,17 +195,11 @@ export const DEFAULT_OCCUPANT = {
   previousEmployment: undefined,
   bankDetails: DEFAULT_BANK_DETAILS,
   additionalIncomes: [],
-  vehicles: [],
-  pets: [],
 };
 
 // Default values for the entire form
 export const DEFAULT_FORM_VALUES = {
-  applicants: [
-    {
-      ...DEFAULT_APPLICANT,
-    },
-  ],
+  applicants: [{...DEFAULT_APPLICANT}],
   isSmoker: false,
   emergencyContact: DEFAULT_EMERGENCY_CONTACT,
   creditHistory: DEFAULT_CREDIT_HISTORY,
@@ -219,4 +211,6 @@ export const DEFAULT_FORM_VALUES = {
   hasCoApplicant: false,
   hasOccupants: false,
   occupants: [],
+  vehicles: [],
+  pets: [],
 };

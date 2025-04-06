@@ -58,10 +58,23 @@ export function RentalCriminalHistory({
       </div>
 
       <FormTextareaField
+        labelClassName="mb-2 text-sm font-medium"
+        textareaClassName="w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 min-h-[80px]"
         form={form}
         name="background.rentalAndCriminalHistoryExplanation"
-        label="Please indicate below the year, location, and type of each felony, sex crime or any crime against persons or property for which you were convicted or received probation. We may need to discuss more facts before making a decision. You represent the answer is 'no' to any item not checked above."
-        rows={5}
+        label={
+          <>
+            Please indicate below the year, location, and type of each felony,
+            sex crime or any crime against persons or property for which you
+            were convicted or received probation.
+            <br />
+            We may need to discuss more facts before making a decision. You
+            represent the answer is 'no' to any item not checked above.
+          </>
+        }
+        rows={6}
+        maxChars={500}
+        placeholder="If applicable, please provide details including year, location, and type of each incident."
       />
     </div>
   );
