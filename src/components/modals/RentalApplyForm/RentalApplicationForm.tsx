@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useForm, Path } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -54,26 +54,30 @@ export default function RentalApplicationForm() {
   // Track occupants separately
   const [occupants, setOccupants] = useState<ApplicantInfo[]>([]);
 
+  // Create a deep copy of default values to avoid reference issues
+  const defaultFormValues = useMemo(() => {
+    return JSON.parse(JSON.stringify(DEFAULT_FORM_VALUES));
+  }, []);
+
   const form = useForm<ApplyFormValues>({
-    defaultValues: DEFAULT_FORM_VALUES,
+    defaultValues: defaultFormValues,
     resolver: zodResolver(applyFormSchema),
-    // mode: "onChange",
     mode: "onBlur",
   });
 
+  // Initialize form when dialog opens
   useEffect(() => {
-    // Use setTimeout to ensure the form is fully mounted before resetting
-    const timer = setTimeout(() => {
-      // Deep clone the default values to ensure all references are new
-      const defaultValues = JSON.parse(JSON.stringify(DEFAULT_FORM_VALUES));
-      form.reset(defaultValues);
+    if (open) {
+      form.reset(defaultFormValues);
 
-      // Log to verify values are set
-      console.log("Form reset with default values:", form.getValues());
-    }, 0);
+      console.log("Form initialized with default values:", form.getValues());
+    }
+  }, [open, form, defaultFormValues]);
 
-    return () => clearTimeout(timer);
-  }, [form]);
+  // Reset form initialization state when dialog closes
+  useEffect(() => {
+    if (!open) setStep(1);
+  }, [open]);
 
   useEffect(() => {
     // Check specific nested values

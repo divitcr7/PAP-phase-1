@@ -14,7 +14,7 @@ export function CreditHistory({
         labelClassName="mb-2 text-sm font-medium"
         textareaClassName="w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500"
         form={form}
-        name="creditHistory.creditProblems"
+        name="creditHistory.creditHistoryExplanation"
         label="If applicable, please explain any past credit problems:"
         rows={15}
         maxChars={500}
