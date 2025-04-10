@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Path } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Dialog,
@@ -19,32 +19,35 @@ import StepSix from "./Steps/StepSix";
 import {
   ApplicantType,
   applyFormSchema,
-  getApplicantFieldPath,
   type ApplyFormValues,
 } from "@/schemas/ApplyForm/ApplyForm";
 import {
   DEFAULT_APPLICANT,
+  DEFAULT_FORM_VALUES,
   DEFAULT_OCCUPANT,
 } from "@/constants/defaultApplyFormValues";
+import { validateAddress, validatePersonalInfo } from "@/validators/formValidation";
 
 export interface ApplicantInfo {
   id: string;
   type: ApplicantType;
   index: number;
   name: string;
+  isRequiredDataFilled: boolean;
+  hasCompleteAddress?: boolean;
 }
 
 export default function RentalApplicationForm() {
   const [step, setStep] = useState(1);
   const [open, setOpen] = useState(false);
 
-  // Track all applicants and occupants
   const [applicants, setApplicants] = useState<ApplicantInfo[]>([
     {
       id: "primary-0",
       type: "applicant",
       index: 0,
       name: "",
+      isRequiredDataFilled: false,
     },
   ]);
 
@@ -52,80 +55,94 @@ export default function RentalApplicationForm() {
   const [occupants, setOccupants] = useState<ApplicantInfo[]>([]);
 
   const form = useForm<ApplyFormValues>({
-    defaultValues: {
-      applicants: [
-        {
-          ...DEFAULT_APPLICANT,
-        },
-      ],
-      hasCoApplicant: false,
-      hasOccupants: false,
-      occupants: [],
-      isSmoker: false,
-      apartmentAddress: "",
-    },
+    defaultValues: DEFAULT_FORM_VALUES,
     resolver: zodResolver(applyFormSchema),
     // mode: "onChange",
+    mode: "onBlur",
   });
 
-  // Watch for changes to applicant names to update our tracking state
   useEffect(() => {
-    const subscription = form.watch((_, { name, type }) => {
-      if (name?.includes("personalInfo.fullName") && type === "change") {
-        const parts = name.split(".");
-        if (parts[0] === "applicants") {
-          const index = parseInt(parts[1]);
-          // Update path to access fullName through personalInfo
-          const fullName = form.getValues(
-            `applicants.${index}.personalInfo.fullName`
-          );
+    // Use setTimeout to ensure the form is fully mounted before resetting
+    const timer = setTimeout(() => {
+      // Deep clone the default values to ensure all references are new
+      const defaultValues = JSON.parse(JSON.stringify(DEFAULT_FORM_VALUES));
+      form.reset(defaultValues);
 
-          if (fullName && index === 0) {
-            // Update primary applicant name
-            setApplicants((prev) => [
-              { ...prev[0], name: fullName },
-              ...prev.slice(1),
-            ]);
-          } else if (fullName && index > 0) {
-            // Update co-applicant name
-            setApplicants((prev) => {
-              const newApplicants = [...prev];
-              if (index < newApplicants.length) {
-                newApplicants[index] = {
-                  ...newApplicants[index],
-                  name: fullName,
-                };
-              }
-              return newApplicants;
-            });
-          }
-        } else if (parts[0] === "occupants") {
-          const index = parseInt(parts[1]);
-          // Update path to access fullName through personalInfo
-          const fullName = form.getValues(
-            `occupants.${index}.personalInfo.fullName`
-          );
+      // Log to verify values are set
+      console.log("Form reset with default values:", form.getValues());
+    }, 0);
 
-          if (fullName) {
-            setOccupants((prev) => {
-              const newOccupants = [...prev];
-              if (index < newOccupants.length) {
-                newOccupants[index] = {
-                  ...newOccupants[index],
-                  name: fullName,
-                };
-              }
-              return newOccupants;
-            });
-          }
-        }
+    return () => clearTimeout(timer);
+  }, [form]);
+
+  useEffect(() => {
+    // Check specific nested values
+    console.log(
+      "Primary applicant info:",
+      form.getValues("applicants.0.personalInfo")
+    );
+    console.log(
+      "Primary applicant address:",
+      form.getValues("applicants.0.addresses")
+    );
+    console.log(
+      "Default state value:",
+      form.getValues("applicants.0.personalInfo.driverLicenseState")
+    );
+  }, [form]);
+
+  useEffect(() => {
+    const subscription = form.watch((formValues) => {
+      if (formValues.applicants) {
+        formValues.applicants.forEach((_, index) => {
+          const isComplete = validatePersonalInfo(form, "applicant", index);
+          const hasCompleteAddress = validateAddress(form, "applicant", index);
+
+          setApplicants((prev) => {
+            const newApplicants = [...prev];
+            if (index < newApplicants.length) {
+              const fullNamePath =
+                `applicants.${index}.personalInfo.fullName` as Path<ApplyFormValues>;
+              const fullName = form.getValues(fullNamePath);
+              newApplicants[index] = {
+                ...newApplicants[index],
+                name: fullName || "",
+                isRequiredDataFilled: isComplete,
+                hasCompleteAddress: hasCompleteAddress,
+              };
+            }
+            return newApplicants;
+          });
+        });
+      }
+
+      if (formValues.occupants) {
+        formValues.occupants.forEach((_, index) => {
+          const isComplete = validatePersonalInfo(form, "occupant", index);
+          const hasCompleteAddress = validateAddress(form, "occupant", index);
+
+          setOccupants((prev) => {
+            const newOccupants = [...prev];
+            if (index < newOccupants.length) {
+              const fullNamePath =
+                `occupants.${index}.personalInfo.fullName` as Path<ApplyFormValues>;
+              const fullName = form.getValues(fullNamePath);
+              newOccupants[index] = {
+                ...newOccupants[index],
+                name: fullName || "",
+                isRequiredDataFilled: isComplete,
+                hasCompleteAddress: hasCompleteAddress,
+              };
+            }
+            return newOccupants;
+          });
+        });
       }
     });
 
     return () => subscription.unsubscribe();
   }, [form]);
 
-  // Add a co-applicant (max 3 additional applicants for a total of 4)
   const addCoApplicant = () => {
     if (applicants.length < 4) {
       const newIndex = applicants.length;
@@ -134,6 +151,7 @@ export default function RentalApplicationForm() {
         type: "applicant",
         index: newIndex,
         name: "",
+        isRequiredDataFilled: false, // Initialize as false
       };
 
       setApplicants((prev) => [...prev, newApplicant]);
@@ -142,9 +160,7 @@ export default function RentalApplicationForm() {
       const currentApplicants = form.getValues("applicants") || [];
       form.setValue("applicants", [
         ...currentApplicants,
-        {
-          ...DEFAULT_APPLICANT,
-        },
+        { ...DEFAULT_APPLICANT },
       ]);
     }
   };
@@ -181,6 +197,7 @@ export default function RentalApplicationForm() {
         type: "occupant",
         index: newIndex,
         name: "",
+        isRequiredDataFilled: false, // Initialize as false
       };
 
       setOccupants((prev) => [...prev, newOccupant]);
@@ -189,14 +206,11 @@ export default function RentalApplicationForm() {
       const currentOccupants = form.getValues("occupants") || [];
       form.setValue("occupants", [
         ...currentOccupants,
-        {
-          ...DEFAULT_OCCUPANT,
-        },
+        { ...DEFAULT_OCCUPANT },
       ]);
     }
   };
 
-  // Remove an occupant
   const removeOccupant = (index: number) => {
     if (index >= 0 && index < occupants.length) {
       setOccupants((prev) => {
@@ -272,7 +286,6 @@ export default function RentalApplicationForm() {
                 removeCoApplicant={removeCoApplicant}
                 addOccupant={addOccupant}
                 removeOccupant={removeOccupant}
-                getFieldPath={getApplicantFieldPath}
               />
             )}
             {step === 2 && (
@@ -282,7 +295,13 @@ export default function RentalApplicationForm() {
                 occupants={occupants}
               />
             )}
-            {step === 3 && <StepThree form={form} />}
+            {step === 3 && (
+              <StepThree
+                form={form}
+                applicants={applicants}
+                occupants={occupants}
+              />
+            )}
             {step === 4 && <StepFour form={form} />}
             {step === 5 && <StepFive form={form} />}
             {step === 6 && <StepSix form={form} />}

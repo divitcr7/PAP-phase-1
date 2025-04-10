@@ -28,6 +28,15 @@ export function YourVehicles({
 
   const allPeople = [...applicants, ...occupants];
 
+    const getPersonLabel = (person: ApplicantInfo) => {
+        return `${person.name || "undefined"} - ${person.type}`;
+    };
+
+    const ownerOptions = allPeople.map((person) => ({
+      label: getPersonLabel(person),
+      value: person.id,
+    }));
+
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-4">
@@ -55,15 +64,7 @@ export function YourVehicles({
                         <FormLabel className="min-w-fit">Owner</FormLabel>
                         <FormControl>
                           <CustomDropdown
-                            options={allPeople.map((person) => ({
-                              label:
-                                person.name ||
-                                `${
-                                  person.type.charAt(0).toUpperCase() +
-                                  person.type.slice(1)
-                                } ${person.index + 1}`,
-                              value: person.id,
-                            }))}
+                            options={ownerOptions}
                             value={field.value}
                             onChange={field.onChange}
                             placeholder="Select Owner"

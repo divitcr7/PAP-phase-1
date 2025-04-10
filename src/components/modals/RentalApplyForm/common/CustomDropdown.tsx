@@ -36,7 +36,6 @@ export function CustomDropdown({
 }: CustomDropdownProps) {
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Use built-in options for state/country or custom options if provided
   const dropdownOptions = options || (type === "state" ? US_STATES : COUNTRIES);
 
   const filteredOptions = dropdownOptions.filter(
@@ -45,7 +44,7 @@ export function CustomDropdown({
       option.value.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const safeValue = typeof value === "string" ? value : "";
+  const safeValue = typeof value === "string" && value !== "" ? value : undefined;
 
   return (
     <Select value={safeValue} onValueChange={onChange}>

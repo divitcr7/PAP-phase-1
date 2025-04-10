@@ -3,8 +3,7 @@ import { COUNTRIES, DEFAULT_COUNTRY } from "@/constants/countries";
 import { DEFAULT_STATE, US_STATES } from "@/constants/states";
 
 // Common enum for states and countries
-export const stateEnum = z
-  .enum(US_STATES.map((state) => state.value) as [string, ...string[]])
+export const stateEnum = z.enum(US_STATES.map((state) => state.value) as [string, ...string[]])
   .default(DEFAULT_STATE);
 
 export const countryEnum = z
@@ -26,13 +25,13 @@ export type ApplicantReference = {
 };
 
 export type AddressType = {
-  type: "applicant" | "occupant";
+  type: ApplicantType;
   index?: number;
 };
 
 export type AddressReference = {
   sameAs?: {
-    type: "applicant" | "occupant";
+    type: ApplicantType;
     index?: number;
   };
 };

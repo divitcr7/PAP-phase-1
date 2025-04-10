@@ -92,11 +92,28 @@ PAP-phase-1/
 The application uses React Router for navigation:
 
 - `/` - Home page with featured properties
-- `/properties` - Property listings
-- `/properties/:id` - Individual property details
-- `/apply/:propertyId` - Rental application form
-- `/login` - User login
-- `/register` - User registration
+- `/about` - About page
+- `/contact` - Contact page
+- `/:propertyName` - Property listings for a specific property name
+- `/:propertyName/:unitTitle` - Individual property unit details
+- `/subscribe` - Subscription page for new users (conditionally rendered)
+
+### Modals
+
+The application includes several modal-based interfaces:
+
+- **Authentication Modals**
+  - Login Modal - User authentication
+  - Signup Modal - New user registration
+
+- **Application Modal**
+  - Rental Application Form - Multi-step application process with six steps:
+    1. Personal Information
+    2. Employment History
+    3. References & Vehicles
+    4. Special Provisions
+    5. Disclosures
+    6. Signature & Submission
 
 ## Form Schemas
 

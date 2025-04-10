@@ -40,13 +40,13 @@ export const vehicleSchema = z.object({
 
 // Pet schema
 export const petSchema = z.object({
-  type: z.string(),
-  breed: z.string(),
+  kind: z.string(),
   weight: z.string(),
+  breed: z.string(),
   age: z.string(),
-  name: z.string(),
-  color: z.string(),
-  gender: z.string(),
-  neutered: z.boolean(),
-  vaccinated: z.boolean(),
+  // name: z.string(),
+  // color: z.string(),
+  // gender: z.string(),
+  // neutered: z.boolean(),
+  // vaccinated: z.boolean(),
 });

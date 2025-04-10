@@ -1,7 +1,7 @@
 import { Plus, Trash2 } from "lucide-react";
 import type { UseFormReturn } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { ApplicantType, ApplyFormValues } from "@/schemas/ApplyForm/ApplyForm";
+import { ApplyFormValues } from "@/schemas/ApplyForm/ApplyForm";
 import AboutYou from "./AboutYou";
 import { ApplicantInfo } from "../../RentalApplicationForm";
 import { ApplicantAddresses } from "./ApplicantAddresses";
@@ -16,11 +16,6 @@ interface StepOneProps {
   removeCoApplicant: (index: number) => void;
   addOccupant: () => void;
   removeOccupant: (index: number) => void;
-  getFieldPath: (
-    applicantType: ApplicantType,
-    index: number,
-    fieldName: string
-  ) => string;
 }
 
 export default function StepOne({
@@ -31,7 +26,6 @@ export default function StepOne({
   removeCoApplicant,
   addOccupant,
   removeOccupant,
-  getFieldPath,
 }: StepOneProps) {
   // Get primary applicant and co-applicants
   const primaryApplicant = applicants[0];
@@ -44,6 +38,7 @@ export default function StepOne({
         <h3 className="text-lg font-medium underline">About You</h3>
         <AboutYou form={form} applicantIndex={0} />
       </div>
+
       {/* Co-Applicant Section */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
@@ -71,10 +66,7 @@ export default function StepOne({
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
-                <AboutYou
-                  form={form}
-                  applicantIndex={idx + 1}
-                />
+                <AboutYou form={form} applicantIndex={idx + 1} />
               </div>
             ))}
           </div>
@@ -154,40 +146,48 @@ export default function StepOne({
       {/* Where you live */}
       <div className="space-y-4">
         <h3 className="text-lg font-medium underline">WHERE YOU LIVE</h3>
+
         {/* Primary Applicant Addresses */}
         <ApplicantAddresses
           form={form}
           applicantType="applicant"
           applicantIndex={0}
           applicantName={primaryApplicant?.name || ""}
-          getFieldPath={getFieldPath}
+          applicants={applicants}
+          occupants={occupants}
         />
 
-        {/* Co-Applicant Addresses */}
+        {/* Co-Applicant Addresses - only show for those with required data filled */}
         {form.watch("hasCoApplicant") &&
-          coApplicants.map((coApp, index) => (
-            <ApplicantAddresses
-              key={coApp.id}
-              form={form}
-              applicantType="applicant"
-              applicantIndex={index + 1}
-              applicantName={coApp.name || ""}
-              getFieldPath={getFieldPath}
-            />
-          ))}
+          coApplicants
+            .filter((coApp) => coApp.isRequiredDataFilled)
+            .map((coApp, index) => (
+              <ApplicantAddresses
+                key={coApp.id}
+                form={form}
+                applicantType="applicant"
+                applicantIndex={index + 1}
+                applicantName={coApp.name || ""}
+                applicants={applicants}
+                occupants={occupants}
+              />
+            ))}
 
-        {/* Occupant Addresses */}
+        {/* Occupant Addresses - only show for those with required data filled */}
         {form.watch("hasOccupants") &&
-          occupants.map((occ, index) => (
-            <ApplicantAddresses
-              key={occ.id}
-              form={form}
-              applicantType="occupant"
-              applicantIndex={index}
-              applicantName={occ.name || ""}
-              getFieldPath={getFieldPath}
-            />
-          ))}
+          occupants
+            .filter((occ) => occ.isRequiredDataFilled)
+            .map((occ, index) => (
+              <ApplicantAddresses
+                key={occ.id}
+                form={form}
+                applicantType="occupant"
+                applicantIndex={index}
+                applicantName={occ.name || ""}
+                applicants={applicants}
+                occupants={occupants}
+              />
+            ))}
       </div>
     </div>
   );

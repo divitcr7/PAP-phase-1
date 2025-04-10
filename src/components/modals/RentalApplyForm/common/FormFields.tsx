@@ -11,6 +11,7 @@ import { UseFormReturn, Path, FieldValues, PathValue } from "react-hook-form";
 import { formatCurrency } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
+import { CustomDropdown, OptionType } from "./CustomDropdown";
 
 // Base props for all form fields
 interface BaseFormFieldProps<T extends FieldValues> {
@@ -73,6 +74,70 @@ interface FormTextareaFieldProps<T extends FieldValues> {
   maxChars?: number;
 }
 
+interface FormCheckboxWithDropdownProps<T extends FieldValues> {
+  form: UseFormReturn<T>;
+  checkboxName: Path<T>;
+  checkboxLabel: React.ReactNode;
+  dropdownOptions: OptionType[];
+  dropdownValue: string;
+  onDropdownChange: (value: string) => void;
+  dropdownPlaceholder?: string;
+  required?: boolean;
+  className?: string;
+  defaultChecked?: boolean;
+}
+
+export function FormCheckboxWithDropdown<T extends FieldValues>({
+  form,
+  checkboxName,
+  checkboxLabel,
+  dropdownOptions,
+  dropdownValue,
+  onDropdownChange,
+  dropdownPlaceholder = "Select",
+  required = false,
+  className = "",
+  defaultChecked = true,
+}: FormCheckboxWithDropdownProps<T>) {
+  return (
+    <FormField
+      control={form.control}
+      name={checkboxName}
+      render={({ field }) => {const value = field.value === undefined ? defaultChecked : !!field.value;
+
+        return (
+          <FormItem className={`flex flex-col space-y-2 ${className}`}>
+            <div className="flex items-center gap-4">
+              <div className="flex items-start space-x-3">
+                <FormControl>
+                  <Checkbox
+                    checked={value}
+                    onCheckedChange={(checked) => field.onChange(checked)}
+                  />
+                </FormControl>
+                <FormLabel className="font-normal" required={required}>
+                  {checkboxLabel}
+                </FormLabel>
+              </div>
+
+              {dropdownOptions.length > 0 && (
+                <CustomDropdown
+                  options={dropdownOptions}
+                  value={dropdownValue}
+                  onChange={onDropdownChange}
+                  placeholder={dropdownPlaceholder}
+                  showSearch={false}
+                  className="w-[250px]"
+                />
+              )}
+            </div>
+            <FormMessage />
+          </FormItem>
+        );
+      }}
+    />
+  );
+}
 export function FormSimpleCheckbox<T extends FieldValues>({
   form,
   name,

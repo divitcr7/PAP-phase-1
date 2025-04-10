@@ -15,18 +15,16 @@ import {
   applicantInfoSchema,
   occupantInfoSchema,
   addressSchema,
-  currentAddressSchema,
-  previousAddressSchema,
+  addressesSchema,
 } from "./Steps/stepOne";
 
 import {
-  currentEmploymentSchema,
-  previousEmploymentSchema,
   additionalIncomeSchema,
   backgroundSchema,
   backgroundFormSchema,
   bankDetailsSchema,
   creditHistorySchema,
+  employmentSchema,
 } from "./Steps/stepTwo";
 
 import {
@@ -40,27 +38,27 @@ import { disclosures } from "./Steps/stepFive";
 import { signatureSchema } from "./Steps/stepSix";
 
 // Define the complete applicant structure
-export const applicantSchema = z.object({
-  personalInfo: applicantInfoSchema,
-  currentAddress: currentAddressSchema,
-  previousAddress: previousAddressSchema.optional(),
-  currentEmployment: currentEmploymentSchema,
-  previousEmployment: previousEmploymentSchema.optional(),
+const infoBaseSchema = z.object({
+  addresses: addressesSchema,
+  employments: employmentSchema,
   bankDetails: bankDetailsSchema,
   additionalIncomes: z.array(additionalIncomeSchema).optional(),
-  vehicles: z.array(vehicleSchema).optional(),
 });
+
+// Define the complete applicant structure
+export const applicantSchema = z.object({
+    personalInfo: applicantInfoSchema,
+  }).merge(infoBaseSchema);
 
 // Define the complete occupant structure
 export const occupantSchema = z.object({
-  personalInfo: occupantInfoSchema,
-  currentAddress: currentAddressSchema,
-  previousAddress: previousAddressSchema.optional(),
-  currentEmployment: currentEmploymentSchema.optional(),
-  previousEmployment: previousEmploymentSchema.optional(),
-  bankDetails: bankDetailsSchema.optional(),
-  additionalIncomes: z.array(additionalIncomeSchema).optional(),
-});
+    personalInfo: occupantInfoSchema,
+  }).merge(
+    infoBaseSchema.extend({
+      employments: employmentSchema.optional(),
+      bankDetails: bankDetailsSchema.optional(),
+    })
+  );
 
 // Define the primary applicant only fields
 export const applyFormSchema = z.object({
@@ -101,14 +99,10 @@ export {
   applicantInfoSchema,
   occupantInfoSchema,
   addressSchema,
-  currentAddressSchema,
-  previousAddressSchema,
 };
 
 // Step Two
 export {
-  previousEmploymentSchema,
-  currentEmploymentSchema,
   additionalIncomeSchema,
   backgroundSchema,
   bankDetailsSchema,

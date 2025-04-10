@@ -1,3 +1,4 @@
+import { ApplyFormValues } from "@/schemas/ApplyForm/ApplyForm";
 import { DEFAULT_STATE } from "./states";
 
 // Base personal information shared between applicants and occupants
@@ -18,7 +19,7 @@ const DEFAULT_PERSON_INFO = {
 const DEFAULT_APPLICANT_INFO = {
   ...DEFAULT_PERSON_INFO,
   formerName: "",
-  gender: "male",
+  gender: "male" as const,
   isMarried: true,
   homePhone: "",
   workPhonePersonal: "",
@@ -32,7 +33,7 @@ const DEFAULT_OCCUPANT_INFO = {
 };
 
 // Address information (shared between applicants and occupants)
-const DEFAULT_ADDRESS = {
+const ADDRESS_BASE = {
   address: "",
   city: "",
   state: DEFAULT_STATE,
@@ -43,49 +44,76 @@ const DEFAULT_ADDRESS = {
   ownerName: "",
   reasonForLeaving: "",
   monthlyPayment: "",
+};
+
+// Current address information (extends the base)
+export const DEFAULT_CURRENT_ADDRESS = {
+  ...ADDRESS_BASE,
   residencyStartDate: "",
 };
 
+// Previous address information (extends the base)
 export const DEFAULT_PREVIOUS_ADDRESS = {
+  ...ADDRESS_BASE,
+  residencyDateFrom: "",
+  residencyDateTo: "",
+};
+
+export const DEFAULT_PRIMARY_APPLICANT_ADDRESS = {
+  hasSharedAddress: false as const,
+  current: DEFAULT_CURRENT_ADDRESS,
+  previous: undefined,
+};
+
+const DEFAULT_ADDRESS = {
+  hasSharedAddress: true as const,
+  residentType: "applicant" as const,
+  residentIndex: 0,
+  residentName: "Primary Applicant",
+  current: undefined,
+  previous: undefined,
+};
+
+const EMPLOYMENT_BASE = {
+  employer: "",
+  position: "",
   address: "",
   city: "",
   state: DEFAULT_STATE,
   zip: "",
-  ownerPhone: "",
-  residenceType: "rent" as const,
-  apartmentName: "",
-  ownerName: "",
-  reasonForLeaving: "",
-  monthlyPayment: "",
-  previousDateFrom: "",
-  previousDateTo: "",
-};
-
-// Employment information (shared between applicants)
-export const DEFAULT_EMPLOYMENT = {
-  employer: "",
-  position: "",
-  workAddress: "",
-  workCity: "",
-  workState: DEFAULT_STATE,
-  workZip: "",
-  workPhone: "",
+  phone: "",
   supervisor: "",
   supervisorPhone: "",
   income: "",
-  workStartDate: "",
-  workEndDate: "",
   grossMonthlyIncome: "",
 };
 
+// Current employment information (extends the base)
+export const DEFAULT_CURRENT_EMPLOYMENT = {
+  ...EMPLOYMENT_BASE,
+  startDate: "",
+};
+
+// Previous employment information (extends the base)
+export const DEFAULT_PREVIOUS_EMPLOYMENT = {
+  ...EMPLOYMENT_BASE,
+  startDate: "",
+  endDate: "",
+};
+
+const DEFAULT_EMPLOYMENT = {
+  current: DEFAULT_CURRENT_EMPLOYMENT,
+  previous: undefined,
+};
+
 export const DEFAULT_BANK_DETAILS = {
-  bankName: "",
-  bankBranch: "",
-  bankAccountNumber: "",
-  bankRoutingNumber: "",
-  bankAccountType: "",
-  bankAccountOpenDate: "",
-  bankStatements: undefined,
+  name: "",
+  branch: "",
+  accountNumber: "",
+  routingNumber: "",
+  accountType: "",
+  accountOpenDate: "",
+  statements: undefined,
 };
 
 export const DEFAULT_ADDITIONAL_INCOME = {
@@ -98,7 +126,6 @@ const DEFAULT_CREDIT_HISTORY = {
   creditHistoryExplanation: "",
 };
 
-// Credit and background history (shared between applicants)
 const DEFAULT_BACKGROUND = {
   hasBeenEvicted: false,
   hasBankruptcy: false,
@@ -146,12 +173,15 @@ export const DEFAULT_VEHICLE = {
 
 // Pet information (for individual applicants/occupants)
 export const DEFAULT_PET = {
-  type: "",
+  kind: "",
   breed: "",
   weight: "",
   age: "",
-  neutered: false,
-  vaccinated: false,
+  // name: "",
+  // color: "",
+  // gender: "",
+  // neutered: false,
+  // vaccinated: false,
 };
 
 // Special provisions (primary applicant only)
@@ -175,32 +205,37 @@ const DEFAULT_SIGNATURE = {
   date: "",
 };
 
+const INFO_BASE = {
+  employments: DEFAULT_EMPLOYMENT,
+  bankDetails: DEFAULT_BANK_DETAILS,
+  additionalIncomes: [],
+};
+
+export const DEFAULT_PRIMARY_APPLICANT = {
+  personalInfo: DEFAULT_APPLICANT_INFO,
+  addresses: DEFAULT_PRIMARY_APPLICANT_ADDRESS,
+  ...INFO_BASE,
+};
+
 // Complete applicant structure with all nested objects
 export const DEFAULT_APPLICANT = {
   personalInfo: DEFAULT_APPLICANT_INFO,
-  currentAddress: DEFAULT_ADDRESS,
-  previousAddress: undefined,
-  currentEmployment: DEFAULT_EMPLOYMENT,
-  previousEmployment: undefined,
-  bankDetails: DEFAULT_BANK_DETAILS,
-  additionalIncomes: [],
+  addresses: DEFAULT_ADDRESS,
+  ...INFO_BASE,
 };
 
 // Complete occupant structure with all nested objects
 export const DEFAULT_OCCUPANT = {
   personalInfo: DEFAULT_OCCUPANT_INFO,
-  currentAddress: DEFAULT_ADDRESS,
-  previousAddress: undefined,
-  currentEmployment: DEFAULT_EMPLOYMENT,
-  previousEmployment: undefined,
-  bankDetails: DEFAULT_BANK_DETAILS,
-  additionalIncomes: [],
+  addresses: DEFAULT_ADDRESS,
+  ...INFO_BASE,
 };
 
 // Default values for the entire form
-export const DEFAULT_FORM_VALUES = {
-  applicants: [{...DEFAULT_APPLICANT}],
+export const DEFAULT_FORM_VALUES: ApplyFormValues = {
+  applicants: [{ ...DEFAULT_PRIMARY_APPLICANT }],
   isSmoker: false,
+  apartmentAddress: "Test",
   emergencyContact: DEFAULT_EMERGENCY_CONTACT,
   creditHistory: DEFAULT_CREDIT_HISTORY,
   background: DEFAULT_BACKGROUND,

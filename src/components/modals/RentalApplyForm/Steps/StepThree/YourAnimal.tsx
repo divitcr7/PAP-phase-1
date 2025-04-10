@@ -31,7 +31,7 @@ export function YourAnimals({ form }: YourAnimalsProps) {
               <div className="grid grid-cols-13 items-center gap-4">
                 <FormInputField
                   form={form}
-                  name={`pets.${index}.type`}
+                  name={`pets.${index}.kind`}
                   label="Kind"
                   className="col-span-6"
                   placeholder="e.g. Dog, Cat"
@@ -86,15 +86,15 @@ export function YourAnimals({ form }: YourAnimalsProps) {
               form.setValue("pets", [
                 ...pets,
                 {
-                  type: "",
-                  name: "",
-                  gender: "",
-                  color: "",
+                  kind: "",
                   breed: "",
                   weight: "",
                   age: "",
-                  neutered: false,
-                  vaccinated: false,
+                  // gender: "",
+                  // color: "",
+                  // name: "",
+                  // neutered: false,
+                  // vaccinated: false,
                 },
               ]);
             }}

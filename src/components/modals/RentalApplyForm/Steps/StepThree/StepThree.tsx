@@ -12,7 +12,7 @@ export default function StepThree({
   occupants = [],
 }: {
   form: UseFormReturn<ApplyFormValues>;
-  applicants?: ApplicantInfo[]; // Make it optional with default value
+  applicants?: ApplicantInfo[];
   occupants?: ApplicantInfo[];
 }) {
   return (
@@ -24,7 +24,6 @@ export default function StepThree({
       <YourVehicles form={form} applicants={applicants} occupants={occupants} />
 
       <YourAnimals form={form} />
-
     </div>
   );
 }

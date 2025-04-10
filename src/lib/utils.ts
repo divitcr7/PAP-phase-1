@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { differenceInYears, parse, format } from "date-fns";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -15,14 +16,56 @@ export const min18Years = new Date(
   .split("T")[0];
 export const todaysDate = new Date().toISOString().split("T")[0];
 
+export function calculateYearsBetween(
+  startDate: string | Date,
+  endDate: Date = new Date()
+): number {
+  try {
+    // If startDate is a string, parse it
+    const parsedStartDate =
+      typeof startDate === "string"
+        ? parse(startDate, "yyyy-MM-dd", new Date())
+        : startDate;
+
+    return differenceInYears(endDate, parsedStartDate);
+  } catch (error) {
+    console.error("Error calculating years between dates:", error);
+    return 0;
+  }
+}
+
 // Add this function to your utils file
+export function isLessThanYearsAgo(
+  dateString: string,
+  years: number = 5
+): boolean {
+  if (!dateString) return true;
+
+  return calculateYearsBetween(dateString) < years;
+}
+
+export function formatDate(
+  dateString: string,
+  formatStr: string = "MM/dd/yyyy"
+): string {
+  if (!dateString) return "";
+
+  try {
+    const date = parse(dateString, "yyyy-MM-dd", new Date());
+    return format(date, formatStr);
+  } catch (error) {
+    console.error("Error formatting date:", error);
+    return dateString;
+  }
+}
+
 export function formatPhoneNumber(value: string) {
   // Remove all non-digits
-  const number = value.replace(/\D/g, '');
-  
+  const number = value.replace(/\D/g, "");
+
   // Return empty if no number
-  if (!number) return '';
-  
+  if (!number) return "";
+
   // Format according to length
   if (number.length <= 3) {
     return `(${number}`;

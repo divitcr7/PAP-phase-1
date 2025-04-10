@@ -31,11 +31,6 @@ interface WhereYouLiveProps {
   residencyStartDate?: string;
   existingAddresses?: ExistingAddress[];
   onAddressSelect?: (value: string) => void;
-  getFieldPath: (
-    applicantType: ApplicantType,
-    index: number,
-    fieldName: string
-  ) => string;
 }
 
 export function WhereYouLive({
@@ -44,46 +39,44 @@ export function WhereYouLive({
   applicantType,
   applicantIndex,
   residencyStartDate,
-  getFieldPath,
 }: WhereYouLiveProps) {
   const prefix = type === "current" ? "current" : "previous";
 
-  // Use getFieldPath to get the correct field path for this applicant/occupant
-  const getField = (fieldName: string): Path<ApplyFormValues> => {
-    return getFieldPath(
-      applicantType,
-      applicantIndex,
-      `${prefix}${fieldName}`
-    ) as Path<ApplyFormValues>;
-  };
+    const basePath =
+      applicantType === "applicant"
+        ? `applicants.${applicantIndex}`
+        : `occupants.${applicantIndex}`;
 
-    const previousDateFromPath = getFieldPath(
-      applicantType,
-      applicantIndex,
-      "previousDateFrom"
-    );
-    const previousDateToPath = getFieldPath(
-      applicantType,
-      applicantIndex,
-      "previousDateTo"
-    );
+    // Use the correct address type path
+    const addressType = type === "current" ? "current" : "previous";
 
-    // Fix: Explicitly type the return values as string
+    // Function to get the full field path
+    const getField = (fieldName: string): Path<ApplyFormValues> => {
+      return `${basePath}.addresses.${addressType}.${fieldName}` as Path<ApplyFormValues>;
+    };
+
+    // For previous address date fields
+    const previousDateFromPath =
+      `${basePath}.addresses.previous.residencyDateFrom` as Path<ApplyFormValues>;
+    const previousDateToPath =
+      `${basePath}.addresses.previous.residencyDateTo` as Path<ApplyFormValues>;
+
+    // Watch previous date fields
     const previousDateFrom = useWatch({
       control: form.control,
-      name: previousDateFromPath as Path<ApplyFormValues>,
-    }) as string | undefined;
+      name: previousDateFromPath,
+    });
 
     const previousDateTo = useWatch({
       control: form.control,
-      name: previousDateToPath as Path<ApplyFormValues>,
-    }) as string | undefined;
+      name: previousDateToPath,
+    });
 
   return (
     <div className="space-y-4">
       <FormField
         control={form.control}
-        name={getField("Address")}
+        name={getField("address")}
         render={({ field }) => {
           console.log(
             `${prefix}Address value:`,

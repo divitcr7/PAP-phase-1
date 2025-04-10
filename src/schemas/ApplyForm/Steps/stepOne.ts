@@ -5,7 +5,7 @@ import { stateOrCountryEnum } from "./base";
 export const personInfoSchema = z.object({
   fullName: z.string().min(4, "Full name is required"),
   birthdate: z.string(),
-  isUSCitizen: z.boolean(),
+  isUSCitizen: z.boolean().default(true),
   socialSecurity: z.string(),
   driverLicense: z.string(),
   driverLicenseState: stateOrCountryEnum,
@@ -51,6 +51,26 @@ export const currentAddressSchema = addressSchema.extend({
 
 // Previous address schema (extends base address)
 export const previousAddressSchema = addressSchema.extend({
-  previousDateFrom: z.string(),
-  previousDateTo: z.string(),
-});
+  residencyDateFrom: z.string(),
+  residencyDateTo: z.string(),
+}).optional();
+
+export const sharedAddressSchema = z.object({
+    hasSharedAddress: z.literal(true),
+    residentType: z.enum(["applicant", "occupant"]),
+    residentIndex: z.number(),
+    residentName: z.string().min(1, "Please select a resident"),
+  }).refine(data => !(data.residentType === "applicant" && data.residentIndex === 0),
+    {message: "Primary applicant must provide their complete address details",
+      path: ["residentType"],
+    }
+  );
+
+export const addressesSchema = z.union([
+  z.object({
+    hasSharedAddress: z.literal(false),
+    current: currentAddressSchema,
+    previous: previousAddressSchema,
+  }),
+  sharedAddressSchema,
+]);

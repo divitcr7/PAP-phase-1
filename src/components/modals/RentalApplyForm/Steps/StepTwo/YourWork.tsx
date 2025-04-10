@@ -8,10 +8,14 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Plus, X } from "lucide-react";
-import { DEFAULT_EMPLOYMENT } from "@/constants/defaultApplyFormValues";
-import { useCallback, useEffect, useState } from "react";
+import {
+  DEFAULT_CURRENT_EMPLOYMENT,
+  DEFAULT_PREVIOUS_EMPLOYMENT,
+} from "@/constants/defaultApplyFormValues";
+import { useEffect, useState } from "react";
 import { WorkDetails } from "./WorkDetails";
 import { Separator } from "@/components/ui/separator";
+import { isLessThanYearsAgo } from "@/lib/utils";
 
 interface YourWorkProps {
   form: UseFormReturn<ApplyFormValues>;
@@ -46,7 +50,21 @@ export function YourWork({
     "previousEmployment"
   );
 
-  // Get the current employment start date
+  // Initialize current employment for non-occupants
+  useEffect(() => {
+    if (applicantType !== "occupant") {
+      const currentEmployment = form.getValues(
+        currentEmploymentPath as Path<ApplyFormValues>
+      );
+      if (!currentEmployment) {
+        form.setValue(
+          currentEmploymentPath as Path<ApplyFormValues>,
+          DEFAULT_CURRENT_EMPLOYMENT
+        );
+      }
+    }
+  }, [form, applicantType, applicantIndex, currentEmploymentPath]);
+
   const startDatePath =
     `${currentEmploymentPath}.startDate` as Path<ApplyFormValues>;
   const currentStartDate = useWatch({
@@ -54,30 +72,48 @@ export function YourWork({
     name: startDatePath,
   }) as string | undefined;
 
-  const resetPreviousEmployment = useCallback(() => {
-    form.setValue(previousEmploymentPath as Path<ApplyFormValues>, undefined);
-  }, [form, previousEmploymentPath]);
-
-  useEffect(() => {
-    if (currentStartDate) {
-      const startDate = new Date(currentStartDate);
-      const today = new Date();
-      const fiveYearsAgo = new Date();
-      fiveYearsAgo.setFullYear(today.getFullYear() - 5);
-
-      if (startDate > fiveYearsAgo) {
-        setShowPreviousEmployment(true);
-      } else {
-        setShowPreviousEmployment(false);
-        resetPreviousEmployment();
+    useEffect(() => {
+      if (currentStartDate) {
+        if (isLessThanYearsAgo(currentStartDate)) {
+          setShowPreviousEmployment(true);
+          const previousEmployment = form.getValues(
+            previousEmploymentPath as Path<ApplyFormValues>
+          );
+          if (!previousEmployment) {
+            form.setValue(
+              previousEmploymentPath as Path<ApplyFormValues>,
+              DEFAULT_PREVIOUS_EMPLOYMENT
+            );
+          }
+        } else {
+          setShowPreviousEmployment(false);
+          form.setValue(
+            previousEmploymentPath as Path<ApplyFormValues>,
+            undefined
+          );
+        }
       }
-    }
-  }, [currentStartDate, resetPreviousEmployment]);
+    }, [currentStartDate, form, previousEmploymentPath]);
 
   const currentEmployment = form.watch(
     currentEmploymentPath as Path<ApplyFormValues>
   );
   const hasCurrentEmployment = !!currentEmployment;
+
+  const handleRemoveWork = () => {
+    form.setValue(currentEmploymentPath as Path<ApplyFormValues>, undefined);
+    form.setValue(previousEmploymentPath as Path<ApplyFormValues>, undefined);
+    setShowPreviousEmployment(false);
+    form.trigger();
+  };
+
+  const handleAddWork = () => {
+    form.setValue(
+      currentEmploymentPath as Path<ApplyFormValues>,
+      DEFAULT_CURRENT_EMPLOYMENT
+    );
+    form.trigger();
+  };
 
   return (
     <div className="space-y-4">
@@ -89,13 +125,7 @@ export function YourWork({
             type="button"
             variant="ghost"
             size="icon"
-            onClick={() => {
-              form.setValue(
-                currentEmploymentPath as Path<ApplyFormValues>,
-                undefined
-              );
-              form.trigger(); // Force re-render
-            }}
+            onClick={handleRemoveWork}
             className="rounded-full hover:bg-destructive/10 transition-colors"
           >
             <X className="h-4 w-4 text-destructive" />
@@ -109,13 +139,7 @@ export function YourWork({
           variant="link"
           className="underline"
           size="sm"
-          onClick={() => {
-            form.setValue(
-              currentEmploymentPath as Path<ApplyFormValues>,
-              DEFAULT_EMPLOYMENT
-            );
-            form.trigger(); // Force re-render
-          }}
+          onClick={handleAddWork}
         >
           <Plus className="h-4 w-4 mr-1" /> Add Work Information
         </Button>
