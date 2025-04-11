@@ -77,7 +77,7 @@ const Subscribe = () => {
             <div className="bg-blue-600 p-2 rounded-full">
               <Gift className="h-5 w-5" />
             </div>
-            <span>$ back when you sign</span>
+            <span>$50 back when you sign</span>
           </div>
         </div>
 
@@ -128,7 +128,7 @@ const Subscribe = () => {
                 variant="secondary"
                 className="bg-white text-gray-800 hover:bg-gray-100 group-hover:translate-x-1 transition-transform relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-gray-800 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-200"
               >
-                <Link to="/try" className="flex items-center">
+                <Link to="/properties" className="flex items-center">
                   Give It a Try! <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>

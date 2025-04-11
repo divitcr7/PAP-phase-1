@@ -22,7 +22,7 @@ export default function Footer() {
         { label: "Pricing Plans", link: "/pricing" },
         { label: "Our Services", link: "/services" },
         { label: "About Us", link: "/about-us" },
-        { label: "Contact Us", link: "/contact" },
+        { label: "Contact Us", link: "/contact-us" },
       ],
     },
     {
@@ -41,7 +41,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-[#141c2f] text-white pt-10 pb-4 md:py-14 px-6 md:px-30">
+    <footer className="mt-auto bg-[#141c2f] text-white pt-10 pb-4 md:py-14 px-6 md:px-30">
       {/* Top Section */}
       <div className="container mx-auto flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-12 border-b pb-6 md:pb-12 border-gray-700 animate-fade-in">
         <div className="flex justify-start mb-6 md:mb-0">

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Nav } from "./Nav";
 import { MobileNav } from "./MobileNav";
 import { Menu } from "lucide-react";
+import AuthModal from "@/components/modals/AuthModal";
 
 interface HeaderProps {
   parentClass?: string;
@@ -14,6 +15,7 @@ const Header: React.FC<HeaderProps> = ({
 }) => {
   const [isFixed, setIsFixed] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -60,7 +62,7 @@ const Header: React.FC<HeaderProps> = ({
               variant="outline"
               size="lg"
               className="rounded-full"
-              onClick={() => console.log("open login modal")}
+              onClick={() => setShowLogin(!showLogin)}
             >
               Sign In
             </Button>
@@ -111,6 +113,12 @@ const Header: React.FC<HeaderProps> = ({
           <MobileNav />
         </div>
       </div>
+
+      <AuthModal
+        isOpen={showLogin}
+        onClose={() => setShowLogin(false)}
+        isSignUp={false}
+      />
     </header>
   );
 };

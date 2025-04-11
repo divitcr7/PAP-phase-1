@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import MetaComponent from "@/components/seo/MetaComponent";
 import LoadingComponent from "@/components/common/LoadingComponent";
+import Brands from "@/components/home/Brands";
 
 // Lazy-load components
 // const Hero = lazy(() => import("@/components/home/Hero"));
@@ -31,6 +32,9 @@ const Home = () => {
       </Suspense>
       <Suspense fallback={<LoadingComponent />}>
         <Testimonials />
+      </Suspense>
+      <Suspense fallback={<LoadingComponent />}>
+        <Brands />
       </Suspense>
       {/*
       <Separator className="my-6" />

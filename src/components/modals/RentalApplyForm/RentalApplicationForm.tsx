@@ -54,7 +54,6 @@ export default function RentalApplicationForm() {
   // Track occupants separately
   const [occupants, setOccupants] = useState<ApplicantInfo[]>([]);
 
-  // Create a deep copy of default values to avoid reference issues
   const defaultFormValues = useMemo(() => {
     return JSON.parse(JSON.stringify(DEFAULT_FORM_VALUES));
   }, []);
@@ -65,22 +64,18 @@ export default function RentalApplicationForm() {
     mode: "onBlur",
   });
 
-  // Initialize form when dialog opens
   useEffect(() => {
     if (open) {
       form.reset(defaultFormValues);
-
       console.log("Form initialized with default values:", form.getValues());
     }
   }, [open, form, defaultFormValues]);
 
-  // Reset form initialization state when dialog closes
   useEffect(() => {
     if (!open) setStep(1);
   }, [open]);
 
   useEffect(() => {
-    // Check specific nested values
     console.log(
       "Primary applicant info:",
       form.getValues("applicants.0.personalInfo")
