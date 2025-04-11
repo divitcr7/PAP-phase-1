@@ -5,10 +5,12 @@ import { ArrowRight, Home, Key, Coins, Gift } from "lucide-react";
 import BGSliderImage from "/images/slider/slider-1.jpg";
 import AuthModal from "@/components/modals/AuthModal";
 import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
 
 const Subscribe = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
+  const { isAuthenticated, user } = useAuth();
   return (
     <section
       className="relative text-white min-h-screen h-screen flex flex-col justify-center overflow-hidden bg-cover bg-center"
@@ -115,6 +117,61 @@ const Subscribe = () => {
               </div>
             </CardContent>
           </Card>
+          {!isAuthenticated ? (
+            <Card className="bg-gradient-to-br from-blue-600 to-blue-800 border-0 shadow-xl overflow-hidden group hover:shadow-blue-500/20 transition-all duration-300">
+              <CardContent className="p-6 relative">
+                <h2 className="text-2xl font-bold mb-4 text-blue-200">
+                  Pad People
+                </h2>
+                <p className="text-blue-100 mb-6 max-w-md">
+                  Join our community of Pad People and enjoy exclusive benefits,
+                  reduced rent, and a seamless renting experience.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Button
+                    onClick={() => setShowLogin(!showLogin)}
+                    asChild
+                    variant="secondary"
+                    className="bg-white text-blue-700 hover:bg-gray-100 transform hover:scale-105 transition-all duration-200"
+                  >
+                    <a className="hover:text-lg transition-all duration-200">
+                      Login
+                    </a>
+                  </Button>
+                  <Button
+                    onClick={() => setShowSignup(!showSignup)}
+                    asChild
+                    variant="outline"
+                    className="border-white text-black hover:bg-white/20 transform hover:scale-105 transition-all duration-200"
+                  >
+                    <a className="hover:text-lg transition-all duration-200">
+                      Sign-up
+                    </a>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ) : (
+            <Card className="bg-gradient-to-br from-blue-600 to-blue-800 border-0 shadow-xl overflow-hidden group hover:shadow-blue-500/20 transition-all duration-300">
+              <CardContent className="p-6 relative">
+                <h2 className="text-2xl font-bold mb-4 text-blue-200">
+                  Welcome Back, {user?.name}!
+                </h2>
+                <p className="text-blue-100 mb-6 max-w-md">
+                  Continue exploring properties and find your perfect pad today.
+                </p>
+                <Button
+                  asChild
+                  variant="secondary"
+                  className="bg-white text-blue-700 hover:bg-gray-100 transform hover:scale-105 transition-all duration-200"
+                >
+                  <Link to="/properties" className="flex items-center">
+                    Browse Properties <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
+          )}
 
           <Card className="bg-gradient-to-br from-gray-800 to-gray-900 border-0 shadow-xl overflow-hidden group hover:shadow-gray-500/20 transition-all duration-300">
             <CardContent className="p-6 relative">

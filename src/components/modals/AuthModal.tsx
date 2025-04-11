@@ -10,6 +10,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import { testimonialData } from "@/data/testimonials";
 import "swiper/css";
+import { useAuth } from "@/hooks/useAuth";
+import { toast } from "sonner";
 
 const AuthModal = ({
   isOpen,
@@ -17,6 +19,7 @@ const AuthModal = ({
   isSignUp: isSignUpProp,
 }: LoginModalProps) => {
   const [isSignUp, setIsSignUp] = useState(isSignUpProp);
+  const { tempLogin, handleLogin, handleSignup, error, isSubmitting } = useAuth();
 
   if (!isOpen) return null;
 
@@ -24,12 +27,36 @@ const AuthModal = ({
     setIsSignUp(!isSignUp);
   };
 
-  const handleLoginSubmit = (data: LoginFormValues) => {
-    console.log("Login Data:", data);
+  const handleLoginSubmit = async (data: LoginFormValues) => {
+    const success = tempLogin
+      ? tempLogin(data.email, data.password)
+      : await handleLogin(data);
+      
+    // const success = await handleLogin(data);
+    if (success) {
+      toast.success("Login successful", {
+        description: "Welcome back to Pick A Pad!",
+      });
+      onClose();
+    } else if (error) {
+      toast.error("Login failed", {
+        description: error,
+      });
+    }
   };
 
-  const handleSignupSubmit = (data: SignupFormValues) => {
-    console.log("Sign Up Data:", data);
+  const handleSignupSubmit = async (data: SignupFormValues) => {
+    const success = await handleSignup(data);
+    if (success) {
+      toast.success("Signup successful", {
+        description: "Welcome to Pick A Pad!",
+      });
+      onClose();
+    } else if (error) {
+      toast.error("Signup failed", {
+        description: error,
+      });
+    }
   };
 
   return (
@@ -158,11 +185,12 @@ const AuthModal = ({
           </div>
         </div>
 
-        <div className="w-full md:w-3/5 flex flex-col items-center bg-gradient-to-r from-blue-200 to-blue-300  p-6 relative">
+        <div className="w-full md:w-3/5 flex flex-col items-center bg-gradient-to-r from-blue-200 to-blue-300 p-6 relative">
           <Button
             variant="ghost"
             onClick={onClose}
             className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 hover:bg-gray-500 rounded-full py-5"
+            disabled={isSubmitting}
           >
             <X className="size-5" />
           </Button>
@@ -192,6 +220,7 @@ const AuthModal = ({
               variant="link"
               className="text-blue-600 p-0 text-lg"
               onClick={toggleSignUp}
+              disabled={isSubmitting}
             >
               {isSignUp ? "Back to Login" : "Sign Up"}
             </Button>

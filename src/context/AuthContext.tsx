@@ -1,6 +1,5 @@
 import {
   createContext,
-  useContext,
   useState,
   useEffect,
   ReactNode,
@@ -8,10 +7,12 @@ import {
 import axiosInstance from "@/lib/axiosInstance";
 import { LoginFormValues, SignupFormValues } from "@/schemas/Auth";
 
+
 interface User {
   id: string;
   name: string;
   email: string;
+  avatar?: string;
 }
 
 interface AuthContextType {
@@ -21,6 +22,7 @@ interface AuthContextType {
   login: (data: LoginFormValues) => Promise<void>;
   signup: (data: SignupFormValues) => Promise<void>;
   logout: () => void;
+  tempLogin: (email: string, password: string) => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -30,29 +32,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is already logged in
     const checkAuthStatus = async () => {
-      const storedUser = localStorage.getItem("user");
-      const token = localStorage.getItem("auth_token");
 
-      if (storedUser && token) {
+      const demoUser = localStorage.getItem("demo_user");
+      if (demoUser) {
+        setUser(JSON.parse(demoUser));
+      }
+
+      const token = localStorage.getItem("auth_token");
+      if (token) {
         try {
-          // Verify token with backend
-          const response = await axiosInstance.get("/auth/verify");
-          if (response.status === 200) {
-            setUser(JSON.parse(storedUser));
+          // Set the token in axios headers
+          axiosInstance.defaults.headers.common[
+            "Authorization"
+          ] = `Bearer ${token}`;
+          const response = await axiosInstance.get("/auth/me");
+          if (response.data.success) {
+            setUser(response.data.user);
           } else {
-            // Token invalid, clear storage
-            localStorage.removeItem("user");
             localStorage.removeItem("auth_token");
           }
         } catch (error) {
           console.error("Auth verification failed:", error);
-          localStorage.removeItem("user");
           localStorage.removeItem("auth_token");
         }
       }
-
       setIsLoading(false);
     };
 
@@ -63,13 +67,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(true);
     try {
       const response = await axiosInstance.post("/auth/login", data);
-      const { user, token } = response.data;
+      if (response.data.success) {
+        const token = response.data.token;
+        localStorage.setItem("auth_token", token);
 
-      // Store user and token
-      localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("auth_token", token);
+        // Set the token in axios headers for future requests
+        axiosInstance.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${token}`;
 
-      setUser(user);
+        setUser(response.data.user);
+      }
     } catch (error) {
       console.error("Login failed:", error);
       throw error;
@@ -82,13 +90,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(true);
     try {
       const response = await axiosInstance.post("/auth/register", data);
-      const { user, token } = response.data;
+      if (response.data.success) {
+        const token = response.data.token;
+        localStorage.setItem("auth_token", token);
 
-      // Store user and token
-      localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("auth_token", token);
+        // Set the token in axios headers for future requests
+        axiosInstance.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${token}`;
 
-      setUser(user);
+        setUser(response.data.user);
+      }
     } catch (error) {
       console.error("Signup failed:", error);
       throw error;
@@ -97,11 +109,34 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("auth_token");
-    setUser(null);
-  };
+    const tempLogin = (email: string, password: string) => {
+      // Check if credentials match our demo account
+      if (email === "test@test.com" && password === "12345678") {
+        const demoUser = {
+          id: "demo-123",
+          name: "Alex Johnson",
+          email: "test@test.com",
+          avatar: "/images/avatar/default-avatar.png", // Use a default avatar image
+        };
+
+        // Store in localStorage for persistence
+        localStorage.setItem("demo_user", JSON.stringify(demoUser));
+        localStorage.setItem("auth_token", "demo-token-123");
+
+        // Update state
+        setUser(demoUser);
+        return true;
+      }
+      return false;
+    };
+
+
+    const logout = () => {
+      localStorage.removeItem("auth_token");
+      localStorage.removeItem("demo_user");
+      delete axiosInstance.defaults.headers.common["Authorization"];
+      setUser(null);
+    };
 
   return (
     <AuthContext.Provider
@@ -112,6 +147,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         login,
         signup,
         logout,
+        tempLogin,
       }}
     >
       {children}
@@ -119,10 +155,4 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-};
+export { AuthContext };

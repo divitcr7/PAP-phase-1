@@ -5,6 +5,7 @@ import LoadingScreen from "./components/common/LoadingScreen";
 import Header from "./components/common/Header/Header";
 import Footer from "./components/common/Footer";
 import { AuthProvider } from "./context/AuthContext";
+import { Toaster } from "sonner";
 
 const Home = lazy(() => import("./pages/Home"));
 const Subscribe = lazy(() => import("./pages/Subscribe"));
@@ -13,6 +14,7 @@ const PropertyList = lazy(() => import("./pages/PropertiesList"));
 const Properties = lazy(() => import("./pages/Properties"));
 const ContactPage = lazy(() => import("./pages/ContactUs"));
 const AboutPage = lazy(() => import("./pages/AboutUs"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 function App() {
   const isNewUser = false;
@@ -20,7 +22,11 @@ function App() {
   if (isNewUser) {
     return (
       <Suspense fallback={<LoadingScreen />}>
-        <Subscribe />
+        <div className="min-h-screen flex flex-col bg-white">
+          <main className="flex-grow">
+            <Subscribe />
+          </main>
+        </div>
       </Suspense>
     );
   }
@@ -65,7 +71,7 @@ function App() {
                 }
               />
               <Route
-                path=":propertyName"
+                path="property/:propertyId"
                 element={
                   <Suspense fallback={<LoadingScreen />}>
                     <PropertyList />
@@ -73,16 +79,34 @@ function App() {
                 }
               />
               <Route
-                path=":propertyName/:unitTitle"
+                path="property/:propertyId/unit/:unitId"
                 element={
                   <Suspense fallback={<LoadingScreen />}>
                     <PropertyDetailsPage />
                   </Suspense>
                 }
               />
+              {/* <Route
+                path=":propertyName/:unitTitle"
+                element={
+                  <Suspense fallback={<LoadingScreen />}>
+                    <PropertyDetailsPage />
+                  </Suspense>
+                }
+              /> */}
+              {/* 404 route */}
+              <Route
+                path="*"
+                element={
+                  <Suspense fallback={<LoadingScreen />}>
+                    <NotFound />
+                  </Suspense>
+                }
+              />
             </Routes>
           </main>
           <Footer />
+          <Toaster />
         </div>
       </ErrorBoundary>
     </AuthProvider>
