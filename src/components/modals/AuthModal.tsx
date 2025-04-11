@@ -19,7 +19,8 @@ const AuthModal = ({
   isSignUp: isSignUpProp,
 }: LoginModalProps) => {
   const [isSignUp, setIsSignUp] = useState(isSignUpProp);
-  const { tempLogin, handleLogin, handleSignup, error, isSubmitting } = useAuth();
+  const { handleTempLogin, handleSignup, error, isSubmitting } =
+    useAuth();
 
   if (!isOpen) return null;
 
@@ -28,10 +29,8 @@ const AuthModal = ({
   };
 
   const handleLoginSubmit = async (data: LoginFormValues) => {
-    const success = tempLogin
-      ? tempLogin(data.email, data.password)
-      : await handleLogin(data);
-      
+    const success = handleTempLogin(data.email, data.password);
+
     // const success = await handleLogin(data);
     if (success) {
       toast.success("Login successful", {
