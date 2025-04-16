@@ -1,6 +1,6 @@
 import { PropertyUnit } from "@/types/properties";
 import {
-  Home,
+  // Home,
   Settings,
   Warehouse,
   Bed,
@@ -13,7 +13,7 @@ import { OverviewProps, OverviewDetail } from "@/types/properties";
 export const createOverviewDetails = (
   props: OverviewProps
 ): OverviewDetail[] => [
-  { label: "ID", value: props.id, icon: Home },
+  // { label: "ID", value: props.id, icon: Home },
   { label: "Type", value: props.type, icon: Settings },
   { label: "Garages", value: props.garages, icon: Warehouse },
   { label: "Bedrooms", value: props.bedrooms, icon: Bed, suffix: "Rooms" },
@@ -113,14 +113,14 @@ export const createStaticUnits = (count: number): PropertyUnit[] => {
       ],
       alt: "Property Image",
       address: "145 Brooklyn Ave, Texas, Texas",
-      title: `Casa Lomas de Machalí Machas ${index + 1}`,
+      title: `Casa Modern Apartment ${index + 1}`,
       description: {
         title: "Description",
         preview: [
-          "Located around an hour away from {city}, between the Perche and the Iton valley, in a beautiful park by a charming stream, this country property immediately seduces with its bucolic and soothing environment.",
+          "Located around an hour away from {city}, between the valley hills, in a beautiful park by a charming stream, this country property immediately seduces with its bucolic and soothing environment.",
         ],
         fullContent: [
-          "Located around an hour away from {city}, between the Perche and the Iton valley, in a beautiful park by a charming stream, this country property immediately seduces with its bucolic and soothing environment.",
+          "Located around an hour away from {city}, between the valley hills, in a beautiful park by a charming stream, this country property immediately seduces with its bucolic and soothing environment.",
           "An ideal choice for sports and leisure enthusiasts who will be able to take advantage of its swimming pool (11m x 5m), tennis court, gym, and sauna.",
           "The property features high-end finishes throughout, including hardwood floors, custom cabinetry, and premium appliances.",
           "The spacious layout provides plenty of natural light and seamless indoor-outdoor living spaces.",
@@ -128,12 +128,16 @@ export const createStaticUnits = (count: number): PropertyUnit[] => {
       },
       floors: [
         {
+          name: "First Floor",
+          image: "/images/banner/floor.png",
           title: "First Floor",
           bedrooms: 2,
           bathrooms: 2,
           imgSrc: "/images/banner/floor.png",
         },
         {
+          name: "Second Floor",
+          image: "/images/banner/floor.png",
           title: "Second Floor",
           bedrooms: 2,
           bathrooms: 2,

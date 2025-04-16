@@ -4,13 +4,18 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import RentalApplicationForm from "@/components/modals/RentalApplyForm/RentalApplicationForm";
 
-interface FloatingActionButtonProps {
-  propertyId: number;
-  price: number;
-  agent: string;
-  avatar: string;
+interface AgentInfo {
+  name: string;
+  phone: string;
+  email: string;
 }
 
+interface FloatingActionButtonProps {
+  propertyId: string | number;
+  price: number;
+  agent: AgentInfo | string;
+  avatar: string;
+}
 
 const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
   propertyId,

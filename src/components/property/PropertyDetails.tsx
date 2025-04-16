@@ -167,7 +167,7 @@ export default function PropertyDetails({ unit }: PropertyDetailsProps) {
           <Description description={normalizedUnit.description} />
           <Separator className="my-4" />
           <Overview
-            id={normalizedUnit.id}
+            // id={normalizedUnit.id}
             type={normalizedUnit.type[0]}
             garages={normalizedUnit.garages}
             bedrooms={normalizedUnit.beds}

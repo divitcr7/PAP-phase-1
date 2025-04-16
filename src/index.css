@@ -162,7 +162,7 @@
 }
 
 .swiper-slide-thumb-active div {
-  @apply border-blue-500 ![border-color:rgb(59,130,246)];
+  @apply border-blue-500;
 }
 
 .main-swiper .swiper-slide {

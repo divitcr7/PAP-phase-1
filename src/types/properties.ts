@@ -18,7 +18,7 @@ export interface OverviewDetail {
 }
 
 export interface OverviewProps {
-  id: number;
+  // id: number;
   type: string;
   garages: number;
   bedrooms: number;
@@ -49,11 +49,14 @@ export interface PropertyDescription {
 }
 
 export interface Floor {
-  title: string;
-  bedrooms: number;
-  bathrooms: number;
-  imgSrc: string;
+  name: string;
+  image: string;
+  title?: string;
+  bedrooms?: number;
+  bathrooms?: number;
+  imgSrc?: string;
 }
+
 export interface PropertyUnit {
   id: number;
   imgSrc: string;

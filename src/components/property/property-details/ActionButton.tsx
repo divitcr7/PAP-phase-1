@@ -4,10 +4,16 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import RentalApplicationForm from "@/components/modals/RentalApplyForm/RentalApplicationForm";
 
+interface AgentInfo {
+  name: string;
+  phone: string;
+  email: string;
+}
+
 interface BottomActionBarProps {
-  propertyId: number;
+  propertyId: string | number;
   price: number;
-  agent: string;
+  agent: AgentInfo | string;
   avatar: string;
 }
 
