@@ -15,6 +15,7 @@ export const signupSchema = z
         "Password must contain at least one special character"
       ),
     confirmPassword: z.string(),
+    userType: z.enum(["master_agent", "agent", "customer"]).default("customer"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords must match",

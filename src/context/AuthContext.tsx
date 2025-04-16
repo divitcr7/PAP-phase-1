@@ -1,19 +1,7 @@
-import {
-  createContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from "react";
+import { createContext, useState, useEffect, ReactNode } from "react";
 import axiosInstance from "@/lib/axiosInstance";
 import { LoginFormValues, SignupFormValues } from "@/schemas/Auth";
-
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  avatar?: string;
-}
+import { User } from "@/types/auth";
 
 interface AuthContextType {
   user: User | null;
@@ -21,8 +9,7 @@ interface AuthContextType {
   isLoading: boolean;
   login: (data: LoginFormValues) => Promise<void>;
   signup: (data: SignupFormValues) => Promise<void>;
-  logout: () => void;
-  tempLogin: (email: string, password: string) => boolean;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -33,31 +20,33 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const checkAuthStatus = async () => {
+      try {
+        // Check if token exists in localStorage
+        const token = localStorage.getItem("auth_token");
 
-      const demoUser = localStorage.getItem("demo_user");
-      if (demoUser) {
-        setUser(JSON.parse(demoUser));
-      }
-
-      const token = localStorage.getItem("auth_token");
-      if (token) {
-        try {
+        if (token) {
           // Set the token in axios headers
           axiosInstance.defaults.headers.common[
             "Authorization"
           ] = `Bearer ${token}`;
+
+          // Fetch current user from your API
           const response = await axiosInstance.get("/auth/me");
+
           if (response.data.success) {
             setUser(response.data.user);
           } else {
             localStorage.removeItem("auth_token");
+            delete axiosInstance.defaults.headers.common["Authorization"];
           }
-        } catch (error) {
-          console.error("Auth verification failed:", error);
-          localStorage.removeItem("auth_token");
         }
+      } catch (error) {
+        console.error("Auth verification failed:", error);
+        localStorage.removeItem("auth_token");
+        delete axiosInstance.defaults.headers.common["Authorization"];
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
 
     checkAuthStatus();
@@ -66,7 +55,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = async (data: LoginFormValues) => {
     setIsLoading(true);
     try {
+      // Login through your API
       const response = await axiosInstance.post("/auth/login", data);
+
       if (response.data.success) {
         const token = response.data.token;
         localStorage.setItem("auth_token", token);
@@ -77,6 +68,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         ] = `Bearer ${token}`;
 
         setUser(response.data.user);
+      } else {
+        throw new Error(response.data.message || "Login failed");
       }
     } catch (error) {
       console.error("Login failed:", error);
@@ -89,7 +82,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signup = async (data: SignupFormValues) => {
     setIsLoading(true);
     try {
+      // Signup through your API
       const response = await axiosInstance.post("/auth/register", data);
+
       if (response.data.success) {
         const token = response.data.token;
         localStorage.setItem("auth_token", token);
@@ -100,6 +95,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         ] = `Bearer ${token}`;
 
         setUser(response.data.user);
+      } else {
+        throw new Error(response.data.message || "Signup failed");
       }
     } catch (error) {
       console.error("Signup failed:", error);
@@ -109,34 +106,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-    const tempLogin = (email: string, password: string) => {
-      // Check if credentials match our demo account
-      if (email === "test@test.com" && password === "12345678") {
-        const demoUser = {
-          id: "demo-123",
-          name: "Alex Johnson",
-          email: "test@test.com",
-          avatar: "/images/avatar/default-avatar.png", // Use a default avatar image
-        };
+  const logout = async () => {
+    try {
+      // Logout through your API
+      await axiosInstance.post("/auth/logout");
 
-        // Store in localStorage for persistence
-        localStorage.setItem("demo_user", JSON.stringify(demoUser));
-        localStorage.setItem("auth_token", "demo-token-123");
-
-        // Update state
-        setUser(demoUser);
-        return true;
-      }
-      return false;
-    };
-
-
-    const logout = () => {
+      // Clear local storage and state
       localStorage.removeItem("auth_token");
-      localStorage.removeItem("demo_user");
       delete axiosInstance.defaults.headers.common["Authorization"];
       setUser(null);
-    };
+    } catch (error) {
+      console.error("Logout failed:", error);
+
+      // Even if the API call fails, clear local state
+      localStorage.removeItem("auth_token");
+      delete axiosInstance.defaults.headers.common["Authorization"];
+      setUser(null);
+    }
+  };
 
   return (
     <AuthContext.Provider
@@ -147,7 +134,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         login,
         signup,
         logout,
-        tempLogin,
       }}
     >
       {children}

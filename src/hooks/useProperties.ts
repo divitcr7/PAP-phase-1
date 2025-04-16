@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "@/lib/axiosInstance";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 import { Property } from "@/components/common/PadCard";
 
 export const useProperties = () => {

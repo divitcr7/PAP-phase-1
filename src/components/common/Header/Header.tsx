@@ -39,9 +39,9 @@ const Header: React.FC<HeaderProps> = ({
 
   useEffect(() => {
     if (isMobileMenuOpen) {
-      document.body.style.overflow = "hidden"; // Disable background scroll
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = ""; // Enable scrolling when menu closes
+      document.body.style.overflow = "";
     }
   }, [isMobileMenuOpen]);
 
@@ -72,10 +72,10 @@ const Header: React.FC<HeaderProps> = ({
             {isAuthenticated ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                  <Button variant="ghost" className="relative h-10 w-10 rounded-full p-0 focus:ring-0 focus:ring-offset-0 hover:bg-transparent">
                     <Avatar className="h-10 w-10">
                       <AvatarImage src={user?.avatar || ""} alt={user?.name || ""} />
-                      <AvatarFallback className="bg-blue-500 text-white">
+                      <AvatarFallback className="bg-blue-500 hover:bg-blue-700 text-white">
                         {user?.name?.charAt(0) || "U"}
                       </AvatarFallback>
                     </Avatar>

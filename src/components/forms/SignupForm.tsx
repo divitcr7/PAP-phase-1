@@ -26,6 +26,7 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
       email: "",
       password: "",
       confirmPassword: "",
+      userType: "customer",
     },
   });
 

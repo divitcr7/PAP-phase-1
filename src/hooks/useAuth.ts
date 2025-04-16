@@ -11,8 +11,7 @@ interface ErrorResponse {
 }
 
 export const useAuth = () => {
-  const { login, signup, logout, user, isAuthenticated, isLoading, tempLogin } =
-    useAuthContext();
+  const { login, signup, logout, user, isAuthenticated, isLoading } = useAuthContext();
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -54,21 +53,10 @@ export const useAuth = () => {
     logout();
   };
 
-  // Add handler for temporary login
-  const handleTempLogin = (email: string, password: string) => {
-    setError(null);
-    const success = tempLogin(email, password);
-    if (!success) {
-      setError("Invalid credentials. Try test@test.com / 12345678");
-    }
-    return success;
-  };
-
   return {
     handleLogin,
     handleSignup,
     handleLogout,
-    handleTempLogin,
     error,
     isSubmitting,
     user,

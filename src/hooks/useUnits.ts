@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import axiosInstance from "@/lib/axiosInstance";
-import { toast } from "sonner"; // "sonner" is a valid package name, can be ignored in spell check
+import { toast } from "@/lib/toast";// "sonner" is a valid package name, can be ignored in spell check
 
 // Define the Amenity interface
 export interface Amenity {

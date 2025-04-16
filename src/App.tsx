@@ -5,7 +5,6 @@ import LoadingScreen from "./components/common/LoadingScreen";
 import Header from "./components/common/Header/Header";
 import Footer from "./components/common/Footer";
 import { AuthProvider } from "./context/AuthContext";
-import { Toaster } from "sonner";
 
 const Home = lazy(() => import("./pages/Home"));
 const Subscribe = lazy(() => import("./pages/Subscribe"));
@@ -106,7 +105,6 @@ function App() {
             </Routes>
           </main>
           <Footer />
-          <Toaster />
         </div>
       </ErrorBoundary>
     </AuthProvider>

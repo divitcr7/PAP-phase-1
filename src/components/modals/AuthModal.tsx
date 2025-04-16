@@ -11,7 +11,7 @@ import { Autoplay } from "swiper/modules";
 import { testimonialData } from "@/data/testimonials";
 import "swiper/css";
 import { useAuth } from "@/hooks/useAuth";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 
 const AuthModal = ({
   isOpen,
@@ -19,8 +19,7 @@ const AuthModal = ({
   isSignUp: isSignUpProp,
 }: LoginModalProps) => {
   const [isSignUp, setIsSignUp] = useState(isSignUpProp);
-  const { handleTempLogin, handleSignup, error, isSubmitting } =
-    useAuth();
+  const { handleLogin, handleSignup, error, isSubmitting } = useAuth();
 
   if (!isOpen) return null;
 
@@ -29,9 +28,7 @@ const AuthModal = ({
   };
 
   const handleLoginSubmit = async (data: LoginFormValues) => {
-    const success = handleTempLogin(data.email, data.password);
-
-    // const success = await handleLogin(data);
+    const success = await handleLogin(data);
     if (success) {
       toast.success("Login successful", {
         description: "Welcome back to Pick A Pad!",
@@ -52,7 +49,7 @@ const AuthModal = ({
       });
       onClose();
     } else if (error) {
-      toast.error("Signup failed", {
+      toast.error("Signup Failed", {
         description: error,
       });
     }
