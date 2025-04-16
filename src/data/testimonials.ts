@@ -13,7 +13,7 @@ export const testimonialData: Testimonial[] = [
   {
     id: 1,
     quote:
-      "My experience with property management services has exceeded expectations. They efficiently manage properties with a professional and attentive approach in every situation. I feel reassured that any issue will be resolved promptly and effectively.",
+      "My experience with PAP has exceeded expectations. They efficiently manage properties with a professional and attentive approach in every situation. I feel reassured that any issue will be resolved promptly and effectively.",
     avatarSrc: "/images/avatar/avt-png1.png",
     avatarAlt: "avatar 1",
     name: "Courtney Henry",
@@ -24,7 +24,7 @@ export const testimonialData: Testimonial[] = [
   {
     id: 2,
     quote:
-      "My experience with property management services has exceeded expectations. They efficiently manage properties with a professional and attentive approach in every situation. I feel reassured that any issue will be resolved promptly and effectively.",
+      "My experience with PAP has exceeded expectations. They efficiently manage properties with a professional and attentive approach in every situation. I feel reassured that any issue will be resolved promptly and effectively.",
     avatarSrc: "/images/avatar/avt-png2.png",
     avatarAlt: "avatar 2",
     name: "Esther Howard",
@@ -35,7 +35,7 @@ export const testimonialData: Testimonial[] = [
   {
     id: 3,
     quote:
-      "My experience with property management services has exceeded expectations. They efficiently manage properties with a professional and attentive approach in every situation. I feel reassured that any issue will be resolved promptly and effectively.",
+      "My experience with PAP has exceeded expectations. They efficiently manage properties with a professional and attentive approach in every situation. I feel reassured that any issue will be resolved promptly and effectively.",
     avatarSrc: "/images/avatar/avt-png4.png",
     avatarAlt: "avatar 3",
     name: "Annette Black",
@@ -46,7 +46,7 @@ export const testimonialData: Testimonial[] = [
   {
     id: 4,
     quote:
-      "My experience with property management services has exceeded expectations. They efficiently manage properties with a professional and attentive approach in every situation. I feel reassured that any issue will be resolved promptly and effectively.",
+      "My experience with PAP has exceeded expectations. They efficiently manage properties with a professional and attentive approach in every situation. I feel reassured that any issue will be resolved promptly and effectively.",
     avatarSrc: "/images/avatar/avt-png6.png",
     avatarAlt: "avatar 4",
     name: "Bessie Cooper",
@@ -67,7 +67,7 @@ export interface SimpleTestimonial {
 export const testimonials: SimpleTestimonial[] = [
   {
     stars: 5,
-    text: `"My experience with property management services has exceeded expectations. 
+    text: `"My experience with PAP has exceeded expectations. 
             They efficiently manage properties with a professional and attentive approach 
             in every situation. I feel reassured that any issue will be resolved promptly 
             and effectively."`,
@@ -77,7 +77,7 @@ export const testimonials: SimpleTestimonial[] = [
   },
   {
     stars: 5,
-    text: `"My experience with property management services has exceeded expectations. 
+    text: `"My experience with PAP has exceeded expectations. 
             They efficiently manage properties with a professional and attentive approach 
             in every situation. I feel reassured that any issue will be resolved promptly 
             and effectively."`,
@@ -87,7 +87,7 @@ export const testimonials: SimpleTestimonial[] = [
   },
   {
     stars: 5,
-    text: `"My experience with property management services has exceeded expectations. 
+    text: `"My experience with PAP has exceeded expectations. 
             They efficiently manage properties with a professional and attentive approach 
             in every situation. I feel reassured that any issue will be resolved promptly 
             and effectively."`,

@@ -84,16 +84,16 @@ const PadCard: React.FC<PadCardProps> = ({ property }) => {
                   Management Team:
                 </p>
                 <div className="flex flex-wrap gap-2 mt-1">
-                  {property.managementTeam.slice(0, 2).map((member, index) => (
+                  {property.managementTeam.map((member, index) => (
                     <Badge key={index} variant="outline" className="text-xs">
                       {member.firstName} {member.lastName} ({member.role})
                     </Badge>
                   ))}
-                  {property.managementTeam.length > 2 && (
+                  {/* {property.managementTeam.length > 2 && (
                     <Badge variant="outline" className="text-xs">
                       +{property.managementTeam.length - 2} more
                     </Badge>
-                  )}
+                  )} */}
                 </div>
               </div>
             )}
