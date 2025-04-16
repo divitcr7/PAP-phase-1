@@ -34,9 +34,14 @@ const LoginForm = ({ onSubmit }: LoginFormProps) => {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel className="text-gray-300 mb-2">Email</FormLabel>
               <FormControl>
-                <Input {...field} type="email" placeholder="Enter Email" />
+                <Input 
+                  {...field} 
+                  type="email" 
+                  placeholder="Enter Email" 
+                  className="rounded-full h-12 px-4"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -47,18 +52,19 @@ const LoginForm = ({ onSubmit }: LoginFormProps) => {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel className="text-gray-300 mb-2">Password</FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter Password"
+                    className="rounded-full h-12 px-4"
                   />
                   <Button
                     type="button"
                     variant="ghost"
-                    className="absolute right-1 top-0 text-gray-500"
+                    className="absolute right-1 top-0 text-gray-500 h-12"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? <EyeOff /> : <Eye />}
@@ -71,7 +77,7 @@ const LoginForm = ({ onSubmit }: LoginFormProps) => {
         />
         <Button
           type="submit"
-          className="w-full bg-blue-600 text-white hover:bg-blue-700"
+          className="w-full bg-blue-600 text-white hover:bg-blue-700 rounded-full h-12"
         >
           Login
         </Button>

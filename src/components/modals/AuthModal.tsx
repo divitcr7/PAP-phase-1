@@ -187,7 +187,7 @@ const AuthModal = ({
             <X className="size-5" />
           </Button>
 
-          <h2 className={`text-3xl font-semibold text-blue-600 my-4`}>
+          <h2 className={`text-3xl font-semibold text-blue-600 ${isSignUp ? 'mb-2' : 'my-4'}`}>
             {isSignUp ? "Join Now" : "Already a Pad Person?"}
           </h2>
           <h3 className="text-xl font-bold text-gray-800 mb-3">

@@ -37,10 +37,15 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
           control={form.control}
           name="name"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
+            <FormItem className="">
+              <FormLabel className="text-gray-300 mb-2">Name</FormLabel>
               <FormControl>
-                <Input {...field} type="text" placeholder="Enter Name" />
+                <Input
+                  {...field}
+                  type="text"
+                  placeholder="Enter Name"
+                  className="rounded-full h-12 px-4"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -51,9 +56,14 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel className="text-gray-300 mb-2">Email</FormLabel>
               <FormControl>
-                <Input {...field} type="email" placeholder="Enter Email" />
+                <Input 
+                  {...field} 
+                  type="email" 
+                  placeholder="Enter Email" 
+                  className="rounded-full h-12 px-4"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -64,13 +74,14 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel className="text-gray-300 mb-2">Password</FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter Password"
+                    className="rounded-full h-12 px-4"
                     onChange={(e) => {
                       field.onChange(e);
                       if (e.target.value.length === 0) {
@@ -82,7 +93,7 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
                     <Button
                       type="button"
                       variant="ghost"
-                      className="absolute right-1 top-0 text-gray-500"
+                      className="absolute right-1 top-0 text-gray-500 h-12"
                       onClick={() => setShowPassword(!showPassword)}
                     >
                       {showPassword ? <EyeOff /> : <Eye />}
@@ -99,13 +110,14 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
           name="confirmPassword"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel className="text-gray-300 mb-2">Confirm Password</FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
                     type={showConfirmPassword ? "text" : "password"}
-                    placeholder="Enter Password"
+                    placeholder="Confirm Password"
+                    className="rounded-full h-12 px-4"
                     onChange={(e) => {
                       field.onChange(e);
                       if (e.target.value.length === 0) {
@@ -117,7 +129,7 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
                     <Button
                       type="button"
                       variant="ghost"
-                      className="absolute right-1 top-0 text-gray-500"
+                      className="absolute right-1 top-0 text-gray-500 h-12"
                       onClick={() =>
                         setShowConfirmPassword(!showConfirmPassword)
                       }
@@ -133,7 +145,7 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
         />
         <Button
           type="submit"
-          className="w-full bg-blue-600 text-white hover:bg-blue-700"
+          className="w-full bg-blue-600 text-white hover:bg-blue-700 rounded-full h-12"
         >
           Sign Up
         </Button>
