@@ -10,7 +10,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, User, Mail, Lock } from "lucide-react";
 import { useState } from "react";
 import { SignupFormProps } from "@/types/auth";
 import { SignupFormValues, signupSchema } from "@/schemas/Auth";
@@ -37,17 +37,20 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
           control={form.control}
           name="name"
           render={({ field }) => (
-            <FormItem className="">
-              <FormLabel className="text-gray-300 mb-2">Name</FormLabel>
+            <FormItem>
+              <FormLabel className="text-gray-300 mb-1">Full Name</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  type="text"
-                  placeholder="Enter Name"
-                  className="rounded-full h-12 px-4"
-                />
+                <div className="relative">
+                  <User className="absolute left-3 top-3 h-5 w-5 text-gray-500" />
+                  <Input
+                    {...field}
+                    type="text"
+                    placeholder="Enter your full name"
+                    className="pl-10 h-12 bg-gray-800/50 border-gray-700 focus:border-blue-500 focus:ring-blue-500 rounded-xl transition-all duration-200 text-white"
+                  />
+                </div>
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-400" />
             </FormItem>
           )}
         />
@@ -56,16 +59,19 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-gray-300 mb-2">Email</FormLabel>
+              <FormLabel className="text-gray-300 mb-1">Email</FormLabel>
               <FormControl>
-                <Input 
-                  {...field} 
-                  type="email" 
-                  placeholder="Enter Email" 
-                  className="rounded-full h-12 px-4"
-                />
+                <div className="relative">
+                  <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-500" />
+                  <Input
+                    {...field}
+                    type="email"
+                    placeholder="Enter your email"
+                    className="pl-10 h-12 bg-gray-800/50 border-gray-700 focus:border-blue-500 focus:ring-blue-500 rounded-xl transition-all duration-200 text-white"
+                  />
+                </div>
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-400" />
             </FormItem>
           )}
         />
@@ -74,34 +80,31 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-gray-300 mb-2">Password</FormLabel>
+              <FormLabel className="text-gray-300 mb-1">Password</FormLabel>
               <FormControl>
                 <div className="relative">
+                  <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-500" />
                   <Input
                     {...field}
                     type={showPassword ? "text" : "password"}
-                    placeholder="Enter Password"
-                    className="rounded-full h-12 px-4"
-                    onChange={(e) => {
-                      field.onChange(e);
-                      if (e.target.value.length === 0) {
-                        setShowPassword(false);
-                      }
-                    }}
+                    placeholder="Create a password"
+                    className="pl-10 h-12 bg-gray-800/50 border-gray-700 focus:border-blue-500 focus:ring-blue-500 rounded-xl transition-all duration-200 text-white"
                   />
-                  {field.value.length > 1 && (
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      className="absolute right-1 top-0 text-gray-500 h-12"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? <EyeOff /> : <Eye />}
-                    </Button>
-                  )}
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="absolute right-2 top-2 text-gray-500 hover:text-gray-300"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </Button>
                 </div>
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-400" />
             </FormItem>
           )}
         />
@@ -110,44 +113,39 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
           name="confirmPassword"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-gray-300 mb-2">Confirm Password</FormLabel>
+              <FormLabel className="text-gray-300 mb-1">Confirm Password</FormLabel>
               <FormControl>
                 <div className="relative">
+                  <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-500" />
                   <Input
                     {...field}
                     type={showConfirmPassword ? "text" : "password"}
-                    placeholder="Confirm Password"
-                    className="rounded-full h-12 px-4"
-                    onChange={(e) => {
-                      field.onChange(e);
-                      if (e.target.value.length === 0) {
-                        setShowConfirmPassword(false);
-                      }
-                    }}
+                    placeholder="Confirm your password"
+                    className="pl-10 h-12 bg-gray-800/50 border-gray-700 focus:border-blue-500 focus:ring-blue-500 rounded-xl transition-all duration-200 text-white"
                   />
-                  {field.value.length > 1 && (
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      className="absolute right-1 top-0 text-gray-500 h-12"
-                      onClick={() =>
-                        setShowConfirmPassword(!showConfirmPassword)
-                      }
-                    >
-                      {showConfirmPassword ? <EyeOff /> : <Eye />}
-                    </Button>
-                  )}
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="absolute right-2 top-2 text-gray-500 hover:text-gray-300"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </Button>
                 </div>
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-400" />
             </FormItem>
           )}
         />
         <Button
           type="submit"
-          className="w-full bg-blue-600 text-white hover:bg-blue-700 rounded-full h-12"
+          className="w-full h-12 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-xl transition-all duration-200 transform hover:scale-[1.02]"
         >
-          Sign Up
+          Create Account
         </Button>
       </form>
     </Form>

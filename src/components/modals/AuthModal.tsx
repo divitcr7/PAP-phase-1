@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { X } from "lucide-react";
+import { X, Star } from "lucide-react";
 import LoginForm from "../forms/LoginForm";
 import SignupForm from "../forms/SignupForm";
 import { LoginModalProps } from "@/types/auth";
@@ -56,27 +56,26 @@ const AuthModal = ({
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center backdrop-blur-xs bg-black/10 z-50 !border-none">
-      <div
-        className={`relative w-full max-w-3xl max-h-[650px] min-h-[500px] h-screen rounded-lg shadow-lg overflow-hidden flex`}
-      >
-        <div className="hidden w-2/5 bg-gray-800 md:flex flex-col items-center justify-between p-6 text-white">
+    <div className="fixed inset-0 flex items-center justify-center backdrop-blur-md bg-black/40 z-50 !border-none animate-in fade-in duration-300">
+      <div className="relative w-full max-w-4xl max-h-[650px] min-h-[500px] h-screen rounded-2xl shadow-2xl overflow-hidden flex scale-in-center">
+        <div className="hidden w-2/5 bg-gradient-to-br from-blue-950 to-gray-900 md:flex flex-col items-center justify-between p-6 text-white">
           <div className="flex flex-col items-center">
             <img
               src="/images/logo/logo-transparent@2x.png"
               alt="Pick a Pad Logo"
-              className="w-36 mb-6"
+              className="w-36 mb-3 hover:scale-105 transition-transform duration-300"
             />
-            <h3 className="text-2xl font-bold mb-4 text-center text-blue-200">
+            <h3 className="text-xl font-bold mb-1 text-center bg-gradient-to-r from-blue-400 to-blue-200 bg-clip-text text-transparent">
               {isSignUp ? "Join Our Community" : "Welcome Back!"}
             </h3>
-            <p className="text-center mb-6 text-gray-200">
+            <p className="text-center mb-6 text-gray-300 leading-relaxed text-sm">
               {isSignUp
                 ? "Find your perfect pad and enjoy exclusive benefits as a Pad Person."
                 : "Continue your journey to find the perfect living space."}
             </p>
             <div className="space-y-4 w-full">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4 bg-blue-900/30 p-2 rounded-xl backdrop-blur-sm hover:bg-blue-900/40 transition-colors">
+                {/* <Shield className="text-blue-400 h-8 w-8" />*/}
                 <div className="bg-blue-600 p-2 rounded-full">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -91,9 +90,11 @@ const AuthModal = ({
                     />
                   </svg>
                 </div>
-                <span className="text-sm">Self touring options</span>
+                <h4 className="font-semibold text-blue-200">
+                  Self touring options
+                </h4>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4 bg-blue-900/30 p-2 rounded-xl backdrop-blur-sm hover:bg-blue-900/40 transition-colors">
                 <div className="bg-blue-500 p-2 rounded-full">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -108,9 +109,11 @@ const AuthModal = ({
                     />
                   </svg>
                 </div>
-                <span className="text-sm">Reduced rent opportunities</span>
+                <span className="font-semibold text-blue-200 text-md">
+                  Reduced rent opportunities
+                </span>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4 bg-blue-900/30 p-2 rounded-xl backdrop-blur-sm hover:bg-blue-900/40 transition-colors">
                 <div className="bg-blue-500 p-2 rounded-full">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -125,14 +128,15 @@ const AuthModal = ({
                     />
                   </svg>
                 </div>
-                <span className="text-sm">Instant leasing process</span>
+                <span className="font-semibold text-blue-200 text-md">
+                  Instant leasing process
+                </span>
               </div>
             </div>
           </div>
 
-          {/* Testimonials Carousel */}
-          <div className="mt-20 w-full">
-            <h4 className="text-lg font-semibold mb-3 text-blue-200">
+          <div className="w-full mt-8">
+            <h4 className="text-md font-semibold mb-3 text-blue-200">
               What Pad People Say
             </h4>
             <Swiper
@@ -148,28 +152,19 @@ const AuthModal = ({
             >
               {testimonialData.slice(0, 3).map(({ id, quote, name, stars }) => (
                 <SwiperSlide key={id}>
-                  <div className="bg-blue-800/70 px-4 py-2 rounded-lg">
-                    {/* Stars */}
+                  <div className="bg-gradient-to-br from-blue-900/40 to-blue-950/40 p-3 px-4 rounded-xl backdrop-blur-sm">
                     <div className="flex mb-1.5">
                       {[...Array(stars)].map((_, index) => (
-                        <svg
+                        <Star
                           key={index}
-                          className="w-4 h-4 text-yellow-500 fill-yellow-500"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                        </svg>
+                          className="w-4 h-4 text-yellow-400 fill-amber-400"
+                        />
                       ))}
                     </div>
-
-                    {/* Quote - shortened for modal */}
-                    <p className="text-sm italic text-gray-200 mb-1.5 line-clamp-5 overflow-hidden">
+                    <p className="text-sm italic text-gray-300 mb-2 line-clamp-5">
                       {quote}
                     </p>
-
-                    {/* Author */}
-                    <p className="text-xs text-gray-300 font-medium">{name}</p>
+                    <p className="text-xs text-blue-300 font-medium">{name}</p>
                   </div>
                 </SwiperSlide>
               ))}
@@ -177,26 +172,28 @@ const AuthModal = ({
           </div>
         </div>
 
-        <div className="w-full md:w-3/5 flex flex-col items-center bg-blue-300 p-6 relative">
+        <div className="w-full md:w-3/5 flex flex-col items-center bg-gradient-to-br from-gray-900 to-blue-900 p-6 relative">
           <Button
             variant="ghost"
             onClick={onClose}
-            className="absolute top-3 right-3 text-blue-500 hover:text-blue-900 hover:bg-blue-400 rounded-full"
+            className="absolute top-1 right-1 text-gray-400 hover:text-white hover:bg-gray-800/10 rounded-full transition-colors"
             disabled={isSubmitting}
           >
             <X className="size-5" />
           </Button>
 
-          <h2 className={`text-3xl font-semibold text-blue-600 ${isSignUp ? 'mb-2' : 'my-4'}`}>
-            {isSignUp ? "Join Now" : "Already a Pad Person?"}
-          </h2>
-          <h3 className="text-xl font-bold text-gray-800 mb-3">
-            {isSignUp ? "Sign up" : "Sign in"}
-          </h3>
+          <div className={`text-center ${isSignUp ? "mb-3" : "my-4"}`}>
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-blue-200 bg-clip-text text-transparent mb-2">
+              {isSignUp ? "Join Now" : "Already a Pad Person?"}
+            </h2>
+            <p className="text-gray-400">
+              {isSignUp
+                ? "Let find your perfect match"
+                : "Continue your smart home search"}
+            </p>
+          </div>
 
-          <Card
-            className={`w-full p-4 md:max-w-2xl py-8 bg-gray-800 border-gray-700`}
-          >
+          <Card className="w-full max-w-md bg-gray-900/50 border-gray-800 backdrop-blur-sm">
             <CardContent>
               {isSignUp ? (
                 <SignupForm onSubmit={handleSignupSubmit} />
@@ -206,17 +203,17 @@ const AuthModal = ({
             </CardContent>
           </Card>
 
-          <div className="flex items-center justify-center gap-2 mt-4">
-            <span className="text-md font-semibold text-gray-700">
-              {isSignUp ? "Already a Pad Person?" : "Not yet, Join Now"}
+          <div className="flex items-center justify-center mt-3">
+            <span className="text-gray-400">
+              {isSignUp ? "Already have an account?" : "New to Pick A Pad?"}
             </span>
             <Button
               variant="link"
-              className="text-blue-700 p-0 text-lg hover:text-blue-900"
+              className="text-blue-400 hover:text-blue-300 transition-colors"
               onClick={toggleSignUp}
               disabled={isSubmitting}
             >
-              {isSignUp ? "Back to Login" : "Sign Up"}
+              {isSignUp ? "Sign In" : "Create Account"}
             </Button>
           </div>
 
