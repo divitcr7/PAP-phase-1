@@ -1,7 +1,7 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
 // import slugify from "slugify";
-import PadCard from "../common/PadCard";
+import PadCard from "../common/PropertiesCard";
 import { useProperties } from "@/hooks/useProperties";
 import { Skeleton } from "@/components/ui/skeleton";
 

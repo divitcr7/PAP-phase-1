@@ -1,5 +1,5 @@
 import { useParams } from "react-router";
-import PropertyCard from "@/components/common/PropertyCard";
+import PropertyCard from "@/components/common/UnitCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useProperties } from "@/hooks/useProperties";
 import { useUnits } from "@/hooks/useUnits";

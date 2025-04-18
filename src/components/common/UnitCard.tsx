@@ -32,17 +32,17 @@ interface Unit {
   amenities: Amenity[]; // Use the imported Amenity type
 }
 
-type PropertyCardProps = {
+type UnitCardProps = {
   unit: Unit;
   propertyId: string;
   propertyName: string;
 };
 
-export default function PropertyCard({
+export default function UnitCard({
   unit,
   propertyId,
   propertyName,
-}: PropertyCardProps) {
+}: UnitCardProps) {
   // Extract bed count from unitType (assuming format like "2-1" for 2 bed, 1 bath)
   const bedCount = parseInt(unit.unitType.split("-")[0]) || 1;
   const bathCount = parseInt(unit.unitType.split("-")[1]) || 1;

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "@/lib/axiosInstance";
 import { toast } from "@/lib/toast";
-import { Property } from "@/components/common/PadCard";
+import { Property } from "@/components/common/PropertiesCard";
 
 export const useProperties = () => {
   const [properties, setProperties] = useState<Property[]>([]);
