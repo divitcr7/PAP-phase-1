@@ -14,7 +14,7 @@ const Subscribe = () => {
 
   return (
     <section
-      className="relative text-white min-h-screen h-screen flex flex-col justify-center overflow-hidden bg-cover bg-center"
+      className="relative text-white min-h-screen flex flex-col justify-center overflow-hidden bg-cover bg-center"
       style={{
         backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), url(${BGSliderImage})`,
       }}
@@ -43,7 +43,7 @@ const Subscribe = () => {
 
       <div className="container relative z-10 mx-auto px-4 py-8 flex flex-col h-full justify-center">
         <div className="text-center">
-          <h1 className="text-3xl md:text-4xl font-semibold text-white">
+          <h1 className="text-3xl md:text-4xl font-semibold text-white mt-10">
             Welcome Home
           </h1>
           <div className="text-4xl md:text-6xl md:mt-10 max-w-4xl mx-auto font-bold bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 bg-clip-text text-transparent mb-6 md:mb-10 animate-gradient">
