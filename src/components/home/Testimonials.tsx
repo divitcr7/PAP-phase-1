@@ -5,23 +5,16 @@ import "swiper/css";
 import "swiper/css/pagination";
 
 export default function Testimonials() {
-  // const companyLogos = [
-  //   { id: 1, src: "/images/brands/company1.svg", alt: "Company 1" },
-  //   { id: 2, src: "/images/brands/company2.svg", alt: "Company 2" },
-  //   { id: 3, src: "/images/brands/company3.svg", alt: "Company 3" },
-  //   { id: 4, src: "/images/brands/company4.svg", alt: "Company 4" },
-  //   { id: 5, src: "/images/brands/company5.svg", alt: "Company 5" },
-  // ];
 
   return (
     <section className="flex flex-col md:flex-row">
       {/* Left side */}
       <div className="bg-slate-200 p-8 md:p-12 lg:p-16 md:w-1/2 flex items-end">
-        <div className="max-w-xl mx-auto md:mx-0 md:ml-auto md:mr-0 md:pr-6">
+        <div className="max-w-xl mx-auto md:mx-0 md:ml-auto py-10 lg:py-10 md:mr-0 md:pr-6">
           <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-slate-800">
             Our Testimonials
           </h2>
-          <p className="mt-4 text-lg text-slate-600">
+          <p className="mt-4 text-base lg:text-lg text-slate-600">
             Our seasoned team excels in real estate with years of successful
             market navigation, offering informed decisions and optimal results.
           </p>
@@ -29,7 +22,7 @@ export default function Testimonials() {
       </div>
 
       {/* Right side */}
-      <div className="bg-white p-8 md:p-12 lg:p-16 lg:py-24 md:w-1/2 flex flex-col justify-between">
+      <div className="bg-white p-8 py-28 lg:py-0 md:p-12 lg:p-16 lg:py-24 md:w-1/2 flex flex-col justify-between">
         <Swiper
           className="w-full"
           slidesPerView={1}
@@ -50,7 +43,7 @@ export default function Testimonials() {
         >
           {testimonialData.map(({ id, quote, name, position, stars }) => (
             <SwiperSlide key={id}>
-              <div className="max-w-lg lg:space-y-16">
+              <div className="max-w-lg space-y-12 lg:space-y-16">
                 {/* Stars */}
                 <div className="flex">
                   {[...Array(stars)].map((_, index) => (
@@ -82,23 +75,6 @@ export default function Testimonials() {
 
         {/* Pagination dots */}
         <div className="testimonial-pagination flex justify-start mt-6 mb-10"></div>
-
-        {/* Trusted by companies */}
-        {/* <div className="mt-auto">
-          <p className="text-sm text-slate-600 mb-4">
-            Trusted by over 150+ major companies
-          </p>
-          <div className="flex flex-wrap gap-6 items-center">
-            {companyLogos.map((logo) => (
-              <img
-                key={logo.id}
-                src={logo.src}
-                alt={logo.alt}
-                className="h-8 w-auto opacity-70 grayscale"
-              />
-            ))}
-          </div>
-        </div> */}
       </div>
     </section>
   );
