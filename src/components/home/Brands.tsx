@@ -20,7 +20,7 @@ export default function Brands() {
           </h3>
         </div>
 
-        <div className="flex flex-wrap justify-center items-center gap-x-10 gap-y-6">
+        <div className="flex flex-wrap justify-center items-center gap-x-10 gap-y-6 lg:gap-40">
           {partners.map((partner, index) => (
             <div
               key={index}
@@ -33,7 +33,7 @@ export default function Brands() {
               <img
                 src={partner.src}
                 alt={partner.alt}
-                className="h-24 md:h-32 lg:h-44 w-auto object-contain"
+                className="max-h-24 md:max-h-32 w-auto object-contain"
               />
             </div>
           ))}
