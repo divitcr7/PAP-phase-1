@@ -22,7 +22,7 @@ export default function Testimonials() {
       </div>
 
       {/* Right side */}
-      <div className="bg-white p-8 py-28 lg:py-0 md:p-12 lg:p-16 lg:py-24 md:w-1/2 flex flex-col justify-between">
+      <div className="bg-white p-8 py-28 md:p-12 lg:p-16 lg:py-24 md:w-1/2 flex flex-col justify-between">
         <Swiper
           className="w-full"
           slidesPerView={1}
