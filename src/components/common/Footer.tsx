@@ -75,7 +75,7 @@ export default function Footer() {
       <div className="container mx-auto border-b border-gray-700 pb-6 md:pb-12 animate-fade-in">
         <div className="flex flex-col md:flex-row gap-6 md:gap-28 text-center md:text-left">
           {/* Company Info */}
-          <div className="text-left md:w-lg md:mr-10">
+          <div className="text-[15px] lg:text-base text-left md:w-lg md:mr-10">
             <p className="text-gray-400 mb-4">
               Specializes in providing high-class pads (Rental Properties) for
               those in need.
@@ -84,7 +84,7 @@ export default function Footer() {
                 Contact Us
               </Link>
             </p>
-            <ul className="space-y-3 flex flex-col md:block items-start">
+            <ul className="space-y-3 flex flex-col md:block items-start mt-8 lg:mt-0">
               <li className="flex items-center justify-center md:justify-start">
                 <MapPin className="text-gray-400 mr-3 md:mr-4 size-5 md:size-6" />
                 <span>2507 South Blvd, Houston, TX 77004</span>
@@ -108,13 +108,13 @@ export default function Footer() {
           </div>
 
           {/* Categories and Our Company */}
-          <div className="flex justify-between md:justify-content mt-4 md:mt-0 px-4 md:px-0 flex-row gap-6 md:gap-56 text-left">
+          <div className="text-[15px] lg:text-base flex justify-between md:justify-content mt-4 md:mt-0 pr-8 lg:pr-0 lg:px-4 md:px-0 flex-row gap-6 md:gap-56 text-left">
             {FooterMenuItems.map((item, idx) => (
               <div key={idx}>
                 <h3 className="text-xl font-semibold mb-4 hover:text-blue-500 transition-colors">
                   {item.title}
                 </h3>
-                <ul className="space-y-2">
+                <ul className="space-y-2 pl-3 lg:pl-0">
                   {item.items.map((subItem, subIdx) => (
                     <li key={subIdx}>
                       <Link
@@ -133,7 +133,7 @@ export default function Footer() {
       </div>
 
       {/* Footer Bottom */}
-      <div className="container mx-auto flex flex-col md:flex-row justify-center md:justify-between items-center pt-6 text-gray-400 text-sm">
+      <div className="container mx-auto flex flex-col md:flex-row justify-center md:justify-between items-center pt-6 text-gray-400 text-xs lg:text-sm">
         <p className="text-center md:text-left mb-4 md:mb-0">
           &copy; 2025 Pick A Pad. All Rights Reserved.
         </p>

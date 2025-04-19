@@ -32,24 +32,23 @@ const Subscribe = () => {
           className="transition-transform duration-300 ease-in-out transform hover:scale-105"
         />
       </div> */}
-      <div className="absolute top-8 right-4 text-white">
+      <div className="flex justify-center items-start mt-10 lg:mt-0 lg:absolute lg:top-8 lg:right-4 text-white">
         <img
           alt="AI Graphic"
-          width={200}
           src="images/slider/graplic-slider-2.png"
-          className="transition-transform duration-300 ease-in-out transform hover:scale-105"
+          className="transition-transform duration-300 ease-in-out transform hover:scale-105 w-48 lg:w-52"
         />
       </div>
 
-      <div className="container relative z-10 mx-auto px-4 py-8 flex flex-col h-full justify-center">
+      <div className="container relative z-10 mx-auto px-4 pb-8 lg:py-8 flex flex-col h-full justify-center">
         <div className="text-center">
-          <h1 className="text-3xl md:text-4xl font-semibold text-white mt-10">
+          <h1 className="text-4xl font-semibold text-white lg:mt-10">
             Welcome Home
           </h1>
-          <div className="text-4xl md:text-6xl md:mt-10 max-w-4xl mx-auto font-bold bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 bg-clip-text text-transparent mb-6 md:mb-10 animate-gradient">
+          <div className="text-3xl mt-5 md:text-6xl md:mt-10 max-w-4xl mx-auto font-bold bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 bg-clip-text text-transparent mb-6 md:mb-10 animate-gradient">
             Find Your Perfect Pad Today!
           </div>
-          <div className="max-w-2xl mx-auto text-lg">
+          <div className="max-w-2xl mx-auto text-sm lg:text-lg">
             <p className="mb-6 text-gray-200">
               Experience the future of rental hunting with our AI-driven
               platform. Join thousands of satisfied renters who found their
@@ -58,8 +57,8 @@ const Subscribe = () => {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 md:mx-4 lg:mx-20 lg:grid-cols-4 gap-4 lg:gap-8 mb-8">
-          <div className="flex items-center gap-3 bg-gradient-to-br from-blue-900/30 to-blue-800/20 backdrop-blur-sm p-4 rounded-xl border border-blue-700/20 hover:border-blue-500/40 transition-all duration-300 group">
+        <div className="grid grid-cols-2 md:mx-4 lg:mx-20 lg:grid-cols-4 gap-4 lg:gap-8 mb-8 text-sm md:text-base">
+          <div className="flex items-center gap-3 bg-gradient-to-br from-blue-900/30 to-blue-800/20 backdrop-blur-sm py-1 px-4 lg:p-4 rounded-xl border border-blue-700/20 hover:border-blue-500/40 transition-all duration-300 group">
             <div className="bg-gradient-to-br from-blue-500 to-blue-700 p-2 rounded-lg group-hover:scale-110 transition-transform duration-300">
               <Brain className="h-5 w-5" />
             </div>
@@ -88,7 +87,7 @@ const Subscribe = () => {
               <Gift className="h-5 w-5" />
             </div>
             <span className="group-hover:text-blue-400 transition-colors">
-              $50 back when you sign
+              $50 Lease Credit
             </span>
           </div>
         </div>
@@ -96,7 +95,7 @@ const Subscribe = () => {
         <div className="grid md:grid-cols-2 gap-6 md:gap-10 mb-8 md:mx-20 md:mt-8">
           {!isAuthenticated ? (
             <Card className="bg-gradient-to-br from-blue-600 to-blue-800 border-0 shadow-xl overflow-hidden group hover:shadow-blue-500/20 transition-all duration-300">
-              <CardContent className="p-6 relative">
+              <CardContent className="lg:p-6 relative">
                 <div className="absolute -right-12 -top-12 w-24 h-24 bg-blue-400/20 rounded-full blur-2xl group-hover:bg-blue-400/30 transition-all duration-500"></div>
                 <h2 className="text-2xl font-bold mb-4 text-blue-200">
                   Pad People
@@ -105,7 +104,7 @@ const Subscribe = () => {
                   Join our community of Pad People and enjoy exclusive benefits,
                   reduced rent, and a seamless renting experience.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex flex-row gap-3">
                   <Button
                     onClick={() => setShowLogin(!showLogin)}
                     className="bg-white text-blue-700 hover:bg-blue-50 transform hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-white/20"
@@ -147,7 +146,7 @@ const Subscribe = () => {
           )}
 
           <Card className="bg-gradient-to-br from-gray-800 to-gray-900 border-0 shadow-xl overflow-hidden group hover:shadow-gray-500/20 transition-all duration-300">
-            <CardContent className="p-6 relative">
+            <CardContent className="lg:p-6 relative">
               <div className="absolute -right-12 -top-12 w-24 h-24 bg-gray-600/20 rounded-full blur-2xl group-hover:bg-gray-600/30 transition-all duration-500"></div>
               <h2 className="text-2xl font-bold mb-4 text-blue-400">Guests</h2>
               <p className="text-gray-300 mb-6 max-w-md">

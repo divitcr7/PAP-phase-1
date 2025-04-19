@@ -115,7 +115,7 @@ const Header: React.FC<HeaderProps> = ({
             className="lg:hidden"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
-            <Menu className="h-6 w-6" />
+            <Menu className="size-7 mr-3" />
             <span className="sr-only">Toggle menu</span>
           </Button>
         </div>

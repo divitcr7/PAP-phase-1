@@ -1,6 +1,3 @@
-import { Autoplay } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
-
 export default function Brands() {
   const partners = [
     {
@@ -15,56 +12,31 @@ export default function Brands() {
   ];
 
   return (
-    <section className="w-full py-24 bg-gray-500">
+    <section className="w-full py-18 lg:py-24 bg-gray-500">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-20">
+        <div className="text-center mb-10 lg:mb-20">
           <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-slate-900">
             Trusted by <span className="italic">leading</span> brands
           </h3>
         </div>
 
-        {/* Desktop View */}
-        <div className="hidden md:flex justify-center items-center gap-16 lg:gap-40">
+        <div className="flex flex-wrap justify-center items-center gap-x-10 gap-y-6">
           {partners.map((partner, index) => (
             <div
               key={index}
-              className="opacity-80 hover:opacity-100 transition-opacity duration-300"
+              className={`opacity-80 hover:opacity-100 transition-opacity duration-300 flex justify-center ${
+                index === 2
+                  ? "w-full justify-center md:w-auto"
+                  : "w-[40%] md:w-auto"
+              }`}
             >
               <img
                 src={partner.src}
                 alt={partner.alt}
-                className="max-h-16 lg:max-h-32 w-auto object-contain"
+                className="h-24 md:h-32 lg:h-44 w-auto object-contain"
               />
             </div>
           ))}
-        </div>
-
-        {/* Mobile Swiper */}
-        <div className="md:hidden">
-          <Swiper
-            spaceBetween={30}
-            slidesPerView={1.5}
-            centeredSlides={true}
-            loop={true}
-            modules={[Autoplay]}
-            autoplay={{
-              delay: 3000,
-              disableOnInteraction: false,
-            }}
-            className="mt-8"
-          >
-            {partners.map((partner, index) => (
-              <SwiperSlide key={index} className="flex justify-center">
-                <div className="opacity-80 hover:opacity-100 transition-opacity duration-300">
-                  <img
-                    src={partner.src}
-                    alt={partner.alt}
-                    className="max-h-14 w-auto object-contain"
-                  />
-                </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
         </div>
       </div>
     </section>
