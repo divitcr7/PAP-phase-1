@@ -1,9 +1,12 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
 // import slugify from "slugify";
-import PadCard from "../common/PropertiesCard";
+import PropertiesCard from "../common/PropertiesCard";
 import { useProperties } from "@/hooks/useProperties";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ArrowRight } from "lucide-react";
+import { Fragment } from "react";
+import PropertiesCardSkeleton from "../common/PropertiesCardSkeleton";
 
 export default function Properties() {
   const { properties, loading, error } = useProperties();
@@ -24,14 +27,9 @@ export default function Properties() {
           {/* Desktop Grid View */}
           <div className="hidden sm:grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="rounded-lg overflow-hidden shadow-md">
-                <Skeleton className="h-48 w-full" />
-                <div className="p-4">
-                  <Skeleton className="h-6 w-3/4 mb-2" />
-                  <Skeleton className="h-4 w-full mb-2" />
-                  <Skeleton className="h-4 w-2/3" />
-                </div>
-              </div>
+              <Fragment key={i}>
+                <PropertiesCardSkeleton />
+              </Fragment>
             ))}
           </div>
 
@@ -80,7 +78,7 @@ export default function Properties() {
         {/* Desktop Grid View */}
         <div className="hidden sm:grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
           {properties.slice(0, 6).map((property) => (
-            <PadCard key={property.propertyId} property={property} />
+            <PropertiesCard key={property.propertyId} property={property} />
           ))}
         </div>
 
@@ -97,19 +95,23 @@ export default function Properties() {
           >
             {properties.slice(0, 6).map((property) => (
               <SwiperSlide key={property.propertyId}>
-                <PadCard property={property} />
+                <PropertiesCard property={property} />
               </SwiperSlide>
             ))}
           </Swiper>
         </div>
 
         {properties.length > 6 && (
-          <div className="text-center mt-10">
+          <div className="text-center mt-12">
             <a
               href="/properties"
-              className="inline-block px-6 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+              className="group relative inline-flex items-center justify-center px-8 py-3.5 overflow-hidden font-medium text-white bg-gradient-to-r from-blue-500 to-blue-600 rounded-full shadow-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 ease-out hover:shadow-blue-400/30 hover:shadow-xl"
             >
-              View All Properties
+              <span className="absolute right-0 w-8 h-32 -mt-12 transition-all duration-1000 transform translate-x-12 bg-white opacity-10 rotate-12 group-hover:-translate-x-40 ease"></span>
+              <span className="relative flex items-center">
+                View All Properties
+                <ArrowRight className="ml-2 h-5 w-5 transform group-hover:translate-x-1 transition-transform" />
+              </span>
             </a>
           </div>
         )}

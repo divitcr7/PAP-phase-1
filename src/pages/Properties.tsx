@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 // import { Swiper, SwiperSlide } from "swiper/react";
 // import { Pagination, Navigation } from "swiper/modules";
 import PropertiesCard from "@/components/common/PropertiesCard";
@@ -11,7 +11,7 @@ import {
 // import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useProperties } from "@/hooks/useProperties";
-import { Skeleton } from "@/components/ui/skeleton";
+import PropertiesCardSkeleton from "@/components/common/PropertiesCardSkeleton";
 // import {
 //   Select,
 //   SelectContent,
@@ -71,18 +71,9 @@ const Properties = () => {
         <section className="container mx-auto py-16 px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="rounded-2xl overflow-hidden">
-                <Skeleton className="h-64 w-full" />
-                <div className="p-5 space-y-4">
-                  <Skeleton className="h-6 w-3/4" />
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-2/3" />
-                  <div className="grid grid-cols-2 gap-2">
-                    <Skeleton className="h-4" />
-                    <Skeleton className="h-4" />
-                  </div>
-                </div>
-              </div>
+              <Fragment key={i}>
+                <PropertiesCardSkeleton />
+              </Fragment>
             ))}
           </div>
         </section>
